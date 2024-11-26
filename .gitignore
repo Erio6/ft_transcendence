@@ -1,2 +1,3 @@
 /.venv
 /.idea
+/backend/db.sqlite3
