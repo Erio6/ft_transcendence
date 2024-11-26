@@ -19,4 +19,24 @@ The project is organized as follows: **TO BE UPDATED**
 - `manage.py`: Command-line utility for administrative tasks.
 
 ```sh
-python manage.py runserver
+python manage.py runserver:
+```
+to install the postgresSQL database
+```sh
+brew install postgresql
+pip install psycopg2-binary
+```
+
+
+Note de Elo pour Elo - TODELETE
+
+should we add a dotenv ?
+il faut installer POSTGRESQL 
+Models to create:
+User  : id, username, email, password, wins, losses, games_played, friends
+Score : id, user, score, date
+Friend : id, user, friend
+
+User - Friend (one to many)
+User - Score (one to many)
+
