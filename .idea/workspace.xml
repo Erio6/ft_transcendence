@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="f7594c81-effb-4a91-b744-29bedfa8672f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,6 +36,14 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="fr_transcendence" type="Python.DjangoServer" factoryName="Django server">
       <module name="fr_transcendence" />
@@ -75,7 +86,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1732625826526</updated>
-      <workItem from="1732625827622" duration="327000" />
+      <workItem from="1732625827622" duration="567000" />
     </task>
     <servers />
   </component>
