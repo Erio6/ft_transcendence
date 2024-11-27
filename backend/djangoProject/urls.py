@@ -1,3 +1,8 @@
+from django.urls import path, include
+from two_factor.urls import urlpatterns as tf_urls
+from django.contrib import admin
+from . import views
+
 """
 URL configuration for djangoProject project.
 
@@ -14,9 +19,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', include(tf_urls)),
+    path('admin/', admin.site.urls),  # Admin route
+    path('home/', views.home, name='home'),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
