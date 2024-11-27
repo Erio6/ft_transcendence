@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'API.apps.ApiConfig',
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
-    'twoFactorAuth',
     #2FA
     'django_otp',
     'two_factor',  # Add this line
