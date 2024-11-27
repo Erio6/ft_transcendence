@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
 """from .forms import UserRegistrationForm"""
 from django.contrib.auth.views import LoginView
 
@@ -19,11 +20,21 @@ def login_view(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect("game:welcome")
+            if "next" in request.POST:
+                return redirect(request.POST.get("next"))
+            else:
+                return redirect("game:welcome")
     else:
         form = AuthenticationForm()
     return render(request, "authentication/login.html", {"form": form})
 
+def logout_view(request):
+        logout(request)
+        return redirect("game:welcome")
+
+@login_required(login_url='authentication:login')
+def profile_view(request):
+    return render(request, 'authentication/profile.html')
 
 """def register(request):
     if request.method == 'POST':
