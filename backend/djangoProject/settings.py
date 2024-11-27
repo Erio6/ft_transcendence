@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,7 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'API.apps.ApiConfig',
     'authentication.apps.AuthenticationConfig',
-    'game.apps.GameConfig'
+    'game.apps.GameConfig',
+    #2FA
+    'django_otp',
+    'two_factor',  # Add this line
+    'two_factor.plugins.phonenumber',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'qr_code',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +55,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -125,7 +132,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+LOGIN_URL = 'two_factor:login'  # 2FA login view
+LOGIN_REDIRECT_URL = 'home'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
