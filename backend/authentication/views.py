@@ -8,7 +8,7 @@ def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            login(request,form.save())
             return redirect("game:welcome")
     else:
         form = UserCreationForm()
@@ -18,6 +18,7 @@ def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
+            login(request, form.get_user())
             return redirect("game:welcome")
     else:
         form = AuthenticationForm()
