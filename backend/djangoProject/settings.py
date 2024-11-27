@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     #2FA
     'django_otp',
     'two_factor',  # Add this line
-    'two_factor.plugins.phonenumber',
+    #'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'qr_code',

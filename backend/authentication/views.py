@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django_otp import devices_for_user
+
 """from .forms import UserRegistrationForm"""
 from django.contrib.auth.views import LoginView
 
@@ -18,7 +20,10 @@ def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            login(request, form.get_user())
+            user = form.get_user()
+            if devices_for_user(user, confirmed=True):
+                return redirect('two_factor:login')
+            #login(request,user)
             return redirect("game:welcome")
     else:
         form = AuthenticationForm()
