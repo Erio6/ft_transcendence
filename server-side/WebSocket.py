@@ -11,16 +11,22 @@ class Paddle:
         self.y = 50
         self.moving = 0
         self.websocket = websocket
+        self.length = 30
         if loc == "left":
-            self.x = 5
+            self.x = 2
         elif loc == "right":
-            self.x = 95
+            self.x = 98
+
+    async def init_paddle(self):
+        await self.websocket.send(
+            json.dumps(
+                {'type': 'init_paddle', 'loc': self.loc, 'size': self.length, 'x': self.x, 'y': self.y}))
 
     async def move(self, delta_time, speed=50):
         # self.moving = float(self.moving)
         self.y += self.moving * speed * delta_time
-        if self.y > 80:
-            self.y = 80
+        if self.y > 100:
+            self.y = 100
         elif self.y < 0:
             self.y = 0
         if self.moving != 0:
@@ -86,6 +92,7 @@ last_time = time.time()
 async def handle_client(websocket):
     loc = "left" if len(connected_clients) == 0 else "right"
     paddle = Paddle(loc, websocket)
+    await paddle.init_paddle()
     # Add the new client and its associated paddle to the set
     connected_clients[websocket] = paddle
     try:
@@ -120,8 +127,8 @@ async def main():
 
         for websocket, paddle in connected_clients.items():
             await paddle.move(delta_time)
-        ball.wall_collide()
-        await ball.move(delta_time)
+        # ball.wall_collide()
+        # await ball.move(delta_time)
         await asyncio.sleep(1 / 60)
 
     await server.wait_closed()

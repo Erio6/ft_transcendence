@@ -3,6 +3,8 @@ const right = document.querySelector('.right')
 const ball = document.querySelector('.ball')
 const game = document.querySelector('.game')
 
+let ratio = 100;
+
 const webSocket = new WebSocket("ws://localhost:12345");
 
 let arrowDown = false;
@@ -33,12 +35,23 @@ webSocket.onmessage = (event) => {
     const json = JSON.parse(event.data);
     if (json['type'] === 'paddle') {
         if (json['loc'] === 'left')
-            left.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
+            left.style["top"] = (json['y'] * game.clientHeight / ratio) + "px";
         else
-            right.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
+            right.style["top"] = (json['y'] * game.clientHeight / ratio) + "px";
     } else if (json['type'] === 'ball') {
-        ball.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
-        ball.style["left"] = (json['x'] * game.clientWidth / 100) + "px";
+        ball.style["top"] = (json['y'] * game.clientHeight / ratio) + "px";
+        ball.style["left"] = (json['x'] * game.clientWidth / ratio) + "px";
+    } else if (json['type'] === 'init_paddle') {
+        if (json['loc'] === 'left') {
+            ratio = 100 + json['size'];
+            left.style["left"] = (json['x'] * game.clientWidth / ratio) + "px";
+            left.style["top"] = (json['y'] * game.clientHeight / ratio) + "px";
+            left.style["height"] = (json['size'] * game.clientHeight / ratio) + "px";
+
+        } else {
+            right.style["top"] = (json['y'] * game.clientHeight / ratio) + "px";
+
+        }
     }
 
 }
