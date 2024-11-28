@@ -1,5 +1,6 @@
 const left = document.querySelector('.left')
 const right = document.querySelector('.right')
+const ball = document.querySelector('.ball')
 const game = document.querySelector('.game')
 
 const webSocket = new WebSocket("ws://localhost:12345");
@@ -13,7 +14,6 @@ let msg = {
     value: false,
     loc: 0
 }
-
 
 webSocket.onopen = (event) => {
     console.log("WebSocket connection established.");
@@ -31,10 +31,15 @@ webSocket.onerror = (error) => {
 webSocket.onmessage = (event) => {
     console.log("message = " + event.data);
     const json = JSON.parse(event.data);
-    if (json['loc'] === 'left')
-        left.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
-    else
-        right.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
+    if (json['type'] === 'paddle') {
+        if (json['loc'] === 'left')
+            left.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
+        else
+            right.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
+    } else if (json['type'] === 'ball') {
+        ball.style["top"] = (json['y'] * game.clientHeight / 100) + "px";
+        ball.style["left"] = (json['x'] * game.clientWidth / 100) + "px";
+    }
 
 }
 
