@@ -22,7 +22,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             if devices_for_user(user, confirmed=True):
-                return redirect('two_factor:login')
+                return redirect('two_factor:setup')
             #login(request,user)
             return redirect("game:welcome")
     else:
