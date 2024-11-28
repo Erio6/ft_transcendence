@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,12 +41,13 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
     #2FA
+    "phonenumber_field",
     'django_otp',
-    'two_factor',  # Add this line
-    #'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
-    'qr_code',
+    'django_otp.plugins.otp_email',  # <- if you want email capability.
+    'two_factor',
+    'two_factor.plugins.email',
 ]
 
 MIDDLEWARE = [
@@ -65,7 +66,9 @@ ROOT_URLCONF = 'djangoProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,7 +91,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "pong",
-        "USER": "z3msta",
+        "USER": "mehdi",
         "PASSWORD": "1234",
         "HOST": "127.0.0.1",
         "PORT": "5432",
@@ -134,6 +137,7 @@ STATIC_URL = 'static/'
 
 LOGIN_URL = 'two_factor:login'  # 2FA login view
 LOGIN_REDIRECT_URL = 'home'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
