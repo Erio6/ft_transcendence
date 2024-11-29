@@ -14,7 +14,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'API.apps.ApiConfig',
-    'authentication.apps.AuthenticationConfig',
-    'game.apps.GameConfig',
+    'authentication',
+    'game',
+    'dashboard',
+    'tournaments',
     #2FA
     'django_otp',
     'two_factor',  # Add this line
@@ -65,7 +67,7 @@ ROOT_URLCONF = 'djangoProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "game/templates")],
+        'DIRS': [os.path.join(BASE_DIR, "djangoProject/templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,6 +133,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "djangoProject/static")
+]
 APPEND_SLASH = True #Always find a path and rewrite the path, if request is /test/ it redirect to /test
 
 LOGIN_URL = 'two_factor:login'  # 2FA login view

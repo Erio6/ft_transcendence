@@ -1,7 +1,6 @@
 from django.urls import path, include
 from two_factor.urls import urlpatterns as tf_urls
 from django.contrib import admin
-from game.views import welcome
 
 from . import views
 
@@ -26,6 +25,6 @@ urlpatterns = [
     path('', include(tf_urls)),
     path('admin/', admin.site.urls),  # Admin route
     path('home/', views.home, name='home'),
-    path('', welcome, name='HomePage'),
+    path('', include('game.urls') , name='MainPage'),
     path('auth/', include('authentication.urls')),
 ]
