@@ -26,7 +26,17 @@ to install the postgresSQL database
 brew install postgresql
 pip install psycopg2-binary
 ```
-
+After creation you need to do a superuser and to create the database (Settings in django for the db:settings.py)
+```sh
+for 2FA - a check avec Mehdi
+```sh
+django-otp
+phonenumbers
+```
+for the Profile picture in authentication:
+```sh
+pip install Pillow
+```
 
 Note de Elo pour Elo - TODELETE
 

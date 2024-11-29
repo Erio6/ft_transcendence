@@ -1,6 +1,18 @@
 
-{% block title %}User Profile{% endblock %}
+{% block title %} User Profile {% endblock %}
 
 {% block content %}
+
+<img src="{{ user.userprofile.avatar.url }}" alt="Profile Image" width="150" height="150">
+<br>
     {{ user.username }}
+<br>
+    {{ user.email }}
+<br>
+    {{ user.date_joined }}
+<br>
+    {{ user.last_login }}
+
 {% endblock %}
+
+<p class="text-center">
