@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class PlayerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to='avatars', null=True, blank=True)
+    avatar = models.ImageField(default='avatar/default.jpg', upload_to='avatar', null=True, blank=True)
     #pseudo = models.TextField(null=True, blank=True)
     friends_number = models.IntegerField(default=0)
     rank = models.IntegerField(default=0)
