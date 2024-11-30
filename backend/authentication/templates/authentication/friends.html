@@ -1,0 +1,47 @@
+
+{% block content %}
+<h2>My friends</h2>
+<ul>
+  {% for friend in friends %}
+    <li>
+      {{ friend.display_name }}
+      <a href="{% url 'remove_friend' friend.id %}">Delete Friend</a>
+    </li>
+  {% empty %}
+    <li>You do not have any friend.</li>
+  {% endfor %}
+</ul>
+
+<h2>Friend requests:</h2>
+<ul>
+  {% for request in incoming_requests %}
+    <li>
+      {{ request.from_user.display_name }}
+      <a href="{% url 'respond_friend_request' request.id 'accept' %}">Accept</a>
+      <a href="{% url 'respond_friend_request' request.id 'decline' %}">Decline</a>
+    </li>
+  {% empty %}
+    <li>You do not have any friend request.</li>
+  {% endfor %}
+</ul>
+
+<h2>Requested as friends:</h2>
+<ul>
+  {% for request in outgoing_requests %}
+    <li>
+      {{ request.to_user.display_name }} (Pending)
+      <a href="{% url 'cancel_friend_request' request.id %}">Cancel</a>
+    </li>
+  {% empty %}
+    <li>No request pending.</li>
+  {% endfor %}
+
+{% if userprofile != request.user.userprofile %}
+  <form action="{% url 'authentication:send_friend_request' userprofile.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Add a Friends</button>
+  </form>
+{% endif %}
+
+</ul>
+{% endblock %}

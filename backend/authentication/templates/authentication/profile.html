@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<img src="{{ user.userprofile.avatar.url }}" alt="Profile Image" width="150" height="150">
+<img src="{{ user.userprofile.avatar.url }}" alt="Profile Image" >
 <br>
     {{ user.username }}
 <br>
@@ -12,6 +12,17 @@
     {{ user.date_joined }}
 <br>
     {{ user.last_login }}
+<br>
+<a href="{% url 'authentication:friends' %}">Friends</a>
+<br>
+
+<form  method="POST" enctype="multipart/form-data">
+    <h1>Profile info</h1>
+        {% csrf_token %}
+        {{ user_form }}
+        {{ profile_form }}
+    <button type="submit">Update Profile info</button>
+</form>
 
 {% endblock %}
 
