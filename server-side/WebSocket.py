@@ -1,6 +1,5 @@
 import asyncio
 import time
-from importlib.metadata import pass_none
 
 import websockets
 import json
@@ -16,6 +15,7 @@ class Paddle:
         self.width = 3.5
         self.speed = 100
         self.x = 2
+        self.score = 0
 
     async def send_data(self, websocket):
         await websocket.send(json.dumps({'type': 'paddle', 'y': self.y, 'size': self.length, 'loc': self.loc}))
@@ -58,7 +58,7 @@ class Response:
 
 class Ball:
     def __init__(self):
-        self.min_speed = 0.5
+        self.min_speed = 10
         self.current_speed = 10
         self.radius = 3
         self.x = 50
@@ -74,57 +74,65 @@ class Ball:
     async def move(self, delta_time):
         self.x += self.v_x * delta_time * self.current_speed
         self.y += self.v_y * delta_time * self.current_speed
+        # if self.y < 0:
+        #     self.y = 0
+        # if self.y > 100:
+        #     self.y = 100
+
+    async def wall_collide(self):
+        if self.y <= 0 or self.y >= 100:
+            self.v_y *= -1
+            for websocket in connected_clients:
+                await self.send_data(websocket)
         if self.y < 0:
             self.y = 0
         if self.y > 100:
             self.y = 100
 
-    async def wall_collide(self):
-        if self.y <= 0 or self.y >= 100:
-            print("collide")
-            self.v_y *= -1
-            for websocket in connected_clients:
-                await self.send_data(websocket)
-
     async def send_data(self, websocket):
         await websocket.send(json.dumps(
-            {'type': 'ball', 'y': self.y, 'x': self.x, 'v_x': self.v_x, 'v_y': self.v_y, 'speed': self.current_speed}))
+            {'type': 'ball', 'y': self.y, 'x': self.x, 'v_x': self.v_x, 'v_y': self.v_y,
+             'speed': self.current_speed}))
+
+    async def send_score(self, paddle):
+        self.x = 50
+        self.y = 50
+        self.v_x = 1
+        self.v_y = 0
+        self.current_speed = self.min_speed
+        for websocket in connected_clients:
+            await websocket.send(
+                json.dumps({'type': 'score', 'value': paddle.score, 'loc': paddle.loc, 'y': self.y, 'x': self.x,
+                            'v_x': self.v_x, 'v_y': self.v_y, 'speed': self.current_speed}))
 
     async def paddles_collide(self, paddle):
-        offset_center = paddle.length / 2
-        proportional_center = (paddle.y - 50) / 50
-        real_center = paddle.y - (proportional_center * offset_center)
-        # for websocket in connected_clients:
-        #     await websocket.send(json.dumps({'type': 'line', 'data': real_center}))
-        print("y check: " + str(paddle.y - paddle.length / 2 <= self.y <= paddle.y + paddle.length / 2))
+        real_center = paddle.y
         if paddle.loc == "left":
-            if self.x <= paddle.x + paddle.width and real_center - paddle.length / 2 <= self.y <= real_center + paddle.length / 2:
+            print(str(self.x <= paddle.x + paddle.width) + " | " + str(
+                real_center - self.radius - paddle.length / 2 <= self.y <= real_center + self.radius + paddle.length / 2))
+            await paddle.websocket.send(json.dumps(
+                {'type': 'debug', 'line1': real_center - self.radius - paddle.length / 2,
+                 'line2': real_center + self.radius + paddle.length / 2}))
+            if self.x < 0:
+                paddle.score += 1
+                await self.send_score(paddle)
+            elif self.x <= paddle.x + paddle.width and real_center - self.radius - paddle.length / 2 <= self.y <= real_center + self.radius + paddle.length / 2:
                 self.v_x *= -1
                 self.v_y += (self.y - (paddle.y + paddle.length / 2)) * 0.1
+                self.current_speed += 10
                 for websocket in connected_clients:
                     await self.send_data(websocket)
         elif paddle.loc == "right":
-            if self.x >= 100 - (
-                    paddle.width + paddle.x) and real_center - paddle.length / 2 <= self.y <= real_center + paddle.length / 2:
+            if self.x > 100:
+                paddle.score += 1
+                await self.send_score(paddle)
+            elif self.x >= 100 - (
+                    paddle.width + paddle.x) and real_center - self.radius - paddle.length / 2 <= self.y <= real_center + self.radius + paddle.length / 2:
                 self.v_x *= -1
                 self.v_y += (self.y - (paddle.y + paddle.length / 2)) * 0.03
+                self.current_speed += 10
                 for websocket in connected_clients:
                     await self.send_data(websocket)
-
-        if self.x < 0:
-            self.x = 50
-            self.y = 50
-            self.v_x = 1
-            self.v_y = 0
-            for websocket in connected_clients:
-                await self.send_data(websocket)
-        elif self.x > 100:
-            self.x = 50
-            self.y = 50
-            self.v_x = 1
-            self.v_y = 0
-            for websocket in connected_clients:
-                await self.send_data(websocket)
 
 
 # Set of connected clients

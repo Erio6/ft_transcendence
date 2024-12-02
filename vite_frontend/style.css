@@ -33,7 +33,7 @@
     background-color: red;
 }
 
-.line-v {
+.line-v, .line-v2, .line-v3 {
     top: 0;
     left: 0;
     width: 100%;
@@ -48,4 +48,11 @@
 
 .right {
     right: 10px;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    top: -10px;
 }

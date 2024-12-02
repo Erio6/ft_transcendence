@@ -3,7 +3,11 @@ const right = document.querySelector('.right')
 const ball = document.querySelector('.ball')
 const line = document.querySelector('.line')
 const line_v = document.querySelector('.line-v')
+const line_v2 = document.querySelector('.line-v2')
+const line_v3 = document.querySelector('.line-v3')
 const game = document.querySelector('.game')
+const left_score = document.querySelector('.score-left')
+const right_score = document.querySelector('.score-right')
 
 let ratio = 100;
 let lastTimestamp = performance.now();
@@ -68,6 +72,7 @@ webSocket.onmessage = (event) => {
             right.style["right"] = (json['x'] * game.offsetWidth / 100) + "px";
             right.style["top"] = ((json['y'] - (json['size'] / 2)) * game.clientHeight / 100) + "px";
             right.style["height"] = (json['size'] * game.clientHeight / 100) + "px";
+            right.style["width"] = (json['width'] * game.clientWidth / 100) + "px";
 
         }
     }
@@ -76,6 +81,17 @@ webSocket.onmessage = (event) => {
         paddleSpeed = json['speed'];
     }
     else if (json['type'] === 'line') {
+    }
+    else if (json['type'] === 'score') {
+        setBall(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
+        if (json['loc'] === 'left')
+            left_score.textContent = json['value'];
+        else if (json['loc'] === 'right')
+            right_score.textContent = json['value'];
+    }
+    else if (json['type'] === 'debug') {
+        line_v2.style['top'] = (json['line1'] * game.clientHeight / 100) + "px";
+        line_v3.style['top'] = (json['line2'] * game.clientHeight / 100) + "px";
     }
 }
 
@@ -125,6 +141,10 @@ addEventListener("keyup", (event) => {
 function moveBall(deltaTime) {
     ball.style["top"] = parseFloat(window.getComputedStyle(ball).top) + (ballData.v_y * ballData.speed * deltaTime * ((game.offsetHeight - parseFloat(window.getComputedStyle(ball).height)) / 100)) + "px";
     ball.style["left"] = parseFloat(window.getComputedStyle(ball).left) + (ballData.v_x * ballData.speed * deltaTime * ((game.offsetWidth - parseFloat(window.getComputedStyle(ball).height)) / 100)) + "px";
+    if (ball.offsetTop < 0)
+        ball.offsetTop = 0;
+    else if (ball.offsetTop + ball.offsetWidth > game.offsetHeight)
+        ball.offsetTop = game.offsetHeight - ball.offsetWidth;
     if (ball.offsetTop < 0 || ball.offsetTop + ball.offsetWidth > game.offsetHeight) {
         ballData.v_y *= -1;
     }
@@ -142,7 +162,7 @@ function setBall(x, y, v_x, v_y, speed) {
 
 function movePaddle(deltaTime) {
     if (paddlePos === 'left') {
-        left.style['top'] = (parseFloat(window.getComputedStyle(left).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight - parseFloat(window.getComputedStyle(left).height)) / 100))) + "px";
+        left.style['top'] = (parseFloat(window.getComputedStyle(left).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight) / 100))) + "px";
 
         const halfHeight = left.offsetHeight / 2;
         if (left.offsetTop < 0)
@@ -151,7 +171,7 @@ function movePaddle(deltaTime) {
             left.style['top'] = (game.offsetHeight - left.offsetHeight) + "px";
     }
     else if (paddlePos === 'right') {
-        right.style['top'] = (parseFloat(window.getComputedStyle(right).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight - parseFloat(window.getComputedStyle(right).height)) / 100))) + "px";
+        right.style['top'] = (parseFloat(window.getComputedStyle(right).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight) / 100))) + "px";
 
         const halfHeight = right.offsetHeight / 2;
         if (right.offsetTop < 0)
