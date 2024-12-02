@@ -1,29 +1,17 @@
 
 {% block title %} User Profile {% endblock %}
-
 {% block content %}
+<img src="{{ profile.avatar.url }}" alt="Profile Image" >
+<h2>{{ profile.display_name }}</h2>
+<p><strong>Username:</strong> {{ profile.user.username }}</p>
+<p><strong>Wins:</strong> {{ profile.wins }}</p>
+<p><strong>Losses:</strong> {{ profile.losses }}</p>
 
-<img src="{{ user.userprofile.avatar.url }}" alt="Profile Image" >
-<br>
-    {{ user.username }}
-<br>
-    {{ user.email }}
-<br>
-    {{ user.date_joined }}
-<br>
-    {{ user.last_login }}
-<br>
-<a href="{% url 'authentication:friends' %}">Friends</a>
-<br>
-
-<form  method="POST" enctype="multipart/form-data">
-    <h1>Profile info</h1>
-        {% csrf_token %}
-        {{ user_form }}
-        {{ profile_form }}
-    <button type="submit">Update Profile info</button>
-</form>
-
+{% if user == profile.user %}
+<hr>
+<h3>Edit Profile</h3>
+<a href="{% url 'authentication:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Update Profile</a>
+{% endif %}
 {% endblock %}
 
 <p class="text-center">

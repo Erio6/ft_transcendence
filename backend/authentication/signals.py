@@ -1,13 +1,22 @@
 from django.db.models.signals import post_save # This is a signal that gets fired after an object is saved (the user)
 from django.contrib.auth.models import User # This is the user model that we want to create a profile for
 from django.dispatch import receiver # This is a decorator that will receive the signal
-from .models import UserProfile
+from .models import UserProfile, FriendList
 
 @receiver(post_save, sender=User) # When a user is saved, send this signal
-def create_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance)
+        UserProfile.objects.create(user=instance, display_name=instance.username)
 
 @receiver(post_save, sender=User) # When a user is saved, send this signal
-def save_profile(sender, instance, **kwargs):
+def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()
+
+@receiver(post_save, sender=UserProfile)
+def create_friendlist(sender, instance, created, **kwargs):
+    if created:
+        FriendList.objects.create(user_profile=instance)
+
+@receiver(post_save, sender=UserProfile)
+def save_friendlist(sender, instance, **kwargs):
+    instance.friend_list.save()

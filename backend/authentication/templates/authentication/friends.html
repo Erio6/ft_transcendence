@@ -5,7 +5,7 @@
   {% for friend in friends %}
     <li>
       {{ friend.display_name }}
-      <a href="{% url 'remove_friend' friend.id %}">Delete Friend</a>
+      <a href="{% url 'authentication:remove_friend' friend.id %}">Delete Friend</a>
     </li>
   {% empty %}
     <li>You do not have any friend.</li>
@@ -17,8 +17,8 @@
   {% for request in incoming_requests %}
     <li>
       {{ request.from_user.display_name }}
-      <a href="{% url 'respond_friend_request' request.id 'accept' %}">Accept</a>
-      <a href="{% url 'respond_friend_request' request.id 'decline' %}">Decline</a>
+      <a href="{% url 'authentication:respond_friend_request' request.id 'accept' %}">Accept</a>
+      <a href="{% url 'authentication:respond_friend_request' request.id 'decline' %}">Decline</a>
     </li>
   {% empty %}
     <li>You do not have any friend request.</li>
@@ -30,18 +30,31 @@
   {% for request in outgoing_requests %}
     <li>
       {{ request.to_user.display_name }} (Pending)
-      <a href="{% url 'cancel_friend_request' request.id %}">Cancel</a>
+      <a href="{% url 'authentication:cancel_friend_request' request.id %}">Cancel</a>
     </li>
   {% empty %}
     <li>No request pending.</li>
   {% endfor %}
 
-{% if userprofile != request.user.userprofile %}
-  <form action="{% url 'authentication:send_friend_request' userprofile.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit">Add a Friends</button>
-  </form>
-{% endif %}
+<h2>Find Users to Add as Friends</h2>
+<form method="get" action="{% url 'authentication:friends' %}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search users..." required>
+    <button type="submit">Search</button>
+</form>
 
+<ul>
+  {% for user in search_users %}
+    <li>
+      {{ user.display_name }}
+      <form action="{% url 'authentication:send_friend_request' user.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Add Friend</button>
+      </form>
+    </li>
+  {% empty %}
+    {% if query %}
+      <li>No users found.</li>
+    {% endif %}
+  {% endfor %}
 </ul>
 {% endblock %}

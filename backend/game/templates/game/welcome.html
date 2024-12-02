@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% if user.is_authenticated %}
-    <a href="{% url 'authentication:profile' %}" >
+    <a href="{% url 'authentication:user_profile' user.username %}" >
         {% csrf_token %}
         Profile
     </a>
