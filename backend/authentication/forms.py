@@ -2,6 +2,7 @@ from django import forms
 from .models import UserProfile
 from django.contrib.auth.models import User
 
+# jai pas utiliser le user  update form mais je dois le mettre dans les updates views
 class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
     class Meta:
@@ -15,6 +16,6 @@ class ProfileUpdateForm(forms.ModelForm):
 
 class UserSearchForm(forms.Form):
     query = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
-        'placeholder': 'Rechercher des utilisateurs...',
+        'placeholder': 'Looking for users...',
         'class': 'form-control',
     }))

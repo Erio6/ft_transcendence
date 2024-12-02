@@ -1,60 +1,82 @@
 
 {% block content %}
-<h2>My friends</h2>
-<ul>
-  {% for friend in friends %}
-    <li>
-      {{ friend.display_name }}
-      <a href="{% url 'authentication:remove_friend' friend.id %}">Delete Friend</a>
-    </li>
-  {% empty %}
-    <li>You do not have any friend.</li>
-  {% endfor %}
-</ul>
+<div class="container mt-4">
+    <h2>My Friends</h2>
+    <ul class="list-group mb-4">
+        {% for friend in friends %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ friend.display_name }}
+                <form action="{% url 'authentication:remove_friend' friend.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">You have no friends.</li>
+        {% endfor %}
+    </ul>
 
-<h2>Friend requests:</h2>
-<ul>
-  {% for request in incoming_requests %}
-    <li>
-      {{ request.from_user.display_name }}
-      <a href="{% url 'authentication:respond_friend_request' request.id 'accept' %}">Accept</a>
-      <a href="{% url 'authentication:respond_friend_request' request.id 'decline' %}">Decline</a>
-    </li>
-  {% empty %}
-    <li>You do not have any friend request.</li>
-  {% endfor %}
-</ul>
+    <h2>Friend Requests</h2>
 
-<h2>Requested as friends:</h2>
-<ul>
-  {% for request in outgoing_requests %}
-    <li>
-      {{ request.to_user.display_name }} (Pending)
-      <a href="{% url 'authentication:cancel_friend_request' request.id %}">Cancel</a>
-    </li>
-  {% empty %}
-    <li>No request pending.</li>
-  {% endfor %}
+    <h3>Incoming Requests</h3>
+    <ul class="list-group mb-4">
+        {% for request in incoming_requests %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ request.sender.display_name }}
+                <div>
+                    <form action="{% url 'authentication:accept_friend_request' request.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                    <form action="{% url 'authentication:decline_friend_request' request.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
+                    </form>
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No incoming friend requests.</li>
+        {% endfor %}
+    </ul>
 
-<h2>Find Users to Add as Friends</h2>
-<form method="get" action="{% url 'authentication:friends' %}">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search users..." required>
-    <button type="submit">Search</button>
-</form>
+    <h3>Outgoing Requests</h3>
+    <ul class="list-group mb-4">
+        {% for request in outgoing_requests %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ request.receiver.display_name }} (Pending)
+                <form action="{% url 'authentication:cancel_friend_request' request.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No outgoing friend requests.</li>
+        {% endfor %}
+    </ul>
 
-<ul>
-  {% for user in search_users %}
-    <li>
-      {{ user.display_name }}
-      <form action="{% url 'authentication:send_friend_request' user.id %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit">Add Friend</button>
-      </form>
-    </li>
-  {% empty %}
+    <h2>Add a Friend</h2>
+    <form method="get" action="{% url 'authentication:friends_overview' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search for users..." required>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
     {% if query %}
-      <li>No users found.</li>
+        <h3>Search Results</h3>
+        <ul class="list-group">
+            {% for user in search_results %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ user.display_name }}
+                    <form action="{% url 'authentication:send_friend_request' user.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">Add Friend</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No users found for "{{ query }}".</li>
+            {% endfor %}
+        </ul>
     {% endif %}
-  {% endfor %}
-</ul>
+</div>
 {% endblock %}

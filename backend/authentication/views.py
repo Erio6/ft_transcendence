@@ -6,6 +6,7 @@ from .forms import UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.models import User
 from .models import UserProfile, FriendList , FriendRequest
 from django.contrib import messages
+from django.db.models import Q
 
 def register(request):
     if request.method == "POST":
@@ -68,4 +69,102 @@ def edit_profile_view(request,username):
     return render(request, 'authentication/edit_profile.html',context)
 
 # FRIENDS VIEWS
+
+@login_required
+def friends_overview(request):
+    user_profile = get_object_or_404(UserProfile, user=request.user)
+    friends = user_profile.friend_list.friends.all()
+    incoming_requests = FriendRequest.objects.filter(receiver=user_profile, is_active=True)
+    outgoing_requests = FriendRequest.objects.filter(sender=user_profile, is_active=True)
+
+    query = request.GET.get('q', '')
+    search_results = []
+    if query:
+        search_results = UserProfile.objects.filter(
+            display_name__icontains=query
+        ).exclude(
+            user=request.user
+        ).exclude(
+            Q(friend_list__friends=user_profile) |
+            Q(sent_requests__receiver=user_profile) |
+            Q(received_requests__sender=user_profile)
+        ).distinct()
+
+    context = {
+        'friends': friends,
+        'incoming_requests': incoming_requests,
+        'outgoing_requests': outgoing_requests,
+        'search_results': search_results,
+        'query': query,
+    }
+    return render(request, 'authentication/friends.html', context)
+
+
+@login_required
+def send_friend_request(request, user_id):
+    if request.method == 'POST':
+        sender = get_object_or_404(UserProfile, user=request.user)
+        receiver = get_object_or_404(UserProfile, id=user_id)
+
+        if sender == receiver:
+            messages.error(request, "You canno sent a friend request.")
+            return redirect('authentication:friends_overview')
+
+        # Vérifier si une demande existe déjà
+        existing_request = FriendRequest.objects.filter(
+            sender=sender, receiver=receiver, is_active=True
+        ).exists()
+
+        existing_friendship = FriendList.objects.filter(
+            Q(user_profile=sender, friends=receiver) | Q(user_profile=receiver, friends=sender)
+        ).exists()
+
+        if existing_request:
+            messages.info(request, "Friend request is pending.")
+        elif existing_friendship:
+            messages.info(request, "Your are already friends")
+        else:
+            FriendRequest.objects.create(sender=sender, receiver=receiver)
+            messages.success(request, f'Friend request sent to {receiver.display_name}.')
+
+    return redirect('authentication:friends_overview')
+
+
+@login_required
+def accept_friend_request(request, request_id):
+    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver__user=request.user, is_active=True)
+    if request.method == 'POST':
+        friend_request.accept()
+        messages.success(request, f'You are now friend with {friend_request.sender.display_name}.')
+    return redirect('authentication:friends_overview')
+
+
+@login_required
+def decline_friend_request(request, request_id):
+    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver__user=request.user, is_active=True)
+    if request.method == 'POST':
+        friend_request.decline()
+        messages.info(request, f'Friend request sent to{friend_request.sender.display_name} declined.')
+    return redirect('authentication:friends_overview')
+
+
+@login_required
+def cancel_friend_request(request, request_id):
+    friend_request = get_object_or_404(FriendRequest, id=request_id, sender__user=request.user, is_active=True)
+    if request.method == 'POST':
+        friend_request.cancel()
+        messages.info(request, f'Friend request sent to {friend_request.receiver.display_name} cancelled.')
+    return redirect('authentication:friends_overview')
+
+
+@login_required
+def remove_friend(request, friend_id):
+    friend = get_object_or_404(UserProfile, id=friend_id)
+    friend_list = get_object_or_404(FriendList, user_profile__user=request.user)
+    if request.method == 'POST':
+        friend_list.remove_friend(friend)
+        other_friend_list = get_object_or_404(FriendList, user_profile=friend)
+        other_friend_list.remove_friend(friend_list.user_profile)
+        messages.info(request, f'Friend {friend.display_name} Deleted.')
+    return redirect('authentication:friends_overview')
 
