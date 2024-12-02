@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
     #2FA
-    "phonenumber_field",
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
@@ -93,8 +92,8 @@ DATABASES = {
         "NAME": "pong",
         "USER": "mehdi",
         "PASSWORD": "1234",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
 
