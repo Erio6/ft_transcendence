@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include(tf_urls)),
     path('admin/', admin.site.urls),  # Admin route
     path('home/', views.home, name='home'),
+    # path('accounts/', include('django.contrib.auth.urls')),
     path('', include('game.urls', namespace='game')),
     path('auth/', include('authentication.urls')),
 ]

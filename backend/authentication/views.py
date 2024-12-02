@@ -11,7 +11,7 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             login(request,form.save())
-            return redirect("game:welcome")
+            return redirect("two_factor:login")
     else:
         form = UserCreationForm()
     return render(request, "authentication/register.html", {"form": form})
@@ -22,7 +22,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             if devices_for_user(user, confirmed=True):
-                return redirect('two_factor:setup')
+                return redirect('two_factor:profile')
             #login(request,user)
             return redirect("game:welcome")
     else:
