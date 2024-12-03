@@ -51,9 +51,14 @@ class FriendList(models.Model):
             return True
 
 class FriendRequest(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined')
+    )
     sender = models.ForeignKey(UserProfile, related_name='sender', on_delete=models.CASCADE)
     receiver = models.ForeignKey(UserProfile, related_name='receiver', on_delete=models.CASCADE)
-    is_active = models.BooleanField(blank=True, null=False, default=True)
+    status = models.CharField(choices=STATUS_CHOICES, default='Pending')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -66,13 +71,13 @@ class FriendRequest(models.Model):
             sender_friend_list = FriendList.objects.get(user_profile=self.sender)
             if sender_friend_list:
                 sender_friend_list.add_friend(self.receiver)
-                self.is_active = False
+                self.status = 'Accepted'
                 self.save()
 
     def decline(self):
-        self.is_active = False
+        self.status = 'Declined'
         self.save()
 
     def cancel(self):
-        self.is_active = False
+        self.status = 'Declined'
         self.save()

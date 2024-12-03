@@ -2,27 +2,21 @@
 {% block content %}
 <div class="container mt-4">
     <h2>My Friends</h2>
-    <ul class="list-group mb-4">
+    {% if friends %}
+    <ul>
         {% for friend in friends %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ friend.display_name }}
-                <form action="{% url 'authentication:remove_friend' friend.id %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
-                </form>
-            </li>
-        {% empty %}
-            <li class="list-group-item">You have no friends.</li>
+            <li>{{ friend.user.username }}</li>
         {% endfor %}
     </ul>
-
-    <h2>Friend Requests</h2>
+    {% else %}
+        <p>You have no friends.</p>
+   {% endif %}
 
     <h3>Incoming Requests</h3>
-    <ul class="list-group mb-4">
+    <ul>
         {% for request in incoming_requests %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ request.sender.display_name }}
+            <li>
+                {{ request.sender.user.username }}
                 <div>
                     <form action="{% url 'authentication:accept_friend_request' request.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
@@ -39,44 +33,45 @@
         {% endfor %}
     </ul>
 
-    <h3>Outgoing Requests</h3>
+    <h3>Pending invitation sent</h3>
     <ul class="list-group mb-4">
         {% for request in outgoing_requests %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ request.receiver.display_name }} (Pending)
+            <li>
+                {{ request.receiver.user.username }} (Pending)
                 <form action="{% url 'authentication:cancel_friend_request' request.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
                 </form>
             </li>
         {% empty %}
-            <li class="list-group-item">No outgoing friend requests.</li>
+            <li class="list-group-item">No invitation sent.</li>
         {% endfor %}
     </ul>
 
     <h2>Add a Friend</h2>
-    <form method="get" action="{% url 'authentication:friends_overview' %}" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search for users..." required>
-            <button class="btn btn-primary" type="submit">Search</button>
-        </div>
+    <form method="GET" action=".">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+            <button type="submit">Search</button>
     </form>
 
     {% if query %}
         <h3>Search Results</h3>
-        <ul class="list-group">
-            {% for user in search_results %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ user.display_name }}
-                    <form action="{% url 'authentication:send_friend_request' user.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary btn-sm">Add Friend</button>
-                    </form>
-                </li>
-            {% empty %}
-                <li class="list-group-item">No users found for "{{ query }}".</li>
-            {% endfor %}
-        </ul>
+        {% if search_results  %}
+            <ul>
+                {% for user in search_results %}
+                    <li>
+                        {{ user.user.name }}
+                        <form action="{% url 'authentication:send_friend_request' user.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" >Add Friend</button
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p> No users found for "{{ query }}".</p>
+        {% endif %}
     {% endif %}
 </div>
 {% endblock %}
+

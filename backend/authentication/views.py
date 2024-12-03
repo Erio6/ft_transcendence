@@ -47,7 +47,7 @@ def profile_view(request,username):
 def edit_profile_view(request,username):
     if request.user.username != username:
         messages.error(request, "You do not have the right to modify this profile.")
-        return redirect('authentication:user_profile', username=username)
+        return redirect('authentication:edit_user_profile', username=username)
 
     profile = get_object_or_404(UserProfile,user=request.user)
 
@@ -58,7 +58,7 @@ def edit_profile_view(request,username):
         if form.is_valid():
             form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('authentication:user_profile', username=username)
+            return redirect('authentication:edit_user_profile', username=username)
     else:
         form = ProfileUpdateForm(instance=profile)
 
@@ -74,20 +74,20 @@ def edit_profile_view(request,username):
 def friends_overview(request):
     user_profile = get_object_or_404(UserProfile, user=request.user)
     friends = user_profile.friend_list.friends.all()
-    incoming_requests = FriendRequest.objects.filter(receiver=user_profile, is_active=True)
-    outgoing_requests = FriendRequest.objects.filter(sender=user_profile, is_active=True)
+    incoming_requests = FriendRequest.objects.filter(receiver=user_profile, status='Pending')
+    outgoing_requests = FriendRequest.objects.filter(sender=user_profile, status='Pending')
 
     query = request.GET.get('q', '')
     search_results = []
     if query:
         search_results = UserProfile.objects.filter(
-            display_name__icontains=query
+            user__username__icontains=query
         ).exclude(
             user=request.user
         ).exclude(
             Q(friend_list__friends=user_profile) |
-            Q(sent_requests__receiver=user_profile) |
-            Q(received_requests__sender=user_profile)
+            Q(receiver__sender=user_profile, receiver__status='pending') |
+            Q(sender__receiver=user_profile, sender__status='pending')
         ).distinct()
 
     context = {
@@ -107,12 +107,11 @@ def send_friend_request(request, user_id):
         receiver = get_object_or_404(UserProfile, id=user_id)
 
         if sender == receiver:
-            messages.error(request, "You canno sent a friend request.")
+            messages.error(request, "You cannot sent a friend request.")
             return redirect('authentication:friends_overview')
 
-        # Vérifier si une demande existe déjà
         existing_request = FriendRequest.objects.filter(
-            sender=sender, receiver=receiver, is_active=True
+            sender=sender, receiver=receiver, status='Pending'
         ).exists()
 
         existing_friendship = FriendList.objects.filter(
@@ -132,7 +131,7 @@ def send_friend_request(request, user_id):
 
 @login_required
 def accept_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver__user=request.user, is_active=True)
+    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver__user=request.user, status='Pending')
     if request.method == 'POST':
         friend_request.accept()
         messages.success(request, f'You are now friend with {friend_request.sender.display_name}.')
@@ -141,21 +140,19 @@ def accept_friend_request(request, request_id):
 
 @login_required
 def decline_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver__user=request.user, is_active=True)
+    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver__user=request.user, status='Pending')
     if request.method == 'POST':
         friend_request.decline()
         messages.info(request, f'Friend request sent to{friend_request.sender.display_name} declined.')
     return redirect('authentication:friends_overview')
 
-
 @login_required
 def cancel_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, sender__user=request.user, is_active=True)
+    friend_request = get_object_or_404(FriendRequest, id=request_id, sender__user=request.user, status='Pending')
     if request.method == 'POST':
         friend_request.cancel()
         messages.info(request, f'Friend request sent to {friend_request.receiver.display_name} cancelled.')
     return redirect('authentication:friends_overview')
-
 
 @login_required
 def remove_friend(request, friend_id):
