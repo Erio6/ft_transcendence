@@ -7,11 +7,11 @@
 <p><strong>Wins:</strong> {{ profile.wins }}</p>
 <p><strong>Losses:</strong> {{ profile.losses }}</p>
 
- <a href="{% url 'authentication:friends_overview' %}">Friend list</a>
+ <a href="{% url 'friends:friends_overview' %}">Friend list</a>
 {% if user == profile.user %}
 <hr>
 <h3>Edit Profile</h3>
-<a href="{% url 'authentication:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Update Profile</a>
+<a href="{% url 'user:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Update Profile</a>
 {% endif %}
 {% endblock %}
 

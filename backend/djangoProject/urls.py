@@ -18,11 +18,14 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path , include
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('game.urls', namespace='game')),
+    path('', views.home, name="home"),
     path('auth/', include('authentication.urls')),
+    path('user/', include('user.urls')),
+    path('friends/', include('friends.urls')),
 ]
 
 # only for production to change for deploying

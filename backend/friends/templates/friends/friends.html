@@ -18,11 +18,11 @@
             <li>
                 {{ request.sender.user.username }}
                 <div>
-                    <form action="{% url 'authentication:accept_friend_request' request.id %}" method="post" style="display:inline;">
+                    <form action="{% url 'friends:accept_friend_request' request.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success btn-sm">Accept</button>
                     </form>
-                    <form action="{% url 'authentication:decline_friend_request' request.id %}" method="post" style="display:inline;">
+                    <form action="{% url 'friends:decline_friend_request' request.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
                     </form>
@@ -38,7 +38,7 @@
         {% for request in outgoing_requests %}
             <li>
                 {{ request.receiver.user.username }} (Pending)
-                <form action="{% url 'authentication:cancel_friend_request' request.id %}" method="post" style="display:inline;">
+                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
                 </form>
@@ -49,7 +49,7 @@
     </ul>
 
     <h2>Add a Friend</h2>
-    <form method="GET" action=".">
+    <form method="GET" action="../../../friends/templates/friends">
             <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
             <button type="submit">Search</button>
     </form>
@@ -61,7 +61,7 @@
                 {% for user in search_results %}
                     <li>
                         {{ user.user.name }}
-                        <form action="{% url 'authentication:send_friend_request' user.id %}" method="POST">
+                        <form action="{% url 'friends:send_friend_request' user.id %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" >Add Friend</button
                         </form>

@@ -5,11 +5,11 @@
 <div class="container mt-4">
     <h2>Edit Profile</h2>
 
-    <form method="POST" enctype="multipart/form-data" action="{% url 'authentication:edit_user_profile' profile.user.username %}">
+    <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_user_profile' profile.user.username %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Update Profile</button>
-        <a href="{% url 'authentication:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Cancel</a>
+        <a href="{% url 'user:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
         {% if messages %}

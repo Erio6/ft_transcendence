@@ -1,6 +1,6 @@
-from django import forms
 from .models import UserProfile
 from django.contrib.auth.models import User
+from django import forms
 
 # jai pas utiliser le user  update form mais je dois le mettre dans les updates views note pour Elo pour l update
 class UserUpdateForm(forms.ModelForm):
@@ -13,8 +13,3 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['avatar','display_name']
-
-class UserSearchForm(forms.Form):
-    query = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
-        'placeholder': 'Looking for users...',
-    }))
