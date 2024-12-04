@@ -25,7 +25,7 @@ def login_view(request):
                 # Log the user in first
                 login(request, user)
                 # Redirect to the 2FA verification step directly
-                return redirect('two_factor:profile')
+                return redirect('two_factor:login', wizard_goto_step='token')
             else:
                 # If user doesn't have 2FA enabled, just log them in
                 login(request, user)
