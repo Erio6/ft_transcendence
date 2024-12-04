@@ -15,9 +15,10 @@
 </head>
 <body>
     <nav>
-        <a href="/">Home</a>
-        <a href="/auth">Sign in</a>
-        <a href="/auth/login">Login</a>
+        <a href="{% url 'game:welcome' %}">Home</a>
+        <a href="{% url 'authentication:register' %}">Sign in</a>
+        <a href="{% url 'authentication:login' %}">Login</a>
+        <a href="{% url 'game:play' %}">Quick Play</a>
     </nav>
     <main>
         {% block content %}

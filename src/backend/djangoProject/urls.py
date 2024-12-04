@@ -1,6 +1,8 @@
 from django.urls import path, include
 from two_factor.urls import urlpatterns as tf_urls
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.conf import settings
 
 from . import views
 
