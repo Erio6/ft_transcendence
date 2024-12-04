@@ -14,3 +14,27 @@ class Game(models.Model):
     #score = models.JSONField()
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
+
+
+"""
+Game Solo
+-player (pseudo, avatar, rank)
+-register player in Bool
+-guest ID if not register 
+-IA
+-Score player
+-Score IA
+-Winner
+-Looser
+-start time
+-end time
+
+
+History of game
+- List of all Games ID + tournaments ID
+
+Leaderboard
+- Player list sort by total score
+- Player list sort by winner
+- Player list sort by looser
+"""

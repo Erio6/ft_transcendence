@@ -7,6 +7,7 @@ django-phonenumber-field==8.0.0
 django-qr-code==4.1.0
 django-two-factor-auth==1.17.0
 phonenumbers==8.13.50
+pillow==11.0.0
 psycopg2-binary==2.9.10
 pydantic==2.10.2
 pydantic_core==2.27.1
