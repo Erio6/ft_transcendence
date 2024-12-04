@@ -21,9 +21,9 @@ def login_view(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            if devices_for_user(user, confirmed=True):
-                return redirect('two_factor:login')
-            #login(request,user)
+            #if devices_for_user(user, confirmed=True):
+            #    return redirect('two_factor:login')
+            login(request,user)
             return redirect("/")
     else:
         form = AuthenticationForm()

@@ -15,23 +15,23 @@
 </head>
 <body>
     <nav>
-{% if user.is_authenticated %}
-    <a href="{% url 'user:user_profile' user.username %}" >
-        {% csrf_token %}
-        Profile
-    </a>
-    <a href="{% url 'authentication:logout' %}" method="post">
-        {% csrf_token %}
-        Logout
-    </a>
-{% else %}
-    <a href="{% url 'authentication:register' %}">
-        Register
-    </a>
-    <a href="{% url 'authentication:login' %}">
-        Login
-    </a>
-{% endif %}
+        {% if user.is_authenticated %}
+        <a href="{% url 'user:user_profile' user.username %}" >
+            {% csrf_token %}
+            Profile
+        </a>
+        <a href="{% url 'authentication:logout' %}" method="POST">
+            {% csrf_token %}
+            Logout
+        </a>
+        {% else %}
+        <a href="{% url 'authentication:register' %}">
+            Register
+        </a>
+        <a href="{% url 'authentication:login' %}">
+            Login
+        </a>
+    {% endif %}
     </nav>
     <main>
         {% block content %}
