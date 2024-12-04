@@ -1,13 +1,13 @@
 import os.path
 from django.db import models
-from user.models import UserProfile
+from django.contrib.auth.models import User
 
 class FriendList(models.Model):
-    user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='friend_list')
-    friends = models.ManyToManyField(UserProfile, blank=True, related_name='friends')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_list')
+    friends = models.ManyToManyField(User, blank=True, related_name='friends')
 
     def __str__(self):
-        return self.user_profile.user.username
+        return self.user.username
 
     def add_friend(self, account):
         if not account in self.friends.all():
@@ -21,7 +21,7 @@ class FriendList(models.Model):
         remover_friends_list = self
         remover_friends_list.remove_friend(removee)
         friends_list = FriendList.objects.get(user=removee)
-        friends_list.remove_friend(self.user_profile)
+        friends_list.remove_friend(self.user)
 
     def is_mutual_friend(self, friend):
         if friend in self.friends.all():
@@ -34,19 +34,19 @@ class FriendRequest(models.Model):
         ('accepted', 'Accepted'),
         ('declined', 'Declined')
     )
-    sender = models.ForeignKey(UserProfile, related_name='sender', on_delete=models.CASCADE)
-    receiver = models.ForeignKey(UserProfile, related_name='receiver', on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='receiver', on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, default='Pending')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"From {self.sender.user.username} to {self.receiver.user.username}"
+        return f"From {self.sender.username} to {self.receiver.username}"
 
     def accept(self):
-        receiver_friend_list = FriendList.objects.get(user_profile=self.receiver)
+        receiver_friend_list = FriendList.objects.get(user=self.receiver)
         if receiver_friend_list:
             receiver_friend_list.add_friend(self.sender)
-            sender_friend_list = FriendList.objects.get(user_profile=self.sender)
+            sender_friend_list = FriendList.objects.get(user=self.sender)
             if sender_friend_list:
                 sender_friend_list.add_friend(self.receiver)
                 self.status = 'Accepted'
@@ -61,6 +61,5 @@ class FriendRequest(models.Model):
         self.save()
 
 
-from django.db import models
 
 # Create your models here.

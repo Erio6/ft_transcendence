@@ -5,7 +5,7 @@
     {% if friends %}
     <ul>
         {% for friend in friends %}
-            <li>{{ friend.user.username }}</li>
+            <li>{{ friend.username }}</li>
         {% endfor %}
     </ul>
     {% else %}
@@ -16,7 +16,7 @@
     <ul>
         {% for request in incoming_requests %}
             <li>
-                {{ request.sender.user.username }}
+                {{ request.sender.username }}
                 <div>
                     <form action="{% url 'friends:accept_friend_request' request.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
@@ -37,8 +37,8 @@
     <ul class="list-group mb-4">
         {% for request in outgoing_requests %}
             <li>
-                {{ request.receiver.user.username }} (Pending)
-                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" style="display:inline;">
+                {{ request.receiver.username }} (Pending)
+                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" >
                     {% csrf_token %}
                     <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
                 </form>
@@ -49,21 +49,21 @@
     </ul>
 
     <h2>Add a Friend</h2>
-    <form method="GET" action="../../../friends/templates/friends">
+    <form method="GET" action="{% url 'friends:friends_overview' %}">
             <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
             <button type="submit">Search</button>
     </form>
 
     {% if query %}
         <h3>Search Results</h3>
-        {% if search_results  %}
+        {% if search_results %}
             <ul>
                 {% for user in search_results %}
                     <li>
-                        {{ user.user.name }}
+                        {{ user.username }}
                         <form action="{% url 'friends:send_friend_request' user.id %}" method="POST">
                             {% csrf_token %}
-                            <button type="submit" >Add Friend</button
+                            <button type="submit" >Add Friend</button>
                         </form>
                     </li>
                 {% endfor %}
