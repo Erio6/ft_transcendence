@@ -85,9 +85,9 @@ webSocket.onmessage = (event) => {
     else if (json['type'] === 'score') {
         setBall(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
         if (json['loc'] === 'left')
-            left_score.textContent = json['value'];
-        else if (json['loc'] === 'right')
             right_score.textContent = json['value'];
+        else if (json['loc'] === 'right')
+            left_score.textContent = json['value'];
     }
     else if (json['type'] === 'debug') {
         line_v2.style['top'] = (json['line1'] * game.clientHeight / 100) + "px";
