@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
     'user.apps.UserConfig',
-    'friends.apps.FriendsConfig'
-    'game.apps.GameConfig',
+    'friends.apps.FriendsConfig',
     #2FA
     'django_otp',
     'two_factor',  # Add this line
