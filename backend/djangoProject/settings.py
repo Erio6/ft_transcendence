@@ -68,6 +68,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+TWO_FACTOR_PATCH_ADMIN = True
+TWO_FACTOR_CALL_GATEWAY = None
+TWO_FACTOR_SMS_GATEWAY = None
+
 ROOT_URLCONF = 'djangoProject.urls'
 
 TEMPLATES = [
