@@ -2,6 +2,10 @@ from django.urls import path, include
 from two_factor.urls import urlpatterns as tf_urls
 from django.contrib import admin
 from . import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 """
 URL configuration for djangoProject project.
@@ -27,4 +31,6 @@ urlpatterns = [
     # path('accounts/', include('django.contrib.auth.urls')),
     path('', include('game.urls', namespace='game')),
     path('auth/', include('authentication.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

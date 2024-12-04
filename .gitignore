@@ -1,4 +1,6 @@
 /.venv
 /.idea
+cert.pem
+key.pem
 /backend/db.sqlite3
 *.pyc
