@@ -1,0 +1,77 @@
+
+{% block content %}
+<div class="container mt-4">
+    <h2>My Friends</h2>
+    {% if friends %}
+    <ul>
+        {% for friend in friends %}
+            <li>{{ friend.user.username }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>You have no friends.</p>
+   {% endif %}
+
+    <h3>Incoming Requests</h3>
+    <ul>
+        {% for request in incoming_requests %}
+            <li>
+                {{ request.sender.user.username }}
+                <div>
+                    <form action="{% url 'friends:accept_friend_request' request.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                    <form action="{% url 'friends:decline_friend_request' request.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
+                    </form>
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No incoming friend requests.</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Pending invitation sent</h3>
+    <ul class="list-group mb-4">
+        {% for request in outgoing_requests %}
+            <li>
+                {{ request.receiver.user.username }} (Pending)
+                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No invitation sent.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add a Friend</h2>
+    <form method="GET" action="../../../friends/templates/friends">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+            <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+        <h3>Search Results</h3>
+        {% if search_results  %}
+            <ul>
+                {% for user in search_results %}
+                    <li>
+                        {{ user.user.name }}
+                        <form action="{% url 'friends:send_friend_request' user.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" >Add Friend</button
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p> No users found for "{{ query }}".</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+

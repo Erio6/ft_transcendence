@@ -23,14 +23,25 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.contrib import admin
+from django.urls import path , include
+from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
     path('', include(tf_urls)),
     path('admin/', admin.site.urls),  # Admin route
-    path('home/', views.home, name='home'),
+    path('', views.home, name="home"),
     # path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('game.urls', namespace='game')),
     path('auth/', include('authentication.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('user/', include('user.urls')),
+    path('auth/', include('authentication.urls')),
+    path('friends/', include('friends.urls')),
 ]
+
+# only for production to change for deploying
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
