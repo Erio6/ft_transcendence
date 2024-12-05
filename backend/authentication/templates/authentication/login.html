@@ -2,13 +2,18 @@
 {% block title %}User Login{% endblock %}
 
 {% block content %}
-    <h1>User Login</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form }}
-        {% if request.GET.next %}
-            <input type="hidden" name="next" value="{{ request.GET.next }}"/>
-        {% endif %}
-    <button type="submit">Login</button>
-    </form>
+<div class="container">
+    <div class="login-box">
+        <h2>Login</h2>
+
+        <!-- This will redirect to the default 2FA login -->
+        <a href="{% url 'two_factor:login' %}" class="btn btn-primary">Login with 2FA</a>
+
+        <!-- Or you can use a form that posts to the 2FA login URL -->
+        <form action="{% url 'two_factor:login' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Login with 2FA</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

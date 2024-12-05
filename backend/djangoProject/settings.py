@@ -50,9 +50,7 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_email',  # <- if you want email capability.
     'two_factor',
-    'two_factor.plugins.email',
     #JWT
     'rest_framework',
     'rest_framework_simplejwt',
