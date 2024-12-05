@@ -1,0 +1,9 @@
+{% extends 'game/welcome.html' %}
+{% block title %}Quick Play{% endblock %}
+
+{% block content %}
+    <h1> Choose your destiny </h1>
+    <a href="{% url 'game:solo' %}">Solo Game</a>
+    <a href="">Tournament</a>
+    <a href="{% url 'game:multi' %}">Multiplayer</a>
+{% endblock %}

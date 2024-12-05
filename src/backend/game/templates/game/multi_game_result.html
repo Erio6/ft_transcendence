@@ -1,0 +1,18 @@
+{% extends 'game/welcome.html' %}
+{% block title %}Multiplayer game result{% endblock %}
+
+{% block content %}
+    <h1> Game result </h1>
+
+    {% if message %}
+        <p>{{ result_message_draw }}</p>
+        <p><strong>{{ player_one_profile }}</strong> Score: {{ player_one_score }}</p>
+        <p><strong>{{ player_two }}</strong> Score: {{ player_two_score }}</p>
+    {% else %}
+        <p><strong>Winner:</strong> {{ winner }}</p>
+        <p><strong>Winner's Score:</strong> {{ winner_score }}</p>
+        <p><strong>Looser:</strong> {{ looser }}</p>
+        <p><strong>Looser's Score:</strong> {{ looser_score }}</p>
+    {% endif %}
+        <a href="{% url 'game:multi_game' %}">Play Again</a>
+{% endblock %}
