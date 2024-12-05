@@ -1,14 +1,10 @@
 from contextlib import nullcontext
 
 from django.shortcuts import render, redirect
-from django.db.models import F
 
 from .forms import ScoreInputForm
 from .models import Game
-from authentication.models import PlayerProfile
-
-def welcome(request):
-    return render(request, 'game/welcome.html', context={"name": "Player"})
+from user.models import UserProfile
 
 def quickPlay(request):
     return render(request, 'game/playmode.html')
@@ -28,8 +24,8 @@ def test_pong_game(request):
             player_one_score = form.cleaned_data['player_one_score']
             player_two_score = form.cleaned_data['player_two_score']
 
-            player_one_profile, _ = PlayerProfile.objects.get_or_create(user=player_one)
-            player_two_profile, _ = PlayerProfile.objects.get_or_create(user=player_two)
+            player_one_profile, _ = UserProfile.objects.get_or_create(user=player_one)
+            player_two_profile, _ = UserProfile.objects.get_or_create(user=player_two)
 
             if player_one_score > player_two_score:
                 player_one_profile.wins += 1

@@ -15,23 +15,26 @@
 </head>
 <body>
     <nav>
+        <a href="{% url 'home' %}">Home</a>
         {% if user.is_authenticated %}
-        <a href="{% url 'user:user_profile' user.username %}" >
+            <a href="{% url 'user:user_profile' user.username %}" >
             {% csrf_token %}
             Profile
-        </a>
-        <a href="{% url 'authentication:logout' %}" method="POST">
+            </a>
+            <a href="{% url 'authentication:logout' %}" method="post">
             {% csrf_token %}
             Logout
-        </a>
+            </a>
+            <a href="{% url 'game:play' %}">Quick Play</a>
         {% else %}
-        <a href="{% url 'authentication:register' %}">
+            <a href="{% url 'authentication:register' %}">
             Register
-        </a>
-        <a href="{% url 'authentication:login' %}">
+            </a>
+            <a href="{% url 'authentication:login' %}">
             Login
-        </a>
-    {% endif %}
+            </a>
+            <a href="{% url 'game:play' %}">Quick Play</a>
+        {% endif %}
     </nav>
     <main>
         {% block content %}

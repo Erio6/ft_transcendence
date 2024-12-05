@@ -29,13 +29,10 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.home, name="home"),
     path('', include(tf_urls)), # Admin route
-    path('', include(tf_urls)),
     path('admin/', admin.site.urls),  # Admin route
-    path('home/', views.home, name='home'),
-    path('', include('game.urls') , name='MainPage'),
+    path('game/', include('game.urls')),
     path('auth/', include('authentication.urls')),
     path('user/', include('user.urls')),
     path('friends/', include('friends.urls')),
