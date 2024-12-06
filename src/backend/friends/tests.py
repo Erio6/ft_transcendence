@@ -25,11 +25,9 @@ class FriendRequestModelTest(TestCase):
         friend_list1 = FriendList.objects.get(user=self.user1)
         friend_list2 = FriendList.objects.get(user=self.user2)
 
-        # Ensure neither user is in the other's friend list
         self.assertNotIn(self.user2, friend_list1.friends.all())
         self.assertNotIn(self.user1, friend_list2.friends.all())
 
-        # Ensure the friend request is not in the pending friend requests
         pending_requests = FriendRequest.objects.filter(sender=self.user1, receiver=self.user2, status='Pending')
         self.assertEqual(pending_requests.count(), 0)
 
