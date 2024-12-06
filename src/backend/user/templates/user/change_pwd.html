@@ -1,0 +1,11 @@
+{% extends 'djangoProject/home.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Change Password</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update Password</button>
+    </form>
+</div>
+{% endblock %}
