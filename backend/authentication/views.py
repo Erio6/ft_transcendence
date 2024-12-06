@@ -7,7 +7,9 @@ from django_otp import devices_for_user
 from django.contrib.auth.views import LoginView
 from user.models import User
 from user.models import UserProfile
-
+from django.contrib.sites.shortcuts import get_current_site
+from django.dispatch import receiver
+from two_factor.signals import user_verified
 
 def login_view(request):
 	return redirect('two_factor:login')
@@ -27,3 +29,4 @@ def register(request):
 def logout_view(request):
         logout(request)
         return redirect("/")
+
