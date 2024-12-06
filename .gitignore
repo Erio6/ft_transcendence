@@ -2,3 +2,4 @@
 /.idea
 /backend/db.sqlite3
 *.pyc
+requirements.txt
