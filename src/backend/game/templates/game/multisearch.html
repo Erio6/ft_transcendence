@@ -1,0 +1,7 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Multiplayer lobby{% endblock %}
+
+{% block content %}
+    <h1> Find your opponent </h1>
+    <a href="{% url 'game:multi_game' %}">New Game</a>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Register page{% endblock %}
+
+{% block content %}
+    <h1>Registration page</h1>
+    <form  method="post">
+        {% csrf_token %}
+        {{ form }}
+    <button type="submit">Register</button>
+    </form>
+{% endblock %}
