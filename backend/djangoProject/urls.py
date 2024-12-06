@@ -1,3 +1,8 @@
+from django.urls import path, include
+from two_factor.urls import urlpatterns as tf_urls
+from django.contrib import admin
+from . import views
+
 """
 URL configuration for djangoProject project.
 
@@ -23,6 +28,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name="home"),
+    path('', include(tf_urls)), # Admin route
     path('auth/', include('authentication.urls')),
     path('user/', include('user.urls')),
     path('friends/', include('friends.urls')),

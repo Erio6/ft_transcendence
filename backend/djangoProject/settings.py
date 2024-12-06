@@ -42,7 +42,14 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
     'user.apps.UserConfig',
-    'friends.apps.FriendsConfig'
+    'friends.apps.FriendsConfig',
+    #2FA
+    'django_otp',
+    'two_factor',  # Add this line
+    #'two_factor.plugins.phonenumber',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'qr_code',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +97,7 @@ DATABASES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -130,7 +138,10 @@ STATICFILES_DIRS =[os.path.join(BASE_DIR, "djangoProject/static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+LOGIN_URL = 'two_factor:login'  # 2FA login view
+LOGIN_REDIRECT_URL = 'home'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

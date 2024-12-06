@@ -1,5 +1,6 @@
 /.venv
 /.idea
 /backend/db.sqlite3
-*.pyc
 requirements.txt
+*.pyc
+__pycache__/
