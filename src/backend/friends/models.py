@@ -1,6 +1,7 @@
 import os.path
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 class FriendList(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_list')
@@ -41,6 +42,11 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f"From {self.sender.username} to {self.receiver.username}"
+
+    def save(self, *args, **kwargs):
+        if self.sender == self.receiver:
+            raise ValidationError("Users cannot send friend requests to themselves.")
+        super().save(*args, **kwargs)
 
     def accept(self):
         receiver_friend_list = FriendList.objects.get(user=self.receiver)
