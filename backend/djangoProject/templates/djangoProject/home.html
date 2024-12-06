@@ -15,12 +15,17 @@
 </head>
 <body>
     <nav>
-{% if user.is_authenticated %}
+        {% block nav %}
+    {% if user.is_authenticated %}
     <a href="{% url 'user:user_profile' user.username %}" >
         {% csrf_token %}
         Profile
     </a>
-    <a href="{% url 'authentication:logout' %}" method="post">
+        <a href="{% url 'friends:friends_overview' %}" method="POST">
+        {% csrf_token %}
+        Friends
+    </a>
+    <a href="{% url 'authentication:logout' %}" method="POST">
         {% csrf_token %}
         Logout
     </a>
@@ -33,6 +38,7 @@
     </a>
 {% endif %}
     </nav>
+    {% endblock %}
     <main>
         {% block content %}
         <h1>Welcome {{ user.username }}!</h1>
