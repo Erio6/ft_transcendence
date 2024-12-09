@@ -16,7 +16,10 @@ let paddleMoving = 0;
 let paddleSpeed = 0;
 let paddlePos = '';
 
-const webSocket = new WebSocket("ws://localhost:12345");
+let lastPart = window.location.toString().split("/");
+lastPart = lastPart.pop() || lastPart.pop();
+
+const webSocket = new WebSocket("ws://localhost:8000/ws/game/" + lastPart + "/");
 
 let arrowDown = false;
 let arrowUp = false;
@@ -162,7 +165,7 @@ function setBall(x, y, v_x, v_y, speed) {
 
 function movePaddle(deltaTime) {
     if (paddlePos === 'left') {
-        left.style['top'] = (parseFloat(window.getComputedStyle(left).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight) / 100))) + "px";
+        left.style['top'] = (parseFloat(window.getComputedStyle(left).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight / 101)))) + "px";
 
         const halfHeight = left.offsetHeight / 2;
         if (left.offsetTop < 0)
