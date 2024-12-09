@@ -31,6 +31,10 @@ class Ball:
             }
         )
 
+    async def init_ball_chan(self, consumer):
+        await consumer.send({'type': 'init_ball', 'y': self.y, 'x': self.x, 'v_x': self.v_x, 'v_y': self.v_y,
+                             'speed': self.current_speed, 'radius': self.radius})
+
     async def move(self, delta_time):
         self.x += self.v_x * delta_time * self.current_speed
         self.y += self.v_y * delta_time * self.current_speed
@@ -64,7 +68,7 @@ class Ball:
             self.sending_data = False
 
     async def send_score(self, consumer):
-        if self.sending_score == None:
+        if self.sending_score is None:
             return
 
         self.x = 50
@@ -92,9 +96,9 @@ class Ball:
         if paddle.loc == "left":
             # print(str(self.x <= paddle.x + paddle.width) + " | " + str(
             #     paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2))
-            await paddle.consumer.send(json.dumps(
-                {'type': 'debug', 'line1': paddle.y - self.radius - paddle.length / 2,
-                 'line2': paddle.y + self.radius + paddle.length / 2}))
+            # await paddle.consumer.send(json.dumps(
+            #     {'type': 'debug', 'line1': paddle.y - self.radius - paddle.length / 2,
+            #      'line2': paddle.y + self.radius + paddle.length / 2}))
             if self.x < 0:
                 paddle.score += 1
                 self.last_touch = "left"
