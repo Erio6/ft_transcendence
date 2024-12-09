@@ -1,9 +1,10 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from two_factor.urls import urlpatterns as tf_urls
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
+from game.consumers import GameConsumer
 from . import views
 
 """
@@ -24,18 +25,22 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path , include
+from django.urls import path, include
 from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
     path('', views.home, name="home"),
-    path('', include(tf_urls)), # Admin route
+    path('', include(tf_urls)),  # Admin route
     path('admin/', admin.site.urls),  # Admin route
     path('game/', include('game.urls')),
     path('auth/', include('authentication.urls')),
     path('user/', include('user.urls')),
     path('friends/', include('friends.urls')),
+]
+
+websocket_urlpatterns = [
+    re_path(r'ws/game/$', GameConsumer.as_asgi()),  # Map WebSocket path to consumer
 ]
 
 # only for production to change for deploying
