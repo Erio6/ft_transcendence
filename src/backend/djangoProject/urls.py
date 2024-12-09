@@ -37,6 +37,8 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('user/', include('user.urls')),
     path('friends/', include('friends.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('API.urls')),
 ]
 
 websocket_urlpatterns = [

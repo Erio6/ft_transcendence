@@ -7,7 +7,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('authentication', '0002_remove_playerprofile_user'),
-        ('tournaments', '0002_alter_tournament_players_and_more'),
     ]
 
     operations = [

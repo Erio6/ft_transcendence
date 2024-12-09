@@ -7,11 +7,11 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField( default='avatar/default.jpg',upload_to='avatar')
     display_name = models.CharField(max_length=100, unique=True)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    total_points = models.IntegerField(default=0)
-    draws = models.IntegerField(default=0)
-    match_history = models.JSONField(default=list, blank=True)
+    # wins = models.IntegerField(default=0)
+    # losses = models.IntegerField(default=0)
+    # total_points = models.IntegerField(default=0)
+    # draws = models.IntegerField(default=0)
+    # match_history = models.JSONField(default=list, blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

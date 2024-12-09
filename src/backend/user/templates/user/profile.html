@@ -4,8 +4,8 @@
 <img src="{{ profile.avatar.url }}" alt="Profile Image" >
 <h2>{{ profile.display_name }}</h2>
 <p><strong>Username:</strong> {{ profile.user.username }}</p>
-<p><strong>Wins:</strong> {{ profile.wins }}</p>
-<p><strong>Losses:</strong> {{ profile.losses }}</p>
+{#<p><strong>Wins:</strong> {{ profile.wins }}</p>#}
+{#<p><strong>Losses:</strong> {{ profile.losses }}</p>#}
 
  <a href="{% url 'friends:friends_overview' %}">Friend list</a>
 {% if user == profile.user %}
