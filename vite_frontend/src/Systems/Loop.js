@@ -7,7 +7,13 @@ class Loop {
         this.camera = camera;
         this.scene = scene;
         this.renderer = renderer;
+        this.pause = false;
         this.updatables = [];
+
+        addEventListener("keydown", (event) => {
+            if (event.code === "Space")
+                this.pause = !this.pause;
+        });
     }
 
     start() {
@@ -22,6 +28,8 @@ class Loop {
     }
 
     tick() {
+        if (this.pause === true)
+            return;
         const delta = clock.getDelta();
         for (const object of this.updatables) {
             object.tick(delta);

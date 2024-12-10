@@ -5,10 +5,10 @@ function createCamera() {
         30,
         1,
         0.01,
-        200,
+        1000,
     );
 
-    camera.position.set(0, 0, 100);
+    camera.position.set(0, 0, 350);
     return camera;
 }
 
