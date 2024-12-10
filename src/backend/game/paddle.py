@@ -25,6 +25,11 @@ class Paddle:
             }
         )
 
+    async def send_data_chan(self, consumer):
+        await consumer.send(json.dumps({
+            'type': 'paddle', 'loc': self.loc, 'size': self.length, 'y': self.y,
+        }))
+
     async def init_paddle(self):
         await self.consumer.channel_layer.group_send(
             self.consumer.room_name,
@@ -43,7 +48,7 @@ class Paddle:
             'type': 'init_paddle', 'loc': self.loc, 'size': self.length, 'width': self.width, 'x': self.x, 'y': self.y,
         }))
 
-    async def move(self, delta_time):
+    async def move(self, delta_time, room):
         self.y += self.moving * self.speed * delta_time
 
         if self.y > 100 - self.length / 2:
@@ -52,6 +57,6 @@ class Paddle:
             self.y = self.length / 2
 
         if self.moving != 0:
-            for consumer in self.consumer.group_rooms[self.consumer.room_name]:
+            for consumer in room.get_consumers():
                 if self.consumer != consumer:
                     await self.send_data()

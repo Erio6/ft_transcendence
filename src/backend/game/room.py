@@ -19,15 +19,28 @@ class Room:
         delta_time = current_time - self.last_time
         self.last_time = current_time
 
+        if not self.left_paddle or not self.right_paddle:
+            return
+
         await self.ball.wall_collide()
-        await self.left_paddle.move(delta_time)
-        await self.right_paddle.move(delta_time)
+        await self.left_paddle.move(delta_time, self)
+        await self.right_paddle.move(delta_time, self)
         await self.ball.paddles_collide_check(self.left_paddle)
         await self.ball.paddles_collide_check(self.right_paddle)
 
-        await self.ball.send_data(self.left_paddle)
-        await self.ball.send_score(self.left_paddle)
+        await self.ball.send_data(self.left_paddle.consumer)
+        await self.ball.send_score(self.left_paddle.consumer)
         await self.ball.move(delta_time)
+
+    async def handle_paddle_msg(self, consumer, message):
+        if consumer == self.left_paddle.consumer:
+            self.left_paddle.moving = int(message['data'])
+            # if self.left_paddle.moving == 0:
+            #     self.left_paddle.send_data_chan(self.left_paddle.consumer)
+            # await self.left_paddle.send_data()
+        elif consumer == self.right_paddle.consumer:
+            self.right_paddle.moving = int(message['data'])
+            # await self.right_paddle.send_data()
 
     async def register_consumer(self, consumer):
         if not self.left_paddle:
@@ -53,3 +66,10 @@ class Room:
             self.spectators.remove(consumer)
         elif consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:
             self.running = False
+
+    def get_consumers(self):
+        consumers = [self.left_paddle, self.right_paddle]
+        for consumer in self.spectators:
+            consumers.append(consumer)
+
+        return consumers

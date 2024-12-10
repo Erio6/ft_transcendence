@@ -32,12 +32,13 @@ class Ball:
         )
 
     async def init_ball_chan(self, consumer):
-        await consumer.send({'type': 'init_ball', 'y': self.y, 'x': self.x, 'v_x': self.v_x, 'v_y': self.v_y,
-                             'speed': self.current_speed, 'radius': self.radius})
+        await consumer.send(json.dumps({'type': 'init_ball', 'y': self.y, 'x': self.x, 'v_x': self.v_x, 'v_y': self.v_y,
+                                        'speed': self.current_speed, 'radius': self.radius}))
 
     async def move(self, delta_time):
         self.x += self.v_x * delta_time * self.current_speed
         self.y += self.v_y * delta_time * self.current_speed
+        print(self.x, self.y)
         # if self.y < 0:
         #     self.y = 0
         # if self.y > 100:

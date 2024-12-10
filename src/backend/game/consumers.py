@@ -15,58 +15,65 @@ ball = None
 
 
 async def game_loop():
-    global ball
-    global connected_clients
-    global default_consumer
-    last_time = time.time()
+    global group_rooms
 
     while True:
-        current_time = time.time()
-        delta_time = current_time - last_time
-        last_time = current_time
-
-        await ball.wall_collide()
-
-        if default_consumer is None or default_consumer.group_consumers[default_consumer.room_name] is None:
-            break
-        for consumer in default_consumer.group_consumers[default_consumer.room_name]:
-            await consumer.paddle.move(delta_time)
-            await ball.paddles_collide_check(consumer.paddle)
-
-        await ball.send_data(default_consumer)
-        await ball.send_score(default_consumer)
-        await ball.move(delta_time)
-
+        for room in group_rooms.values():
+            await room.update()
         await asyncio.sleep(1 / 60)
+
+    # while True:
+    #     current_time = time.time()
+    #     delta_time = current_time - last_time
+    #     last_time = current_time
+    #
+    #     await ball.wall_collide()
+    #
+    #     if default_consumer is None or default_consumer.group_consumers[default_consumer.room_name] is None:
+    #         break
+    #     for consumer in default_consumer.group_consumers[default_consumer.room_name]:
+    #         await consumer.paddle.move(delta_time)
+    #         await ball.paddles_collide_check(consumer.paddle)
+    #
+    #     await ball.send_data(default_consumer)
+    #     await ball.send_score(default_consumer)
+    #     await ball.move(delta_time)
+
+    # await asyncio.sleep(1 / 60)
 
 
 class GameConsumer(AsyncWebsocketConsumer):
     room_name = ""
 
     async def connect(self):
-        global connected_clients
-        global ball
-        global default_consumer
         global group_rooms
+
+        start_loop = False
 
         self.room_name = self.scope['url_route']['kwargs']['room_id']
         await self.channel_layer.group_add(self.room_name, self.channel_name)
 
+        if len(group_rooms) == 0:
+            start_loop = True
+
+        await self.accept()
+
         if self.room_name not in group_rooms:
             group_rooms[self.room_name] = Room()
-        group_rooms[self.room_name].register_consumer(self)
+        await group_rooms[self.room_name].register_consumer(self)
+
+        if start_loop:
+            asyncio.create_task(game_loop())
 
         # print(self.room_name)
         # print(group_rooms[self.room_name])
 
-        loc = "left" if len(connected_clients) == 0 else "right"
+        # loc = "left" if len(connected_clients) == 0 else "right"
         # paddle = Paddle(loc, self)
         # self.paddle = paddle
-        if loc == "left":
-            # ball = Ball()
-            asyncio.create_task(game_loop())
-
-        await self.accept()
+        # if loc == "left":
+        #   ball = Ball()
+        #   asyncio.create_task(game_loop())
 
         # await self.send(json.dumps({'type': 'client', 'loc': loc, 'speed': paddle.speed}))
 
@@ -85,20 +92,22 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
 
         if self.room_name in group_rooms:
-            group_rooms[self.room_name].discard(self)
+            group_rooms[self.room_name].remove_consumer(self)
             if not group_rooms[self.room_name]:
                 del group_rooms[self.room_name]
 
     async def receive(self, text_data=None, bytes_data=None):
-        global connected_clients
         message = json.loads(text_data)
         if message['type'] == 'move':
-            paddle = connected_clients.get(self)
-            if paddle:
-                paddle.moving = int(message['data'])
-                if paddle.moving == 0:
-                    for consumer, other_paddle in connected_clients.items():
-                        await paddle.send_data()
+            room = group_rooms[self.room_name]
+            if room:
+                await room.handle_paddle_msg(self, message)
+            # paddle = connected_clients.get(self)
+            # if paddle:
+            #     paddle.moving = int(message['data'])
+            #     if paddle.moving == 0:
+            #         for consumer, other_paddle in connected_clients.items():
+            #             await paddle.send_data()
 
     # Broadcast methods called from group_send
 
