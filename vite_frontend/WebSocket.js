@@ -12,7 +12,8 @@ const right_score = document.querySelector('.score-right')
 let ratio = 100;
 let lastTimestamp = performance.now();
 let ballData = {};
-let paddleMoving = 0;
+let ballRadius = 0;
+let paddleMovingDown = 0, paddleMovingUp = 0;
 let paddleSpeed = 0;
 let paddlePos = '';
 
@@ -59,6 +60,7 @@ webSocket.onmessage = (event) => {
         setBall(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
     }
     else if (json['type'] === 'init_ball') {
+        ballRadius = json['radius'];
         ball.style["width"] = (json['radius'] * game.clientWidth / 100) + "px";
         ball.style["height"] = (json['radius'] * game.clientWidth / 100) + "px";
         setBall(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
@@ -100,7 +102,7 @@ webSocket.onmessage = (event) => {
 
 addEventListener("keydown", (event) => {
     if (event.code === "ArrowDown" && !arrowDown) {
-        paddleMoving = 1;
+        paddleMovingDown = 1;
         msg.data = 1;
         msg.value = true;
         msg.loc = 0;
@@ -109,7 +111,7 @@ addEventListener("keydown", (event) => {
         console.log("down: true");
     }
     if (event.code === "ArrowUp" && !arrowUp) {
-        paddleMoving = -1;
+        paddleMovingUp = 1;
         msg.data = -1;
         msg.value = true;
         msg.loc = 1;
@@ -122,8 +124,8 @@ addEventListener("keydown", (event) => {
 addEventListener("keyup", (event) => {
     // console.log(event.code);
     if (event.code === "ArrowDown" && arrowDown) {
-        paddleMoving = 0;
-        msg.data = 0;
+        paddleMovingDown = 0;
+        msg.data = 1;
         msg.value = false;
         msg.loc = 0;
         webSocket.send(JSON.stringify(msg));
@@ -131,8 +133,8 @@ addEventListener("keyup", (event) => {
         console.log("down: false");
     }
     if (event.code === "ArrowUp" && arrowUp) {
-        paddleMoving = 0;
-        msg.data = 0;
+        paddleMovingUp = 0;
+        msg.data = -1;
         msg.value = false;
         msg.loc = 1;
         webSocket.send(JSON.stringify(msg));
@@ -159,11 +161,14 @@ function setBall(x, y, v_x, v_y, speed) {
     ballData.v_x = v_x;
     ballData.v_y = v_y;
     ballData.speed = speed;
-    ball.style["top"] = (y * (game.clientHeight - parseFloat(window.getComputedStyle(ball).width)) / 100) + "px";
-    ball.style["left"] = (x * (game.offsetWidth - parseFloat(window.getComputedStyle(ball).width)) / 100) + "px";
+    const adjustedTop = ((y) * (game.clientHeight - parseFloat(window.getComputedStyle(ball).width)) / 100);
+    const adjustedLeft = (x * (game.offsetWidth - parseFloat(window.getComputedStyle(ball).width)) / 100);
+    ball.style["top"] = `${adjustedTop}px`;
+    ball.style["left"] = `${adjustedLeft}px`;
 }
 
 function movePaddle(deltaTime) {
+    let paddleMoving = paddleMovingDown - paddleMovingUp;
     if (paddlePos === 'left') {
         left.style['top'] = (parseFloat(window.getComputedStyle(left).top) + (paddleMoving * paddleSpeed * deltaTime * ((game.offsetHeight / 101)))) + "px";
 

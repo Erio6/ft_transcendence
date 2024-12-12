@@ -12,15 +12,15 @@ class Ball {
         this.field_width = field_width;
         this.model = createCube();
         this.model.scale.set(this.radius, this.radius, this.radius);
-        this.model.position.set(this.x, this.y, 0);
+        this.model.position.set(this.x - 50, this.y - 50, 0);
     }
 
     collide(x, y, v_x, v_y, speed) {
         this.x = x;
-        this.y = y;
+        this.y = 100 - y;
         this.v_x = v_x;
         this.v_y = v_y;
-        this.speed = parseInt(speed) / 2;
+        this.speed = parseInt(speed);
     }
 
     normalize(value, ratio) {
@@ -44,10 +44,9 @@ class Ball {
 
     tick(delta) {
         //this.wall_collide();
-        this.x += this.v_x * delta * this.speed * 2;
-        this.y += -this.v_y * delta * this.speed * 2;
+        this.x += this.v_x * delta * this.speed;
+        this.y += -this.v_y * delta * this.speed;
         // console.log(this.normalize(this.x, this.field_width));
-        console.log(this.x);
         this.model.position.set(this.x - 50, this.y - 50, 0);
     }
 }
