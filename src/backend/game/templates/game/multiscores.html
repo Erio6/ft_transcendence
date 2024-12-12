@@ -1,0 +1,34 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Enter Scores for game{% endblock %}
+
+{% block content %}
+    <h1> Enter Scores for Game #{{ game.id }} </h1>
+
+    <form id="scoreForm">
+        {% csrf_token %}
+
+        <label for="playerOneScore">Player 1 Score: </label>
+        <input type="number" id="playerOneScore" name="player_one_score" required value="{{ game.player_one_score }}">
+        <br><br>
+
+        <label for="playerTwoScore">Player 2 Score: </label>
+        <input type="number" id="playerTwoScore" name="player_two_score" required value="{{ game.player_two_score }}">
+        <br><br>
+
+        <label for="winner">Winner: </label>
+        <select id="winner" name="winner">
+            <option value="{{ game.player_one.id }}" {% if game.winner == game.player_one %}selected{% endif %}>{{ game.player_one.user.username }}</option>
+            <option value="{{ game.player_two.id }}" {% if game.winner == game.player_two %}selected{% endif %}>{{ game.player_two.user.username }}</option>
+        </select>
+        <br><br>
+
+        <label for="looser">Looser: </label>
+        <select id="looser" name="looser">
+            <option value="{{ game.player_one.id }}" {% if game.looser == game.player_one %}selected{% endif %}>{{ game.player_one.user.username }}</option>
+            <option value="{{ game.player_two.id }}" {% if game.looser == game.player_two %}selected{% endif %}>{{ game.player_two.user.username }}</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Submit Scores</button>
+    </form>
+{% endblock %}
