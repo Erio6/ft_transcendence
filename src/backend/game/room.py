@@ -1,6 +1,8 @@
 import json
 import time
 
+from asgiref.sync import async_to_sync
+
 from game.ball import Ball
 from game.paddle import Paddle
 
@@ -34,12 +36,21 @@ class Room:
 
     async def handle_paddle_msg(self, consumer, message):
         if consumer == self.left_paddle.consumer:
-            self.left_paddle.moving = int(message['data'])
+            if message['data'] == 1:
+                self.left_paddle.movingDown = 1 if message['value'] else 0
+            else:
+                self.left_paddle.movingUp = 1 if message['value'] else 0
+
+            # self.left_paddle.moving = int(message['data'])
             # if self.left_paddle.moving == 0:
             #     self.left_paddle.send_data_chan(self.left_paddle.consumer)
             # await self.left_paddle.send_data()
         elif consumer == self.right_paddle.consumer:
-            self.right_paddle.moving = int(message['data'])
+            if message['data'] == 1:
+                self.right_paddle.movingDown = 1 if message['value'] else 0
+            else:
+                self.right_paddle.movingUp = 1 if message['value'] else 0
+            # self.right_paddle.moving = int(message['data'])
             # await self.right_paddle.send_data()
 
     async def register_consumer(self, consumer):
@@ -61,9 +72,13 @@ class Room:
             await self.left_paddle.init_paddle_chan(consumer)
             await self.right_paddle.init_paddle_chan(consumer)
 
-    def remove_consumer(self, consumer):
+    async def remove_consumer(self, consumer):
         if consumer in self.spectators:
             self.spectators.remove(consumer)
+        # elif consumer == self.left_paddle.consumer:
+        #     self.left_paddle.consumer = None
+        # elif consumer == self.right_paddle.consumer:
+        #     self.right_paddle.consumer = None
         elif consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:
             self.running = False
 

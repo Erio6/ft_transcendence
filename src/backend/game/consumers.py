@@ -49,6 +49,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         global group_rooms
 
         start_loop = False
+        print("connect")
 
         self.room_name = self.scope['url_route']['kwargs']['room_id']
         await self.channel_layer.group_add(self.room_name, self.channel_name)
@@ -90,14 +91,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
-
+        print("disconnect")
         if self.room_name in group_rooms:
-            group_rooms[self.room_name].remove_consumer(self)
+            await group_rooms[self.room_name].remove_consumer(self)
             if not group_rooms[self.room_name]:
                 del group_rooms[self.room_name]
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
+        print(message)
         if message['type'] == 'move':
             room = group_rooms[self.room_name]
             if room:
@@ -135,5 +137,5 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def init_paddle(self, event):
         await self.send(text_data=json.dumps({
             'type': 'init_paddle', 'loc': event['loc'], 'size': event['size'], 'width': event['width'], 'y': event['y'],
-            'x': event['x']
+            'x': event['x'], 'speed': event['speed']
         }))
