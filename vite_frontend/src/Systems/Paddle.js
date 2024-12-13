@@ -13,9 +13,9 @@ class Paddle {
         this.field_width = field_width;
         this.websocket = websocket;
         if (location === "left")
-            this.x = -50 + x;
+            this.x = -50 + x + this.width;
         else
-            this.x = 50 - x;
+            this.x = 50 - x - this.width;
         this.y = 0;
         this.z = 0;
         this.model = createCube();

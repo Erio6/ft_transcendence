@@ -46,7 +46,6 @@ class World {
             }
             else if (json['type'] === 'init_paddle') {
                 if (loc === json['loc']) {
-                    console.log(json['speed']);
                     active_paddle = new Paddle(loc, json['speed'], json['width'], json['size'], true, json['x'], 50, 50, webSocket);
                     scene.add(active_paddle.model);
                     loop.updatables.push(active_paddle);
@@ -82,9 +81,9 @@ class World {
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
 
-        top.position.set(0, 52.5, 0);
+        top.position.set(0, 51, 0);
         top.scale.set(50, 1, 1);
-        bot.position.set(0, -52.5, 0);
+        bot.position.set(0, -51, 0);
         bot.scale.set(50, 1, 1);
 
 
