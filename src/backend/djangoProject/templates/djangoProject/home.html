@@ -94,19 +94,17 @@
             Logout
         </a>
         {% else %}
-        <a href="{% url 'authentication:register' %}">
-            Register
-            {% block register %} {% endblock %}
-        </a>
-        <a href="{% url 'authentication:login' %}">
-            Login
-            {% block login %} {% endblock %}
-        </a>
+        <a href="{% url 'authentication:register' %}">Register</a>
+        <a href="{% url 'authentication:login' %}">Login</a>
         {% endif %}
     </div>
 
     <section class="home">
-        {% block content %}Welcome {{ user.username }}!{% endblock %}
+        {% block profile %} {% endblock %}
+        {% block friends %} {% endblock %}
+        {% block register %} {% endblock %}
+        {% block login %} {% endblock %}
+        {% block game %} {% endblock %}
     </section>
 
  <script src="{% static 'js/main.js' %}"></script>
