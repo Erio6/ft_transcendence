@@ -1,17 +1,14 @@
-require('@nomicfoundation/hardhat-toolbox');
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-    // Retrieve the contract factory
-    const ScoreContract = await hre.ethers.getContractFactory("ScoreContract");
 
-    // Deploy the contract
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    const ScoreContract = await ethers.getContractFactory("ScoreContract");
     const scoreContract = await ScoreContract.deploy();
-
-    // Ensure the deployment is complete
     await scoreContract.waitForDeployment();
 
-    // Log the contract address
     console.log("ScoreContract deployed to:", scoreContract.address);
 }
 

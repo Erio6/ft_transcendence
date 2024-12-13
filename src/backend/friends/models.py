@@ -1,14 +1,15 @@
-import os.path
+
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from user.models import UserProfile
+
 
 class FriendList(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='friend_list')
-    friends = models.ManyToManyField(User, blank=True, related_name='friends')
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='friend_list')
+    friends = models.ManyToManyField(UserProfile, blank=True, related_name='friends')
 
     def __str__(self):
-        return self.user.username
+        return self.user.user.username
 
     def add_friend(self, account):
         if not account in self.friends.all():
@@ -35,13 +36,13 @@ class FriendRequest(models.Model):
         ('accepted', 'Accepted'),
         ('declined', 'Declined')
     )
-    sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, related_name='receiver', on_delete=models.CASCADE)
+    sender = models.ForeignKey(UserProfile, related_name='sender', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(UserProfile, related_name='receiver', on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICES, default='Pending')
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"From {self.sender.username} to {self.receiver.username}"
+        return f"From {self.sender.user.username} to {self.receiver.user.username}"
 
     def save(self, *args, **kwargs):
         if self.sender == self.receiver:

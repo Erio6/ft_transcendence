@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os.path
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'qr_code',
     'channels',
+    'django_countries',
 ]
 
 ASGI_APPLICATION = 'djangoProject.asgi.application'
@@ -160,3 +162,12 @@ LOGIN_REDIRECT_URL = 'home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
+CONTRACT_ADDRESS = '0xf1796A4610C9b1cb11f1e9Fd4f78Ff197a0AD97F'
+ABI_FILE_PATH = os.path.join(BASE_DIR, 'blockchain', 'ScoreContract.json')
+ETHERSCAN_BASE_URL = 'https://sepolia.etherscan.io/tx'
+
+with open(ABI_FILE_PATH, 'r') as abi_file:
+    contract_data = json.load(abi_file)
+    CONTRACT_ABI = contract_data['abi']

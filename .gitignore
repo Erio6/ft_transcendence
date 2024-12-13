@@ -5,8 +5,11 @@ requirements.txt
 *.pyc
 __pycache__/
 .DS_Store
+.env
+
 
 # Smart contract
 /smart_contract/nodules_module/
 /smart_contract/cache/
 /smart_contract/artifacts/
+/smart_contract/.env

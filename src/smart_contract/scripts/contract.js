@@ -5,7 +5,7 @@ const web3 = new Web3(rpcURL); // Pass the provider to Web3
 
 const ScoreContract = require("../artifacts/contracts/ScoreContract.sol/ScoreContract.json");
 const contractABI = ScoreContract.abi;
-const contractAddress = "0xa51c1fc2f0d1a1b8494ed1fe312d7c3a78ed91c0";// to update
+const contractAddress = "0xf1796A4610C9b1cb11f1e9Fd4f78Ff197a0AD97F";// to update
 
 const app = express();
 

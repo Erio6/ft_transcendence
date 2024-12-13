@@ -5,7 +5,7 @@
     {% if friends %}
     <ul>
         {% for friend in friends %}
-            <li>{{ friend.username }}</li>
+            <li>{{ friend.user.username }}</li>
         {% endfor %}
     </ul>
     {% else %}
@@ -60,7 +60,7 @@
             <ul>
                 {% for user in search_results %}
                     <li>
-                        {{ user.username }}
+                        {{ user.user.username }}
                         <form action="{% url 'friends:send_friend_request' user.id %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" >Add Friend</button>
