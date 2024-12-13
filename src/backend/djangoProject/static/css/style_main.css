@@ -116,6 +116,7 @@ header .image-text .header-text{
     padding-bottom: 30px;
 }
 
+/* --- Sidebar // boutton pour ouvrir/fermer la barre --- */
 .sidebar header .toggle
 {
     position: absolute;
@@ -168,7 +169,7 @@ header .image-text .header-text{
     flex-direction: column;
     justify-content: space-between;
 }
-
+/* --- Sidebar // Night mode/Light Mode--- */
 .menu-bar .mode{
     position: relative;
     align-items: center;
@@ -238,7 +239,7 @@ body.light .switch::before {
     left: 24px;
 }
 
-/* --- Login Bar --- */
+/* --- Login Bar (TO REWORK) --- */
 .login-section {
     position: absolute; /* Position relative to the viewport */
     top: 10px; /* Distance from the top of the screen */
