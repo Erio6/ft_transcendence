@@ -4,21 +4,30 @@ from game.models import Game
 from user.models import UserProfile
 
 class GameSerializer(serializers.ModelSerializer):
+    winner = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+    looser = serializers.PrimaryKeyRelatedField(queryset=UserProfile.objects.all())
+
     class Meta:
         model = Game
-        fields = ['id', 'player_one_score', 'player_two_score', 'winner_score', 'looser_score', 'is_completed']
+        fields = ['id', 'player_one_score', 'player_two_score', 'winner', 'looser', 'is_completed']
 
     def update(self, instance, validated_data):
-        winner_id = validated_data.get('winner', None)
-        looser_id = validated_data.get('looser', None)
+        # winner_id = validated_data.get('winner', None)
+        # looser_id = validated_data.get('looser', None)
+        #
+        # if winner_id:
+        #     winner = UserProfile.objects.get(id=winner_id)
+        #     instance.winner = winner
+        #
+        # if looser_id:
+        #     looser = UserProfile.objects.get(id=looser_id)
+        #     instance.looser = looser
+        #
+        # instance.player_one_score = validated_data.get('player_one_score', instance.player_one_score)
+        # instance.player_two_score = validated_data.get('player_two_score', instance.player_two_score)
 
-        if winner_id:
-            winner = UserProfile.objects.get(id=winner_id)
-            instance.winner = winner
-
-        if looser_id:
-            looser = UserProfile.objects.get(id=looser_id)
-            instance.looser = looser
+        instance.winner = validated_data.get('winner', instance.winner)
+        instance.looser = validated_data.get('looser', instance.looser)
 
         instance.player_one_score = validated_data.get('player_one_score', instance.player_one_score)
         instance.player_two_score = validated_data.get('player_two_score', instance.player_two_score)

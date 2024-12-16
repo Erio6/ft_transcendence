@@ -26,6 +26,7 @@
             Logout
             </a>
             <a href="{% url 'game:play' %}">Quick Play</a>
+            <a href="{% url 'dashboard:leaderboard' %}">Leaderboard</a>
         {% else %}
             <a href="{% url 'authentication:register' %}">
             Register
@@ -34,6 +35,7 @@
             Login
             </a>
             <a href="{% url 'game:play' %}">Quick Play</a>
+            <a href="{% url 'dashboard:leaderboard' %}">Leaderboard</a>
         {% endif %}
     </nav>
     <main>

@@ -4,15 +4,15 @@
 {% block content %}
     <h1> Enter Scores for Game #{{ game.id }} </h1>
 
-    <form id="scoreForm">
+    <form id="scoreForm" data-game-id="{{ game.id }}">
         {% csrf_token %}
 
         <label for="playerOneScore">Player 1 Score: </label>
-        <input type="number" id="playerOneScore" name="player_one_score" required value="{{ game.player_one_score }}">
+        <input type="number" id="playerOneScore" name="playerOneScore" required value="{{ game.player_one_score }}">
         <br><br>
 
         <label for="playerTwoScore">Player 2 Score: </label>
-        <input type="number" id="playerTwoScore" name="player_two_score" required value="{{ game.player_two_score }}">
+        <input type="number" id="playerTwoScore" name="playerTwoScore" required value="{{ game.player_two_score }}">
         <br><br>
 
         <label for="winner">Winner: </label>
@@ -29,6 +29,6 @@
         </select>
         <br><br>
 
-        <button type="submit">Submit Scores</button>
+        <button type="submit" id="submit_button">Submit Scores</button>
     </form>
 {% endblock %}

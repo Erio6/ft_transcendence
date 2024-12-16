@@ -6,8 +6,8 @@ from user.models import UserProfile
 class Game(models.Model):
     player_one = models.ForeignKey(UserProfile, related_name='player_one_games', on_delete=models.CASCADE)
     player_two = models.ForeignKey(UserProfile, related_name='player_two_games', on_delete=models.CASCADE)
-    winner = models.ForeignKey(UserProfile, related_name='winner_games', null=True, on_delete=models.CASCADE)
-    looser = models.ForeignKey(UserProfile, related_name='looser_games',null=True, on_delete=models.CASCADE)
+    winner = models.ForeignKey(UserProfile, related_name='winner_games', null=True, on_delete=models.SET_NULL)
+    looser = models.ForeignKey(UserProfile, related_name='looser_games',null=True, on_delete=models.SET_NULL)
     player_one_score = models.IntegerField(default=0, null=True, blank=True)
     player_two_score = models.IntegerField(default=0, null=True, blank=True)
     winner_score = models.IntegerField(default=0, null=True, blank=True)

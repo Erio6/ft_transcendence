@@ -1,24 +1,38 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Get form elements by their IDs
-    const gameIdInput = document.getElementById('game_id');
-    const playerOneScoreInput = document.getElementById('player_one_score');
-    const playerTwoScoreInput = document.getElementById('player_two_score');
+    const scoreForm = document.getElementById('scoreForm');
+    const gameId = parseInt(scoreForm.dataset.gameId, 10); // Parse as integer (base 10)
+
+    // If the parsing fails and gameId is NaN, you can handle the error:
+    if (isNaN(gameId)) {
+        console.error('Invalid game ID');
+        return;
+    }
+    const playerOneScoreInput = document.getElementById('playerOneScore');
+    const playerTwoScoreInput = document.getElementById('playerTwoScore');
     const winnerSelect = document.getElementById('winner');
     const looserSelect = document.getElementById('looser');
-    const isCompletedInput = document.getElementById('is_completed');
     const submitButton = document.getElementById('submit_button');
+
+
+    console.log({
+        gameId,
+        playerOneScoreInput,
+        playerTwoScoreInput,
+        winnerSelect,
+        looserSelect,
+        submitButton
+    });
 
     // Add event listener to the submit button
     submitButton.addEventListener('click', function(event) {
         event.preventDefault();  // Prevent form submission to handle it with JavaScript
 
         // Collect values from the form
-        const gameId = gameIdInput.value;
         const playerOneScore = parseInt(playerOneScoreInput.value);
         const playerTwoScore = parseInt(playerTwoScoreInput.value);
         const winnerId = winnerSelect.value;
         const looserId = looserSelect.value;
-        const isCompleted = isCompletedInput.checked;
 
         // Construct the data object to send to the API
         const data = {

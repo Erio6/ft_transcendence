@@ -23,6 +23,21 @@ class UserProfile(models.Model):
                 img.thumbnail(output_size)
                 img.save(self.avatar.path)
 
+    @property
+    def leaderboard_rank(self):
+        leaderboard = self.leaderboard
+        return leaderboard.rank if leaderboard else None
+
+    @property
+    def total_wins(self):
+        leaderboard = self.leaderboard  # Accessing the related leaderboard object
+        return leaderboard.total_wins if leaderboard else 0  # Return 0 if no leaderboard exists
+
+    @property
+    def total_losses(self):
+        leaderboard = self.leaderboard  # Accessing the related leaderboard object
+        return leaderboard.total_losses if leaderboard else 0  # Return 0 if no leaderboard exists
+
     def __str__(self):
         return f'{self.user.username} Profile'
 # Create your models here.

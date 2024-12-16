@@ -6,6 +6,7 @@ from tournaments.models import TournamentGame
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from itertools import chain
+from dashboard.signals import update_ranks
 
 
 
@@ -26,6 +27,7 @@ class Leaderboard(models.Model):
     total_points = models.IntegerField(default=0)
     total_wins = models.PositiveIntegerField(default=0)
     total_losses = models.PositiveIntegerField(default=0)
+    rank = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f'Leaderboard: {self.player}'
@@ -67,3 +69,5 @@ class Leaderboard(models.Model):
             leaderboard.total_losses += 1
 
         leaderboard.save()
+
+        update_ranks()
