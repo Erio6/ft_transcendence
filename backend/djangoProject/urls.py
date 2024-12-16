@@ -32,6 +32,8 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from two_factor.views import SetupView
+
 from . import views
 
 urlpatterns = [

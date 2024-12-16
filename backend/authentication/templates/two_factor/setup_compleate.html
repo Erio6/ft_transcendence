@@ -1,0 +1,12 @@
+<!-- templates/two_factor/setup_complete.html -->
+{% extends "two_factor/_base.html" %}
+
+{% block title %}Two Factor Authentication - Setup Complete{% endblock %}
+
+{% block content %}
+    <h1>Two-Factor Authentication Setup Complete</h1>
+    <p>Your two-factor authentication has been successfully set up.</p>
+
+    <!-- Link to the homepage -->
+    <a href="{% url 'home' %}" class="btn btn-primary">Go to Home Page</a>
+{% endblock %}

@@ -176,7 +176,7 @@ MEDIA_URL = '/media/'
 
 LOGIN_URL = 'two_factor:login'  # 2FA login view
 LOGIN_REDIRECT_URL = 'home'
-
+TWO_FACTOR_SETUP_TEMPLATE = 'two_factor/setup.html'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
