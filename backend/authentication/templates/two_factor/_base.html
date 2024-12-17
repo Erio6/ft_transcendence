@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>{% block title %}Two Factor Authentication{% endblock %}</title>
-    <!-- Add your CSS, Bootstrap, etc. here -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     {% block extra_css %}{% endblock %}
 </head>
@@ -11,6 +10,10 @@
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
+                <!-- Home button -->
+                <div class="text-center mb-3">
+                    <a href="/" class="btn btn-secondary">Back to Home</a>
+                </div>
                 <div class="card">
                     <div class="card-body">
                         {% block content %}{% endblock %}
@@ -19,9 +22,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Add your JavaScript here -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_scripts %}{% endblock %}
 </body>
 </html>

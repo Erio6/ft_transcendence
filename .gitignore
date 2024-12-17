@@ -4,7 +4,3 @@ cert.pem
 key.pem
 /backend/db.sqlite3
 *.pyc
-<<<<<<< HEAD
-=======
-requirements.txt
->>>>>>> 90a4469d080062c8f63ee39997ad76a490990148
