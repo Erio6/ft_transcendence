@@ -6,6 +6,10 @@ from django.conf import settings
 
 from game.consumers import GameConsumer
 from . import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 """
 URL configuration for djangoProject project.
@@ -26,7 +30,14 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from two_factor.urls import urlpatterns as tf_urls
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from two_factor.views import SetupView
+
 from . import views
 
 urlpatterns = [
@@ -35,8 +46,13 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Admin route
     path('game/', include('game.urls')),
     path('auth/', include('authentication.urls')),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/', include('user.urls')),
     path('friends/', include('friends.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('API.urls')),
+    path('leaderboard/', include('dashboard.urls')),
 ]
 
 websocket_urlpatterns = [

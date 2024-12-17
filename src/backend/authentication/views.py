@@ -1,40 +1,31 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django_otp import devices_for_user
+"""from .forms import UserRegistrationForm"""
+from django.contrib.auth.views import LoginView
+from user.models import User
 from user.models import UserProfile
+from django.contrib.sites.shortcuts import get_current_site
+from django.dispatch import receiver
+from two_factor.signals import user_verified
+
+def login_view(request):
+	return redirect('two_factor:login')
+
 
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request,form.save())
-            user.userprofile.is_online = True
-            user.userprofile.save()
-            return redirect("/")
+            login(request, user)
+            return redirect("two_factor:setup")
     else:
         form = UserCreationForm()
     return render(request, "authentication/register.html", {"form": form})
 
-def login_view(request):
-    if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            #if devices_for_user(user, confirmed=True):
-            #    return redirect('two_factor:login')
-            login(request,user)
-            user.userprofile.is_online = True
-            user.userprofile.save()
-            return redirect("/")
-    else:
-        form = AuthenticationForm()
-    return render(request, "authentication/login.html", {"form": form})
-
 def logout_view(request):
-    if request.user.is_authenticated:
-        request.user.userprofile.is_online = False
-        request.user.userprofile.save()
-    logout(request)
-    return redirect("/")
+        logout(request)
+        return redirect("/")

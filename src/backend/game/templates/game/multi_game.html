@@ -2,10 +2,25 @@
 {% block title %}Multiplayer game{% endblock %}
 
 {% block content %}
-    <h1> Enter the score </h1>
-    <form method="post">
+    <h1> Select Players for the Game </h1>
+    <form action="{% url 'game:multi' %}" method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
+        <label for="playerOne">Player 1: </label>
+        <select id="playerOne" name="player_one">
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.user.username }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="playerTwo">Player 2: </label>
+        <select id="playerTwo" name="player_two">
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.user.username }} </option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <button type="submit">Create Game</button>
     </form>
 {% endblock %}

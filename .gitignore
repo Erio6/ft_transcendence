@@ -1,6 +1,8 @@
 /.venv
 /.idea
 /venv
+cert.pem
+key.pem
 /backend/db.sqlite3
 requirements.txt
 *.pyc
@@ -14,3 +16,5 @@ __pycache__/
 /smart_contract/cache/
 /smart_contract/artifacts/
 /smart_contract/.env
+
+*.pyc
