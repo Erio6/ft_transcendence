@@ -6,8 +6,8 @@
     {% if friends %}
     <ul>
         {% for friend in friends %}
-           <li class="list-group-item d-flex align-items-center">
-                 <span class="status-dot {% if friend.user.userprofile.is_online %}online{% else %}offline{% endif %}"></span>
+           <li class="list-friends">
+                 <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
                  <span>{{ friend.user.username }}</span>
             </li>
         {% endfor %}
