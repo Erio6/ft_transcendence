@@ -15,7 +15,6 @@
     </title>
 </head>
 <body>
-
     <nav class ="sidebar close">
         <header>
             <div class="image-text">
@@ -42,7 +41,7 @@
                             <i class='bx bxs-leaf icon'></i>
                             <span class="text nav-text">About us</span>
                         </a>
-                        <a href=#>
+                        <a href="{% url 'dashboard:leaderboard' %}">
                             <i class='bx bxs-trophy icon'></i>
                             <span class="text nav-text">Leaderboard</span>
                         </a>
@@ -101,25 +100,20 @@
         <a href="{% url 'authentication:login' %}">Login</a>
         {% endif %}
     </nav>
-    <main>
-        {% block content %}
-        <h1>Welcome {{ user.username }}!</h1>
-        {% include 'dashboard/game_history.html' %}
-        {% endblock %}
-    </main>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{% static 'js/script.js' %}"></script>
     </div>
 
     <section class="home">
-        {% block profile %} {% endblock %}
-        {% block friends %} {% endblock %}
-        {% block register %} {% endblock %}
-        {% block login %} {% endblock %}
-        {% block game %} {% endblock %}
+        <main>
+        {% block content %}
+            <h1> Welcome to the most beautiful Pong! </h1>
+            {% include 'dashboard/game_history.html' %}
+        {% endblock %}
+        </main>
     </section>
 
- <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 
 </body>
 </html>
