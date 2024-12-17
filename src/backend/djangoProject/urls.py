@@ -50,6 +50,9 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('user/', include('user.urls')),
     path('friends/', include('friends.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('API.urls')),
+    path('leaderboard/', include('dashboard.urls')),
 ]
 
 websocket_urlpatterns = [
