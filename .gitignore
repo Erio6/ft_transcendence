@@ -1,5 +1,6 @@
 /.venv
 /.idea
+/venv
 /backend/db.sqlite3
 requirements.txt
 *.pyc

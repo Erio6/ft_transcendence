@@ -41,7 +41,7 @@ def friends_overview(request):
 @login_required
 def send_friend_request(request, user_id):
     if request.method == 'POST':
-        sender = request.user
+        sender = request.user.userprofile
         receiver = get_object_or_404(UserProfile, id=user_id)
 
         if sender == receiver:
@@ -69,37 +69,37 @@ def send_friend_request(request, user_id):
 
 @login_required
 def accept_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user, status='Pending')
+    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user.userprofile, status='Pending')
     if request.method == 'POST':
         friend_request.accept()
-        messages.success(request, f'You are now friend with {friend_request.sender.user.username}.')
+        messages.success(request, f'You are now friend with {friend_request.sender.user.userprofile}.')
     return redirect('friends:friends_overview')
 
 
 @login_required
 def decline_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user, status='Pending')
+    friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user.userprofile, status='Pending')
     if request.method == 'POST':
         friend_request.decline()
-        messages.info(request, f'Friend request sent to{friend_request.sender.user.username} declined.')
+        messages.info(request, f'Friend request sent to{friend_request.sender.user.userprofile} declined.')
     return redirect('friends:friends_overview')
 
 @login_required
 def cancel_friend_request(request, request_id):
-    friend_request = get_object_or_404(FriendRequest, id=request_id, sender=request.user, status='Pending')
+    friend_request = get_object_or_404(FriendRequest, id=request_id, sender=request.user.userprofile, status='Pending')
     if request.method == 'POST':
         friend_request.cancel()
-        messages.info(request, f'Friend request sent to {friend_request.receiver.user.username} cancelled.')
+        messages.info(request, f'Friend request sent to {friend_request.receiver.user.userprofile} cancelled.')
     return redirect('friends:friends_overview')
 
 @login_required
 def remove_friend(request, friend_id):
     friend = get_object_or_404(UserProfile, id=friend_id)
-    friend_list = get_object_or_404(FriendList, user=request.user)
+    friend_list = get_object_or_404(FriendList, user=request.user.userprofile)
     if request.method == 'POST':
         friend_list.remove_friend(friend)
         other_friend_list = get_object_or_404(FriendList, name=friend)
         other_friend_list.remove_friend(friend_list.user)
-        messages.info(request, f'Friend {friend.user.username} Deleted.')
+        messages.info(request, f'Friend {friend.user.userprofile} Deleted.')
     return redirect('friends:friends_overview')
 
