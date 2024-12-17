@@ -41,6 +41,7 @@
     <main>
         {% block content %}
         <h1>Welcome {{ user.username }}!</h1>
+        {% include 'dashboard/game_history.html' %}
         {% endblock %}
     </main>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -6,4 +6,5 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', views.leaderboard, name='leaderboard'),
+    # path('gameHistory/', views.game_history_view, name='gameHistory'),
 ]

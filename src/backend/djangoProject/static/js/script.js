@@ -45,13 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // API URL (replace with your actual API endpoint)
-        const apiUrl = 'http://127.0.0.1:8000/api/score';  // Change this to your actual endpoint
+        const apiUrl = 'http://127.0.0.1:8000/api/score'; // Change this to your actual endpoint
+        const csrfToken = getCookie('csrftoken');
 
         // Send the data to the API endpoint using fetch
         fetch(apiUrl, {
             method: 'POST',  // HTTP method
             headers: {
-                'Content-Type': 'application/json'  // We are sending JSON data
+                'Content-Type': 'application/json',  // We are sending JSON data
+                'X-CSRFToken': csrfToken
             },
             body: JSON.stringify(data)  // Convert the data object to a JSON string
         })

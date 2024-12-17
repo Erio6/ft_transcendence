@@ -6,7 +6,6 @@
 
     <form id="scoreForm" data-game-id="{{ game.id }}">
         {% csrf_token %}
-
         <label for="playerOneScore">Player 1 Score: </label>
         <input type="number" id="playerOneScore" name="playerOneScore" required value="{{ game.player_one_score }}">
         <br><br>
