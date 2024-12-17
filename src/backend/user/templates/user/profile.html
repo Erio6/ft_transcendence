@@ -1,13 +1,12 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %} User Profile {% endblock %}
-{% block content %}
+{% block profile %}
 <img src="{{ profile.avatar.url }}" alt="Profile Image" >
 <h2>{{ profile.display_name }}</h2>
 <p><strong>Username:</strong> {{ profile.user.username }}</p>
-<p><strong>Wins:</strong> {{ profile.wins }}</p>
-<p><strong>Losses:</strong> {{ profile.losses }}</p>
-
- <a href="{% url 'friends:friends_overview' %}">Friend list</a>
+<p><strong>Wins:</strong> </p>
+<p><strong>Losses:</strong> </p>
+<p><strong>Score stored in the blockchain (TEST):</strong> {{ score }}</p>
 {% if user == profile.user %}
 <hr>
 <h3>Edit Profile</h3>

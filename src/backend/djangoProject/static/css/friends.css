@@ -1,0 +1,24 @@
+/* static/css/friends.css */
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.status-dot.online {
+    background-color: #2ecc71;
+    box-shadow: 0 0 4px #2ecc71;
+}
+
+.status-dot.offline {
+    background-color: #e74c3c;
+    opacity: 0.5;
+}
+
+.list-group-item {
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+}

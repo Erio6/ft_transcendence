@@ -2,13 +2,11 @@
 {% block title %}Register page{% endblock %}
 
 {% block register %}
-    <h1>Registration page</h1>
-<div class="login-section">
+    <a>Registration page</a>
     <form  method="post">
         {% csrf_token %}
         {{ form }}
     <button type="submit">Register</button>
     </form>
-</div>
 
 {% endblock %}

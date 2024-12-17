@@ -1,11 +1,15 @@
 {% extends 'djangoProject/home.html' %}
-{% block content %}
+
+{% block friends %}
 <div class="container mt-4">
     <h2>My Friends</h2>
     {% if friends %}
     <ul>
         {% for friend in friends %}
-            <li>{{ friend.username }}</li>
+           <li class="list-group-item d-flex align-items-center">
+                 <span class="status-dot {% if friend.user.userprofile.is_online %}online{% else %}offline{% endif %}"></span>
+                 <span>{{ friend.user.username }}</span>
+            </li>
         {% endfor %}
     </ul>
     {% else %}
@@ -16,7 +20,7 @@
     <ul>
         {% for request in incoming_requests %}
             <li>
-                {{ request.sender.username }}
+                {{ request.sender.user.userprofile }}
                 <div>
                     <form action="{% url 'friends:accept_friend_request' request.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
@@ -37,7 +41,7 @@
     <ul class="list-group mb-4">
         {% for request in outgoing_requests %}
             <li>
-                {{ request.receiver.username }} (Pending)
+                {{ request.receiver.user.userprofile }} (Pending)
                 <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" >
                     {% csrf_token %}
                     <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
@@ -60,8 +64,8 @@
             <ul>
                 {% for user in search_results %}
                     <li>
-                        {{ user.username }}
-                        <form action="{% url 'friends:send_friend_request' user.id %}" method="POST">
+                        {{ user.user.username }}
+                        <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" >Add Friend</button>
                         </form>
@@ -74,4 +78,3 @@
     {% endif %}
 </div>
 {% endblock %}
-
