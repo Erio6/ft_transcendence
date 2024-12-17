@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import os.path
 import json
+from .vault_config import get_db_credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -114,14 +115,16 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+db_credentials = get_db_credentials()
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "pong",
-        "USER": "mehdi",
-        "PASSWORD": "1234",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": db_credentials['db_name'],
+        "USER": db_credentials['username'],
+        "PASSWORD": db_credentials['password'],
+        "HOST": db_credentials['host'],
+        "PORT": db_credentials['port'],
     }
 }
 
