@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
+    'rest_framework'
     #2FA
     'django_otp',
     #'two_factor.plugins.phonenumber',

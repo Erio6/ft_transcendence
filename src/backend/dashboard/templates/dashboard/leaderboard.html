@@ -1,0 +1,28 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+    <h1>Leaderboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Total Points</th>
+                <th>Total Wins</th>
+                <th>Total Losses</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in leaderboard %}
+            <tr>
+                <td>{{ entry.rank }}</td>
+                <td>{{ entry.player.user.username }}</td>
+                <td>{{ entry.total_points }}</td>
+                <td>{{ entry.total_wins }}</td>
+                <td>{{ entry.total_losses }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

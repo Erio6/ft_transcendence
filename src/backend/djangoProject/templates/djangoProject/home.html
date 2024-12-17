@@ -7,6 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/gameHistory.css' %}">
     <!-- Boxicons CSS - On a le droit de load des boxicons cest plus simple non?-->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel="stylesheet">
     <title>
@@ -92,11 +93,22 @@
         <a href="{% url 'authentication:logout' %}" method="post">
             {% csrf_token %}
             Logout
-        </a>
+            </a>
+            <a href="{% url 'game:play' %}">Quick Play</a>
+            <a href="{% url 'dashboard:leaderboard' %}">Leaderboard</a>
         {% else %}
         <a href="{% url 'authentication:register' %}">Register</a>
         <a href="{% url 'authentication:login' %}">Login</a>
         {% endif %}
+    </nav>
+    <main>
+        {% block content %}
+        <h1>Welcome {{ user.username }}!</h1>
+        {% include 'dashboard/game_history.html' %}
+        {% endblock %}
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
     </div>
 
     <section class="home">
