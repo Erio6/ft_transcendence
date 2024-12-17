@@ -44,12 +44,12 @@ INSTALLED_APPS = [
     'API.apps.ApiConfig',
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
-    "django_extensions",
+    'django_extensions',
     'user.apps.UserConfig',
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
-    'rest_framework'
+    'rest_framework',
     #2FA
     'django_otp',
     #'two_factor.plugins.phonenumber',
@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'django_countries',
     'two_factor',
     #JWT
-    'rest_framework',
     'rest_framework_simplejwt',
 ]
 
@@ -118,8 +117,8 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "pong",
-        "USER": "mehdi",
+        "NAME": "db",
+        "USER": "postgres",
         "PASSWORD": "1234",
         "HOST": "127.0.0.1",
         "PORT": "5432",
