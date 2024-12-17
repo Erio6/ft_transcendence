@@ -37,17 +37,3 @@ for the Profile picture in authentication:
 ```sh
 pip install Pillow
 ```
-
-Note de Elo pour Elo - TODELETE
-
-should we add a dotenv ?
-il faut installer POSTGRESQL
-Models to create:
-User  : id, username, email, password, wins, losses, games_played, friends
-Score : id, user, score, date
-Friend : id, user, friend
-
-User - Friend (one to many)
-User - Score (one to many)
-
-python3 backend/manage.py runserver_plus --cert-file cert.pem --key-file key.pem

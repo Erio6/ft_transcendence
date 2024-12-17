@@ -1,0 +1,25 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Edit Profile {% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_user_profile' profile.user.username %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ form2.as_p }}
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <a href="{% url 'user:user_profile' profile.user.username %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+<div class="container mt-4">
+    <h2>Change Password</h2>
+    <form method="POST" action="{% url 'user:change_password' %}">
+        {% csrf_token %}
+        {{ password_form.as_p }}
+        <button type="submit" class="btn btn-primary">Update Password</button>
+        <a href="{% url 'user:user_profile' profile.user.username  %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
