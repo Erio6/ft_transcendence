@@ -1,6 +1,6 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %} User Profile {% endblock %}
-{% block profile %}
+{% block content %}
 <img src="{{ profile.avatar.url }}" alt="Profile Image" >
 <h2>{{ profile.display_name }}</h2>
 <p><strong>Username:</strong> {{ profile.user.username }}</p>
