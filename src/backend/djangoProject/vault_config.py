@@ -6,7 +6,7 @@ load_dotenv()
 
 def get_db_credentials():
     client = hvac.Client(
-        url='http://127.0.0.1:8200',
+        url='http://vault:8200',
         token=os.getenv('VAULT_TOKEN')
     )
 
