@@ -16,6 +16,6 @@ class GameConfig(AppConfig):
             from AI.ai_game import main  # Import inside to avoid conflicts during app loading
             main()
 
-        thread = threading.Thread(target=run_main)
-        thread.daemon = True  # Ensures the thread will stop when the main program stops
-        thread.start()
+        # thread = threading.Thread(target=run_main)
+        # thread.daemon = True  # Ensures the thread will stop when the main program stops
+        # thread.start()
