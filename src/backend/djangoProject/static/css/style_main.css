@@ -1,40 +1,250 @@
+@import url("friends.css");
+/* Googl Font import - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* --- General --- */
 
-nav {
-    height: 100vh; /* Full height */
-    width: 100px; /* Sidebar width */
-    background-color: #2c3e50; /* Background color */
-    color: white; /* Text color */
-    display: flex;
-    flex-direction: column; /* Stack items vertically */
-    position: fixed; /* Stays in place while scrolling */
-    top: 0;
+* {
+    font-family: "Poppins", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    margin : 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- Global color variable --- */
+:root{
+    --background-color: #151515;
+    --toggle-color: #313131;
+    --sidebar-dark-color: #151515;
+    --font-color: #f2f2f2;
+}
+
+/* --- Body --- */
+body {
+    height: 50vh;
+    background: var(--background-color);
+    color: var(--font-color);
+}
+
+body.light
+{
+    --background-color: #ffffff;
+    --toggle-color: #b4b5b6;
+    --sidebar-dark-color: #ffffff;
+    --font-color: #151515;
+}
+
+
+/* --- Sidebar --- */
+.sidebar .image-text img {
+    width: 40px;
+    border-radius: 10px;
+}
+
+.sidebar .image {
+    min-width: 60px;
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 30px;
+    font-size: 35px;
+}
+
+.sidebar{
+    position: fixed;
+    top : 0;
     left: 0;
-    overflow-x: hidden; /* Hide horizontal overflow */
-    padding-top: 20px;
+    height: 100%;
+    width: 250px;
+    transition: all 0.3s;
 }
 
-nav a{
-    padding: 15px 20px;
-    text-decoration: none;
-    font-size: 18px;
-    color: white;
+.sidebar.close {
+    width: 75px;
+}
+
+.sidebar.close .text {
+    opacity: 0;
+}
+
+.sidebar li {
+    height: 50px;
+    margin-top: 10px;
+    list-style: none; /* enleve le style des listes*/
+    align-items: center;
+}
+
+.sidebar li .icon,
+.sidebar li .text  {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    color: var(--font-color);
+    min-width: 60px;
+    justify-content: center;
+}
+
+.sidebar header{
+    position: relative;
+    padding :5px;
+}
+
+.sidebar .image-text img {
+    width: 40px;
+    border-radius: 10px;
+}
+
+.sidebar header .image-text{
+    display:flex;
+    align-items: center;
+}
+
+.sidebar .text{
+    font-size: 13px;
+    font-weight: 200;
+    transition : all 0.2s;
+    white-space: nowrap; /* evite de wrap le texte quand la side-bar souvre*/
+    opacity: 1;
+}
+
+header .image-text .header-text{
     display: block;
+    flex-direction: column;
+    font-weight: 300;
+    font-size: 20px;
+    padding-bottom: 30px;
 }
 
-.sidebar a:hover {
-      background-color: #34495e;
-    }
-
-main {
-    margin-left: 100px;
+/* --- Sidebar // boutton pour ouvrir/fermer la barre --- */
+.sidebar header .toggle
+{
+    position: absolute;
+    top: 50%;
+    right: -35px; /* position en dehors un peu de la sidebar*/
+    transform: translateY(-50%) rotate(180deg);
+    height: 25px;
+    width: 25px;
+    background : var(--toggle-color);
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
 }
 
-/* LOGIN SECTION */
+.sidebar.close header .toggle{
+    transform: translateY(-50%);
+}
+
+.sidebar li a {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 10px;
+    transition: all 0.3s;
+    border-radius: 10px;
+}
+
+/* To see how to fix the hover its not good i think */
+.sidebar li a:hover{
+    background-color: var(--toggle-color);
+}
+
+.sidebar li .icon,
+.sidebar li .text  {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    min-width: 60px;
+    justify-content: center;
+}
+
+.sidebar .menu-bar {
+    height: calc(100% - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+/* --- Sidebar // Night mode/Light Mode--- */
+.menu-bar .mode{
+    position: relative;
+    align-items: center;
+    display: flex;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+.menu-bar .mode .moon-sun{
+    height: 50px;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+}
+
+.menu-bar .mode i{
+    position: absolute;
+    transition: all 0.2s;
+}
+
+.menu-bar .mode i.moon{
+    opacity: 0;
+}
+
+body.light .menu-bar .mode i.sun{
+    opacity:0;
+}
+body.light .menu-bar .mode i.moon{
+    opacity:1;
+}
+
+.menu-bar .mode .toggle-switch {
+    position: absolute; /* met le toggle sur la lune ou le soleil pour etre dans la bar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    right: 0;
+    height: 100%;
+    min-width: 75px;
+    cursor: pointer;
+}
+
+.toggle-switch .switch {
+    position: relative;
+    height: 22px;
+    width: 44px;
+    border-radius: 25px;
+    background: var(--toggle-color);
+}
+
+.switch::before{
+    content: '';
+    position: absolute;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    background: var(--font-color);
+}
+
+body.light .switch::before {
+    left: 24px;
+}
+
+/* --- Login Bar (TO REWORK) --- */
 .login-section {
     position: absolute; /* Position relative to the viewport */
     top: 10px; /* Distance from the top of the screen */
     right: 10px; /* Distance from the right of the screen */
-    background-color: #2c3e50; /* Background color (adjust as needed) */
+    background-color: var(--background-color); /* Background color (adjust as needed) */
     border: 1px solid #ccc; /* Light border */
     padding: 10px; /* Spacing inside the container */
     border-radius: 5px; /* Rounded corners */
@@ -42,14 +252,26 @@ main {
 }
 
 .login-section a {
-    color: #f2f2f2; /* Light text color */
+    color: var(--font-color); /* Light text color */
     text-decoration: none; /* Removes underlines */
     padding: 5px 10px; /* Adds spacing around links */
     display: inline-block; /* Ensures padding works */
 }
 
-.login-section a:hover {
-    color: #f2f2f2; /* Change text color on hover */
+.home {
+    position: relative;
+    height: 100vh;
+    top: 75px;
+    left: 250px;
+    margin: 10px;
+    width: calc(100% - 250px);
+    z-index:100;
+    transition: all 0.5s;
+}
+
+.sidebar.close ~.home {
+    left: 75px;
+    width: calc(100% - 75px);
 }
 
 

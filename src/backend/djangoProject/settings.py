@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import os.path
+import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,18 +44,23 @@ INSTALLED_APPS = [
     'API.apps.ApiConfig',
     'authentication.apps.AuthenticationConfig',
     'game.apps.GameConfig',
+    'django_extensions',
     'user.apps.UserConfig',
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
+    'rest_framework',
     #2FA
     'django_otp',
-    'two_factor',  # Add this line
     #'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'qr_code',
     'channels',
+    'django_countries',
+    'two_factor',
+    #JWT
+    'rest_framework_simplejwt',
 ]
 
 ASGI_APPLICATION = 'djangoProject.asgi.application'
@@ -73,9 +80,15 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+TWO_FACTOR_PATCH_ADMIN = True
+TWO_FACTOR_CALL_GATEWAY = None
+TWO_FACTOR_SMS_GATEWAY = None
 
 ROOT_URLCONF = 'djangoProject.urls'
 
@@ -112,6 +125,32 @@ DATABASES = {
     }
 }
 
+#JWT
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
+    'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+}
+
+#PASSWORD HASHING
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -160,3 +199,12 @@ LOGIN_REDIRECT_URL = 'home'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
+CONTRACT_ADDRESS = '0xf1796A4610C9b1cb11f1e9Fd4f78Ff197a0AD97F'
+ABI_FILE_PATH = os.path.join(BASE_DIR, 'blockchain', 'ScoreContract.json')
+ETHERSCAN_BASE_URL = 'https://sepolia.etherscan.io/tx'
+
+with open(ABI_FILE_PATH, 'r') as abi_file:
+    contract_data = json.load(abi_file)
+    CONTRACT_ABI = contract_data['abi']
