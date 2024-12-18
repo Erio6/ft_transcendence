@@ -56,18 +56,15 @@ class Room:
                 self.left_paddle.movingDown = 1 if message['value'] else 0
             else:
                 self.left_paddle.movingUp = 1 if message['value'] else 0
-
-            # self.left_paddle.moving = int(message['data'])
-            # if self.left_paddle.moving == 0:
-            #     self.left_paddle.send_data_chan(self.left_paddle.consumer)
-            # await self.left_paddle.send_data()
+            if self.left_paddle.movingDown == 0 and self.left_paddle.movingUp == 0:
+                await self.left_paddle.send_data()
         elif consumer == self.right_paddle.consumer:
             if message['data'] == 1:
                 self.right_paddle.movingDown = 1 if message['value'] else 0
             else:
                 self.right_paddle.movingUp = 1 if message['value'] else 0
-            # self.right_paddle.moving = int(message['data'])
-            # await self.right_paddle.send_data()
+            if self.right_paddle.movingDown == 0 and self.right_paddle.movingUp == 0:
+                await self.right_paddle.send_data()
 
     async def register_consumer(self, consumer):
         if not self.left_paddle and not self.is_ai:
@@ -98,8 +95,12 @@ class Room:
         elif consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:
             self.running = False
 
-    def get_consumers(self):
-        consumers = [self.left_paddle, self.right_paddle]
+    def get_consumers(self, left=True, right=True):
+        consumers = []
+        if left:
+            consumers.append(self.left_paddle.consumer)
+        if right:
+            consumers.append(self.right_paddle.consumer)
         for consumer in self.spectators:
             consumers.append(consumer)
 

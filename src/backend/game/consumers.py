@@ -99,7 +99,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
-        print(message)
+        # print(message)
         if message['type'] == 'move':
             room = group_rooms[self.room_name]
             if room:
