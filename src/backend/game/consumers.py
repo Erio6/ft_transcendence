@@ -49,7 +49,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         global group_rooms
 
         start_loop = False
-        print("connect")
 
         self.room_name = self.scope['url_route']['kwargs']['room_id']
         await self.channel_layer.group_add(self.room_name, self.channel_name)
@@ -60,7 +59,8 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         if self.room_name not in group_rooms:
-            group_rooms[self.room_name] = Room()
+            print("create Room, room name", type(self.room_name))
+            group_rooms[self.room_name] = Room(False)
         await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:

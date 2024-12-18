@@ -8,13 +8,19 @@ from game.paddle import Paddle
 
 
 class Room:
-    def __init__(self):
-        self.left_paddle = None
-        self.right_paddle = None
+    def __init__(self, is_ai):
+        if is_ai:
+            self.right_paddle = Paddle("right", None)
+            self.left_paddle = Paddle("left", None)
+        else:
+            self.left_paddle = None
+            self.right_paddle = None
+
         self.spectators = []
         self.ball = Ball()
         self.last_time = time.time()
         self.running = True
+        self.is_ai = is_ai
 
     async def update(self):
         current_time = time.time()
@@ -25,13 +31,23 @@ class Room:
             return
 
         await self.ball.wall_collide()
-        await self.left_paddle.move(delta_time, self)
-        await self.right_paddle.move(delta_time, self)
+
+        if not self.is_ai:
+            await self.left_paddle.move(delta_time, self)
+            await self.right_paddle.move(delta_time, self)
+
         await self.ball.paddles_collide_check(self.left_paddle)
         await self.ball.paddles_collide_check(self.right_paddle)
 
-        await self.ball.send_data(self.left_paddle.consumer)
-        await self.ball.send_score(self.left_paddle.consumer)
+        if not self.is_ai:
+            await self.ball.send_data(self.left_paddle.consumer)
+            await self.ball.send_score(self.left_paddle.consumer)
+        elif len(self.spectators) > 0:
+            await self.ball.send_data(self.spectators[0])
+            await self.ball.send_score(self.spectators[0])
+            await self.left_paddle.send_data_chan(self.spectators[0])
+            await self.right_paddle.send_data_chan(self.spectators[0])
+
         await self.ball.move(delta_time)
 
     async def handle_paddle_msg(self, consumer, message):
@@ -54,12 +70,12 @@ class Room:
             # await self.right_paddle.send_data()
 
     async def register_consumer(self, consumer):
-        if not self.left_paddle:
+        if not self.left_paddle and not self.is_ai:
             self.left_paddle = Paddle("left", consumer)
             await consumer.send(json.dumps({'type': 'client', 'loc': 'left', 'speed': self.left_paddle.speed}))
             await self.left_paddle.init_paddle()
             await self.ball.init_ball_chan(consumer)
-        elif not self.right_paddle:
+        elif not self.right_paddle and not self.is_ai:
             self.right_paddle = Paddle("right", consumer)
             await consumer.send(json.dumps({'type': 'client', 'loc': 'right', 'speed': self.right_paddle.speed}))
             await self.right_paddle.init_paddle()
@@ -88,3 +104,17 @@ class Room:
             consumers.append(consumer)
 
         return consumers
+
+    async def reset(self):
+        self.running = True
+        self.last_time = time.time()
+        self.ball = Ball()
+        if self.is_ai:
+            self.left_paddle = Paddle("left", None)
+            self.right_paddle = Paddle("right", None)
+        self.running = True
+        for consumer in self.spectators:
+            await consumer.send(json.dumps({'type': 'client', 'loc': 'spectator'}))
+            await self.ball.init_ball_chan(consumer)
+            await self.left_paddle.init_paddle_chan(consumer)
+            await self.right_paddle.init_paddle_chan(consumer)
