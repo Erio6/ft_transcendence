@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
+    'matchMaking.apps.MatchMakingConfig',
     'rest_framework',
     #2FA
     'django_otp',
