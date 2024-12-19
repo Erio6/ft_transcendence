@@ -201,7 +201,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
-CONTRACT_ADDRESS = '0xf1796A4610C9b1cb11f1e9Fd4f78Ff197a0AD97F'
+CONTRACT_ADDRESS = '0x1dCc08838E29CC8dAEa2957d919F805162aAA72A'
 ABI_FILE_PATH = os.path.join(BASE_DIR, 'blockchain', 'ScoreContract.json')
 ETHERSCAN_BASE_URL = 'https://sepolia.etherscan.io/tx'
 

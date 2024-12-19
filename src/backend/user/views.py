@@ -37,7 +37,7 @@ def edit_profile_view(request,username):
             form.save()
             form2.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('user:edit_user_profile', username=username)
+            return redirect('user:user_profile', username=username)
     else:
         form = ProfileUpdateForm(instance=profile)
         form2 = UserUpdateForm(instance=request.user)
