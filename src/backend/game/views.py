@@ -46,10 +46,8 @@ def multi_scores(request, game_id):
 
 def online_game_creation(request):
     # print(request.user.id, UserProfile.objects.get(id=request.user.id))
-    new_game = Game(player_one=UserProfile.objects.get(id=request.user.id))
-    new_game.save()
-    print(new_game)
-    return render(request, 'game/online.html', {"game": new_game})
+    games = Game.objects.filter(is_completed=False).all()
+    return render(request, 'game/online.html', {"games": games})
 
 
 def game_3d(request, game_id):
