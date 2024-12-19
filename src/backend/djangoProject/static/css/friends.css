@@ -1,5 +1,19 @@
 /* static/css/friends.css */
 
+/* friends list */
+li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-friends {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+/* status-dot */
+
 .status-dot {
     width: 8px;
     height: 8px;
@@ -14,7 +28,7 @@
 }
 
 .status-dot.offline {
-    background-color: #f3062a;
+    background-color: #f30622;
     opacity: 0.5;
 }
 
