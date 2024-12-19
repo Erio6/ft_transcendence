@@ -7,16 +7,13 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from blockchain.utils import get_score
 from django.conf import settings
 @login_required(login_url='authentication:login')
 def profile_view(request,username):
         user = get_object_or_404(User, username=username)
         profile = get_object_or_404(UserProfile, user=user)
-        score = get_score(user.username)
         context = {
             'profile': profile,
-            'score': score,
         }
         return render(request, 'user/profile.html', context)
 
