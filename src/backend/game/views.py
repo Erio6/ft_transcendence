@@ -7,14 +7,18 @@ from .forms import ScoreInputForm
 from .models import Game
 from user.models import UserProfile
 
+
 def quickPlay(request):
     return render(request, 'game/playmode.html')
+
 
 def soloGame(request):
     return render(request, 'game/sologame.html')
 
+
 def multiGame(request):
     return render(request, 'game/multisearch.html')
+
 
 def game_creation(request):
     if request.method == 'POST':
@@ -29,7 +33,7 @@ def game_creation(request):
         return redirect(f'multi_scores/{new_game.id}')
 
     users = UserProfile.objects.all()
-    return render (request, 'game/multi_game.html', {"users": users})
+    return render(request, 'game/multi_game.html', {"users": users})
 
 
 def multi_scores(request, game_id):
@@ -38,6 +42,21 @@ def multi_scores(request, game_id):
     except Game.DoesNotExist:
         return redirect(error, 'Game does not exist')
     return render(request, 'game/multiscores.html', {"game": game})
+
+
+def online_game_creation(request):
+    # print(request.user.id, UserProfile.objects.get(id=request.user.id))
+    games = Game.objects.filter(is_completed=False).all()
+    return render(request, 'game/online.html', {"games": games})
+
+
+def game_3d(request, game_id):
+    if not Game.objects.filter(id=game_id).exists():
+        print("Game does not exist")
+        return redirect('/')
+    print("load threejs.html")
+    return render(request, 'game/threejs.html')
+
 # def test_pong_game(request):
 #     if request.method == "POST":
 #         form = ScoreInputForm(request.POST)

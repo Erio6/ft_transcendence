@@ -14,8 +14,10 @@ class Paddle:
         self.speed = 100
         self.x = 2
         self.score = 0
+        self.hit = 0
 
     async def send_data(self):
+        print("send to all")
         await self.consumer.channel_layer.group_send(
             self.consumer.room_name,
             {
@@ -63,6 +65,19 @@ class Paddle:
 
         if self.moving != 0:
             # print(self.movingDown, self.movingUp)
-            for consumer in room.get_consumers():
-                if self.consumer != consumer:
-                    await self.send_data()
+            for consumer in room.get_consumers(self.loc != "left", self.loc != "right"):
+                await self.send_data_chan(consumer)
+
+    def force_move(self, value):
+        if self.y >= 100 - self.length / 2:
+            return False
+        elif self.y <= self.length / 2:
+            return False
+
+        self.y += value
+
+        if self.y > 100 - self.length / 2:
+            self.y = 100 - self.length / 2
+        elif self.y < self.length / 2:
+            self.y = self.length / 2
+        return True

@@ -138,6 +138,7 @@ class Ball:
         self.v_x *= -1
         self.current_speed += 10
         self.last_touch = paddle.loc
+        paddle.hit += 1
         self.sending_data = True
 
     def normalize(self):
