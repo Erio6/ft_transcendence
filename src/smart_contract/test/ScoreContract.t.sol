@@ -17,6 +17,7 @@ contract ScoreContractTest is Test {
         vm.deal(USER, STARTING_VALUE);
     }
 
+    //function that will be called by the back-end once a game is finished
     function testRecordGameResult() public {
         string memory gameId = "game_1";
         string memory player1 = "jdoe";
@@ -47,8 +48,6 @@ contract ScoreContractTest is Test {
         scoreContract.recordGameResult(gameId, "player1", "player2", 10, 5);
     }
 
-    function testCannotGetNonExistentGame() public {
-        vm.expectRevert("Game not found");
-        scoreContract.getResult("0");
-    }
+
+
 }

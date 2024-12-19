@@ -3,22 +3,16 @@ pragma solidity ^0.8.0;
 contract ScoreContract {
 
     struct GameResult {
-        string player1;
-        string player2;
-        uint256 score1;
-        uint256 score2;
+        uint256 id;              // ID du jeu dans la base de données Django
+        string player_one;       // username of player_one
+        string player_two;       // username of  player_two
+        uint256 player_one_score;
+        uint256 player_two_score;
         uint256 timestamp;
     }
 
     // mapping of game id to game result;
     mapping(string => GameResult) private gameResults;
-
-    event ScoreUpdated(
-        string indexed gameID,
-        string player1,
-        string player2,
-        uint256 score1,
-        uint256 score2);
 
     address public owner;
 
@@ -33,28 +27,25 @@ contract ScoreContract {
     }
 
     function recordGameResult(
-        string memory gameID,
+        uint256 gameID,
         string memory player1,
         string memory player2,
         uint256 score1,
         uint256 score2
     ) external onlyOwner {
-        require(score1 >= 0 && score2 >= 0, "Score must be positive");
-        require(bytes(gameID).length > 0, "Game ID must not be empty");
         require(bytes(player1).length > 0, "Player 1 must not be empty");
         require(bytes(player2).length > 0, "Player 2 must not be empty");
         gameResults[gameID] = GameResult({
-            player1: player1,
-            player2: player2,
-            score1: score1,
-            score2: score2,
+            id: gameID,
+            player_one: player1,
+            player_two: player2,
+            player_one_score: score1,
+            player_two_score: score2,
             timestamp: block.timestamp
         });
-        emit ScoreUpdated(gameID, player1, player2, score1, score2);
     }
 
     function getResult(string memory gameID) public view returns (GameResult memory) {
-        require(bytes(gameID).length > 0, "Game ID must not be empty");
         require(gameResults[gameID].timestamp != 0, "Game not found");
         return gameResults[gameID];
     }
