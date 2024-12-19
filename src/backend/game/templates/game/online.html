@@ -3,5 +3,7 @@
 
 {% block content %}
     <h1>Online Game</h1>
-    <p>{{ game.player_one }}</p>
+    {% for game in games %}
+        <a href="/game/game/{{ game.id }}">game no {{ game.id }} vs {{ game.player_one.display_name }}</a>
+    {% endfor %}
 {% endblock %}

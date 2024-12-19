@@ -17,7 +17,6 @@ class World {
         let lastPart = window.location.toString().split("/");
 
         lastPart = lastPart.pop() || lastPart.pop();
-        lastPart = 256;
         const webSocket = new WebSocket("ws://localhost:8000/ws/game/" + lastPart + "/");
 
         webSocket.onopen = (event) => {
@@ -67,8 +66,10 @@ class World {
                     console.log("set to " + json['y']);
                 }
             }
-            else if (json['type'] === 'ball')
-                this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
+            else if (json['type'] === 'ball') {
+                if (json['y'] > 2 && json['y'] < 97)
+                    this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
+            }
             else if (json['type'] === 'score') {
                 this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
             }
@@ -110,6 +111,11 @@ class World {
         points.push(new Vector3(50, 50, 0));
         points.push(new Vector3(-50, 50, 0));
         points.push(new Vector3(-50, -50, 0));
+        points.push(new Vector3(-50 + 3, -50 + 3))
+        points.push(new Vector3(50 - 3, -50 + 3, 0));
+        points.push(new Vector3(50 - 3, 50 - 3, 0));
+        points.push(new Vector3(-50 + 3, 50 - 3, 0));
+        points.push(new Vector3(-50 + 3, -50 + 3, 0));
 
         const geometry = new BufferGeometry().setFromPoints(points);
         const line = new Line(geometry, mat);

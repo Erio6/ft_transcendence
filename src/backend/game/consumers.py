@@ -2,11 +2,15 @@ import asyncio
 import json
 import time
 
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.contrib.auth.models import User
 
 from game.ball import Ball
+from game.models import Game
 from game.paddle import Paddle
 from game.room import Room
+from user.models import UserProfile
 
 connected_clients = {}
 group_rooms = {}
@@ -48,9 +52,33 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         global group_rooms
 
+        user = self.scope["user"]
+        self.room_name = self.scope['url_route']['kwargs']['room_id']
+
+        if user.is_authenticated:
+            # Convert the lazy User object into a real User instance
+            user = await sync_to_async(lambda: User.objects.get(pk=user.pk))()
+
+            # Fetch the UserProfile asynchronously
+            self.user_profile = await sync_to_async(UserProfile.objects.get)(user=user)
+            await sync_to_async(print)(self.user_profile)
+            try:
+                self.game = await sync_to_async(Game.objects.get)(id=self.room_name)
+                if self.room_name in group_rooms:
+                    for consumer in group_rooms[self.room_name].get_consumers():
+                        if consumer.user_profile == self.user_profile:
+                            print("already in the game")
+                            return
+
+                print("valid id")
+            except Game.DoesNotExist:
+                print("invalid id")
+                return
+        else:
+            return
+
         start_loop = False
 
-        self.room_name = self.scope['url_route']['kwargs']['room_id']
         await self.channel_layer.group_add(self.room_name, self.channel_name)
 
         if len(group_rooms) == 0:
@@ -92,14 +120,16 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
         print("disconnect")
-        if self.room_name in group_rooms:
+        if self.room_name in group_rooms and self in group_rooms[self.room_name].get_consumers():
             await group_rooms[self.room_name].remove_consumer(self)
-            if not group_rooms[self.room_name]:
+            print("is room empty :", group_rooms[self.room_name].is_empty())
+            if group_rooms[self.room_name].is_empty():
                 del group_rooms[self.room_name]
+                print("delete room")
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
-        # print(message)
+        print(message)
         if message['type'] == 'move':
             room = group_rooms[self.room_name]
             if room:
