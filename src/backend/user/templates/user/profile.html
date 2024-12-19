@@ -10,7 +10,6 @@
         <p><strong>Rank:</strong> {{ profile.leaderboard_rank }}</p>
         <p><strong>Wins:</strong> {{ profile.total_wins }}</p>
         <p><strong>Losses:</strong> {{ profile.total_losses }}</p>
-        <p><strong>Score stored in the blockchain (TEST):</strong> {{ score }}</p>
  <a href="{% url 'friends:friends_overview' %}">Friend list</a>
 {% if user == profile.user %}
 <hr>

@@ -12,10 +12,8 @@ from django.conf import settings
 def profile_view(request,username):
         user = get_object_or_404(User, username=username)
         profile = get_object_or_404(UserProfile, user=user)
-        score = get_score(user.username)
         context = {
             'profile': profile,
-            'score': score,
         }
         return render(request, 'user/profile.html', context)
 
