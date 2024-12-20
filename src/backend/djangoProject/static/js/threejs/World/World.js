@@ -8,9 +8,10 @@ import {Loop} from "../Systems/Loop.js";
 import {Paddle} from "../Systems/Paddle.js"
 import {createControls} from "../Systems/controls.js";
 import {Ball} from "../Systems/Ball.js";
-import {BufferGeometry, Line, LineBasicMaterial, Vector3} from "three";
+import {BufferGeometry, Group, Line, LineBasicMaterial, Vector3} from "three";
+import {createFont} from "../Components/font.js";
 
-let camera, renderer, scene, loop, loc, active_paddle, default_paddle;
+let camera, renderer, scene, loop, loc, active_paddle, default_paddle, score_left;
 
 class World {
     constructor(container) {
@@ -79,6 +80,9 @@ class World {
         camera = createCamera();
         scene = createScene();
         renderer = createRenderer();
+        const fontGroup = new Group();
+        createFont(scene, -30, 30, -5, "01", fontGroup);
+        createFont(scene, 30, 30, -5, "01", fontGroup);
 
         const controls = createControls(camera, renderer.domElement);
 
@@ -126,7 +130,7 @@ class World {
         // loop.updatables.push(ball);
         // loop.updatables.push(cube);
 
-        scene.add(top, bot, light, ambientLight);
+        scene.add(top, bot, light, ambientLight, fontGroup);
 
         this.canvas = renderer.domElement;
 
