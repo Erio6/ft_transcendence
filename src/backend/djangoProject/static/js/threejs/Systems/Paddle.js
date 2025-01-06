@@ -12,6 +12,7 @@ class Paddle {
         this.field_height = field_height;
         this.field_width = field_width;
         this.websocket = websocket;
+        this.score = 0;
         if (location === "left")
             this.x = -50 + x + this.width;
         else

@@ -73,6 +73,37 @@ class World {
             }
             else if (json['type'] === 'score') {
                 this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
+                if (json['loc'] === active_paddle.location)
+                    default_paddle.score = json['value'];
+                else
+                    active_paddle.score = json['value'];
+
+                // scene.remove(fontGroup.children);
+                // const children = [...fontGroup.children];
+                // children.forEach((child) => {
+                //
+                //     // If the child has geometry and material, dispose of them
+                //     if (child.geometry) child.geometry.dispose();
+                //     if (child.material) {
+                //         if (Array.isArray(child.material)) {
+                //             child.material.forEach((mat) => mat.dispose());
+                //         }
+                //         else {
+                //             child.material.dispose();
+                //         }
+                //     }
+                //     // Remove the child from the group
+                //     fontGroup.remove(child);
+                //     // child.removeFromParent();
+                //     // scene.remove(child);
+                // });
+                let mult = -1;
+                if (active_paddle.location === "right")
+                    mult = 1;
+
+                createFont(scene, 30 * mult, 30, -5, "0" + active_paddle.score, fontGroup, fontGroup.children[0]);
+                createFont(scene, 30 * -mult, 30, -5, "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
+                scene.add(fontGroup);
             }
         }
 
@@ -81,8 +112,8 @@ class World {
         scene = createScene();
         renderer = createRenderer();
         const fontGroup = new Group();
-        createFont(scene, -30, 30, -5, "01", fontGroup);
-        createFont(scene, 30, 30, -5, "01", fontGroup);
+        createFont(scene, -30, 30, -5, "00", fontGroup);
+        createFont(scene, 30, 30, -5, "00", fontGroup);
 
         const controls = createControls(camera, renderer.domElement);
 
