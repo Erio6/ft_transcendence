@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'matchMaking',
     'rest_framework',
+    'asgiref',
     #2FA
     'django_otp',
     #'two_factor.plugins.phonenumber',
