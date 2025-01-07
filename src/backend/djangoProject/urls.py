@@ -60,7 +60,7 @@ urlpatterns = [
 
 websocket_urlpatterns = [
     re_path(r'ws/game/$', GameConsumer.as_asgi()), # Map WebSocket path to consumer
-    path('ws/matchmaking/', MatchMakingConsumer.as_asgi()),
+    re_path(r'ws/matchmaking/(?P<match_id>\d+)/$', MatchMakingConsumer.as_asgi()),
 ]
 
 # only for production to change for deploying

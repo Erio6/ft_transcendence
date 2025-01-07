@@ -15,9 +15,13 @@ def waiting_view(request):
 
     user_profile = UserProfile.objects.get(user=request.user)
 
-    match = Match.objects.filter(player_one=user_profile, status='waiting').first()
-    if not match:
-        match = Match.objects.create(player_one=user_profile)
+    match = Match.objects.filter(player_two__isnull=True, status='waiting').first()
+    if match:
+        match.player_two = user_profile
+        match.status = 'matched'
+        match.save()
+    else:
+        match = Match.objects.create(player_one=user_profile, status='waiting')
 
     context = {
         "match_id": match.id,

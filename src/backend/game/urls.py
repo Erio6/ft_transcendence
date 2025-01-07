@@ -11,5 +11,5 @@ urlpatterns = [
     path('multi_scores/<int:game_id>', views.multi_scores, name='multi_scores'),
     # path('play/multi/game', views.test_pong_game, name='multi_game'),
     path('online', views.online_game_creation, name='online'),
-    path('game/<int:game_id>', views.game_3d)
+    path('game/<int:game_id>', views.game_3d, name='real_game')
 ]

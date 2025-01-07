@@ -3,7 +3,7 @@ function cancelMatchmaking() {
     window.location.href = "djangoProject:home";
 }
 
-const matchID = "{{ match_id }}";
+
 const socket = new WebSocket('ws://' + window.location.host + '/ws/matchmaking/' + matchID + '/');
 
 socket.onopen = () => {

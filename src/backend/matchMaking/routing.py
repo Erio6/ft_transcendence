@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import re_path
 from .consumers import MatchMakingConsumer
 
 
 websocket_urlpatterns = [
-    path('ws/matchmaking/', MatchMakingConsumer.as_asgi()),
+    re_path(r'ws/matchmaking/(?P<match_id>\d+)/$', MatchMakingConsumer.as_asgi()),
 ]
