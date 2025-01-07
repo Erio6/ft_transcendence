@@ -167,5 +167,5 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def init_paddle(self, event):
         await self.send(text_data=json.dumps({
             'type': 'init_paddle', 'loc': event['loc'], 'size': event['size'], 'width': event['width'], 'y': event['y'],
-            'x': event['x'], 'speed': event['speed']
+            'x': event['x'], 'speed': event['speed'], 'name': event['name']
         }))

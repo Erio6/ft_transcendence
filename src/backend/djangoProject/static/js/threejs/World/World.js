@@ -9,9 +9,9 @@ import {Paddle} from "../Systems/Paddle.js"
 import {createControls} from "../Systems/controls.js";
 import {Ball} from "../Systems/Ball.js";
 import {BufferGeometry, Group, Line, LineBasicMaterial, Vector3} from "three";
-import {createFont} from "../Components/font.js";
+import {Align, createFont} from "../Components/font.js";
 
-let camera, renderer, scene, loop, loc, active_paddle, default_paddle, score_left;
+let camera, renderer, scene, loop, loc, active_paddle, default_paddle;
 
 class World {
     constructor(container) {
@@ -45,13 +45,22 @@ class World {
                 loc = json['loc'];
             }
             else if (json['type'] === 'init_paddle') {
+                console.log(json['name']);
                 if (loc === json['loc']) {
-                    active_paddle = new Paddle(loc, json['speed'], json['width'], json['size'], true, json['x'], 50, 50, webSocket);
+                    let align = Align.Left;
+                    if (loc === "right")
+                        align = Align.Right;
+                    active_paddle = new Paddle(loc, json['name'], json['speed'], json['width'], json['size'], true, json['x'], 50, 50, webSocket);
+                    createFont(scene, active_paddle.x, 55, -5, active_paddle.name, null, null, align, 7);
                     scene.add(active_paddle.model);
                     loop.updatables.push(active_paddle);
                 }
                 else {
-                    default_paddle = new Paddle(json['loc'], json['speed'], json['width'], json['size'], false, json['x'], 50, 50, webSocket);
+                    let align = Align.Left;
+                    default_paddle = new Paddle(json['loc'], json['name'], json['speed'], json['width'], json['size'], false, json['x'], 50, 50, webSocket);
+                    if (json['loc'] === "right")
+                        align = Align.Right;
+                    createFont(scene, default_paddle.x, 55, -5, default_paddle.name, null, null, align, 7);
                     scene.add(default_paddle.model);
                     loop.updatables.push(default_paddle);
                 }
@@ -72,6 +81,11 @@ class World {
                     this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
             }
             else if (json['type'] === 'score') {
+                if (json['value'] >= 10) {
+                    default_paddle.active = false;
+                    active_paddle.active = false;
+                    scene.remove(this.ball.model);
+                }
                 this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
                 if (json['loc'] === active_paddle.location)
                     default_paddle.score = json['value'];
@@ -101,8 +115,8 @@ class World {
                 if (active_paddle.location === "right")
                     mult = 1;
 
-                createFont(scene, 30 * mult, 30, -5, "0" + active_paddle.score, fontGroup, fontGroup.children[0]);
-                createFont(scene, 30 * -mult, 30, -5, "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
+                createFont(scene, 30 * mult, 30, -5, Number(active_paddle.score) >= 10 ? active_paddle.score.toString() : "0" + active_paddle.score, fontGroup, fontGroup.children[0]);
+                createFont(scene, 30 * -mult, 30, -5, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
                 scene.add(fontGroup);
             }
         }

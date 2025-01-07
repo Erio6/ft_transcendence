@@ -2,8 +2,9 @@ import {createCube} from "../Components/cube.js";
 
 
 class Paddle {
-    constructor(location, speed, width, length, active, x, field_height, field_width, websocket) {
+    constructor(location, name, speed, width, length, active, x, field_height, field_width, websocket) {
         this.location = location;
+        this.name = name;
         this.active = active;
         this.speed = speed;
         console.log(this.speed, speed);
@@ -71,7 +72,7 @@ class Paddle {
             });
         }
     }
-
+    
     tick(delta) {
         if (this.pressUp)
             this.y += this.speed * delta;

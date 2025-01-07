@@ -10,9 +10,9 @@ class Ball:
         self.current_speed = 10
         self.radius = 3
         self.x = 50
-        self.y = 0
-        self.v_x = 0.5
-        self.v_y = 0.5
+        self.y = 50
+        self.v_x = 1
+        self.v_y = 0
         self.sending_data = False
         self.sending_score = None
         self.last_touch = "left"
