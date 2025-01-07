@@ -16,7 +16,7 @@ contract ScoreContract {
 
     address public owner;
 
-    //only the backend quand interact with the smart contract
+    //only the backend can interact with the smart contract
     constructor () {
         owner = msg.sender;
     }
