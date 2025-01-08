@@ -26,25 +26,6 @@ async def game_loop():
             await room.update()
         await asyncio.sleep(1 / 60)
 
-    # while True:
-    #     current_time = time.time()
-    #     delta_time = current_time - last_time
-    #     last_time = current_time
-    #
-    #     await ball.wall_collide()
-    #
-    #     if default_consumer is None or default_consumer.group_consumers[default_consumer.room_name] is None:
-    #         break
-    #     for consumer in default_consumer.group_consumers[default_consumer.room_name]:
-    #         await consumer.paddle.move(delta_time)
-    #         await ball.paddles_collide_check(consumer.paddle)
-    #
-    #     await ball.send_data(default_consumer)
-    #     await ball.send_score(default_consumer)
-    #     await ball.move(delta_time)
-
-    # await asyncio.sleep(1 / 60)
-
 
 class GameConsumer(AsyncWebsocketConsumer):
     room_name = ""
@@ -90,7 +71,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if self.room_name not in group_rooms:
             print("create Room, room name", type(self.room_name))
-            group_rooms[self.room_name] = Room(False)
+            group_rooms[self.room_name] = Room(False, self.room_name)
         await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:

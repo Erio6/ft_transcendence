@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'matchMaking',
     'rest_framework',
     'asgiref',
-    #2FA
+    # 2FA
     'django_otp',
     # 'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
@@ -84,12 +84,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = True  # Ensure the cookie is HTTP-only
-SESSION_COOKIE_SAMESITE = 'Lax'  # Allow cookies for same-origin requests
-SESSION_COOKIE_SECURE = False  # Set to False for local development (no HTTPS)
 
 TWO_FACTOR_PATCH_ADMIN = True
 TWO_FACTOR_CALL_GATEWAY = None

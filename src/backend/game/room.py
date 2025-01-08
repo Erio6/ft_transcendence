@@ -2,12 +2,16 @@ import asyncio
 import json
 import time
 
+from django.utils.timezone import now
+from asgiref.sync import sync_to_async
+
 from game.ball import Ball
+from game.models import Game
 from game.paddle import Paddle
 
 
 class Room:
-    def __init__(self, is_ai):
+    def __init__(self, is_ai, id):
         if is_ai:
             self.right_paddle = Paddle("right", None, "p1")
             self.left_paddle = Paddle("left", None, "p2")
@@ -16,6 +20,7 @@ class Room:
             self.right_paddle = None
 
         self.spectators = []
+        self.id = id
         self.ball = Ball()
         self.last_time = time.time()
         self.running = False
@@ -56,13 +61,28 @@ class Room:
         await self.ball.move(delta_time)
 
     async def end_game(self):
-        pass
+        self.running = False
+        game = await sync_to_async(Game.objects.get)(pk=self.id)
+        player_one = await sync_to_async(lambda: game.player_one)()
+        winner = self.left_paddle if self.left_paddle.score >= 10 else self.right_paddle
+        looser = self.right_paddle if self.right_paddle.score >= 10 else self.left_paddle
+        player1 = self.left_paddle if self.left_paddle.consumer.user_profile == player_one else self.right_paddle
+        player2 = self.left_paddle if player1 == self.right_paddle else self.right_paddle
+        game.winner = winner.consumer.user_profile
+        game.looser = looser.consumer.user_profile
+        game.winner_score = winner.score
+        game.looser_score = looser.score
+        game.player_one_score = player1.score
+        game.player_two_score = player2.score
+        game.end_time = now()
+        game.is_completed = True
+        await sync_to_async(game.save)()
 
     async def start_game(self):
         if not self.left_paddle or not self.right_paddle:
             self.running = False
             return
-        await asyncio.sleep(10)
+        await asyncio.sleep(3)
         self.last_time = time.time()
         await self.ball.init_ball(self.left_paddle.consumer)
         self.running = True
