@@ -17,17 +17,6 @@ from django.http import HttpResponseRedirect
 from two_factor.utils import default_device
 import json
 
-
-#TEST
-from django.http import HttpResponse
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def protected_view(request):
-    return HttpResponse("You have access to this protected view!")
-
 class CustomLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
@@ -77,12 +66,16 @@ def register(request):
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             }
+
+            # Option 1: Set JWT tokens as cookies (Secure, HttpOnly)
             response = HttpResponseRedirect(reverse('two_factor:setup'))
             response.set_cookie('jwt_tokens', json.dumps(data), httponly=True, secure=True)
+            
             return response
     else:
         form = UserCreationForm()
     return render(request, "authentication/register.html", {"form": form})
+
 
 @api_view(['POST'])
 def logout_view(request):
