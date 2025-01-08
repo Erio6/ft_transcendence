@@ -35,3 +35,9 @@ class TournamentGame(models.Model):
     is_completed = models.BooleanField(default=False)
     def __str__(self):
         return  f'{self.player_one.display_name} vs {self.player_two.display_name} (Tournament)'
+
+    # - Tournament game (player one, player two, game ID, tournament ID)
+    # - Tournament (je reprend le model tournament qui existe deja)
+    # - Je rajoute un bool dans game pour savoir si la game est tournament ou non
+    # - Dans leaderboard j'affiche que les game ou le tournament bool est false
+    
