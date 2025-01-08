@@ -14,6 +14,8 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
+import matchMaking.routing
+import game.routing
 from game.routing import websocket_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoProject.settings')
@@ -22,8 +24,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoProject.settings')
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
     'websocket': AuthMiddlewareStack(
-        URLRouter(websocket_urlpatterns)
-    )
+        URLRouter(game.routing.websocket_urlpatterns + matchMaking.routing.websocket_urlpatterns)
+    ),
 })
 
 # threading.Thread(target=asyncio.run, args=(game_loop(),), daemon=True).start()

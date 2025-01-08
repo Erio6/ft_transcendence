@@ -47,8 +47,10 @@ INSTALLED_APPS = [
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
+    'matchMaking',
     'rest_framework',
-    # 2FA
+    'asgiref',
+    #2FA
     'django_otp',
     # 'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
@@ -67,7 +69,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [('127.0.0.1', 6379)],
         }
     }
 }
