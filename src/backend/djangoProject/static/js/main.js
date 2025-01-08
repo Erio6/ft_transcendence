@@ -14,7 +14,7 @@ modeSwitch.addEventListener("click", () => {
     }
 });
 
-toggle.addEventListener("click", () => {
-    sidebar.classList.toggle("close");
-});
+// toggle.addEventListener("click", () => {
+//     sidebar.classList.toggle("close");
+// });
 

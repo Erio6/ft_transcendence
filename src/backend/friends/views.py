@@ -27,6 +27,9 @@ def friends_overview(request):
             Q(receiver__sender=userprofile, receiver__status='pending') |
             Q(sender__receiver=userprofile, sender__status='pending')
         ).distinct()
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
 
     context = {
         'friends': friends,
@@ -34,6 +37,7 @@ def friends_overview(request):
         'outgoing_requests': outgoing_requests,
         'search_results': search_results,
         'query': query,
+        'profile': profile,
     }
     return render(request, 'friends/friends.html', context)
 
