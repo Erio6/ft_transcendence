@@ -18,7 +18,6 @@ import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ SECRET_KEY = 'django-insecure-vfvsk%cx11j^o)to!8om3mt^tf72j81h3dlp&d_%)8-8e=-q-g
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -49,17 +47,19 @@ INSTALLED_APPS = [
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
+    'matchMaking',
     'rest_framework',
-    #2FA
+    'asgiref',
+    # 2FA
     'django_otp',
-    #'two_factor.plugins.phonenumber',
+    # 'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'qr_code',
     'channels',
     'django_countries',
     'two_factor',
-    #JWT
+    # JWT
     'rest_framework_simplejwt',
 ]
 
@@ -69,7 +69,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [('127.0.0.1', 6379)],
         }
     }
 }
@@ -79,7 +79,6 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -110,7 +109,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -125,7 +123,7 @@ DATABASES = {
     }
 }
 
-#JWT
+# JWT
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -142,7 +140,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
 }
 
-#PASSWORD HASHING
+# PASSWORD HASHING
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
@@ -170,7 +168,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -182,12 +179,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS =[os.path.join(BASE_DIR, "djangoProject/static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "djangoProject/static")]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

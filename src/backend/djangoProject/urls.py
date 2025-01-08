@@ -4,7 +4,9 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
+import matchMaking
 from game.consumers import GameConsumer
+from matchMaking.consumers import MatchMakingConsumer
 from . import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -53,10 +55,12 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('API.urls')),
     path('leaderboard/', include('dashboard.urls')),
+    path('matchMaking', include('matchMaking.urls')),
 ]
 
 websocket_urlpatterns = [
-    re_path(r'ws/game/$', GameConsumer.as_asgi()),  # Map WebSocket path to consumer
+    re_path(r'ws/game/(?P<room_id>\d+)/$', GameConsumer.as_asgi()), # Map WebSocket path to consumer
+    re_path(r'ws/matchmaking/(?P<match_id>\d+)/$', MatchMakingConsumer.as_asgi()),
 ]
 
 # only for production to change for deploying

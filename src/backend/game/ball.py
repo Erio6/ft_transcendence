@@ -6,13 +6,13 @@ from asgiref.sync import async_to_sync
 
 class Ball:
     def __init__(self):
-        self.min_speed = 10
-        self.current_speed = 10
+        self.min_speed = 100
+        self.current_speed = 100
         self.radius = 3
         self.x = 50
-        self.y = 0
-        self.v_x = 0.5
-        self.v_y = 0.5
+        self.y = 50
+        self.v_x = 1
+        self.v_y = 0
         self.sending_data = False
         self.sending_score = None
         self.last_touch = "left"

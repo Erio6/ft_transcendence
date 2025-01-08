@@ -2,9 +2,9 @@ import {BoxGeometry, Mesh, MeshStandardMaterial, MathUtils, TextureLoader} from 
 
 function createMaterial() {
 
-    const textureLoader = new TextureLoader();
+    //const textureLoader = new TextureLoader();
 
-    const texture = textureLoader.load('/assets/textures/test.png');
+    //const texture = textureLoader.load('/assets/textures/test.png');
 
     const material = new MeshStandardMaterial({color: "red"});
 

@@ -21,6 +21,7 @@ class Ball {
         this.v_x = v_x;
         this.v_y = v_y;
         this.speed = parseInt(speed);
+        console.log("collide");
     }
 
     normalize(value, ratio) {
@@ -43,9 +44,9 @@ class Ball {
     }
 
     tick(delta) {
-        //this.wall_collide();
         this.x += this.v_x * delta * this.speed;
         this.y += -this.v_y * delta * this.speed;
+        this.wall_collide();
         // console.log(this.normalize(this.x, this.field_width));
         this.model.position.set(this.x - 50, this.y - 50, 0);
     }

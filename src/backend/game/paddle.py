@@ -2,7 +2,7 @@ import json
 
 
 class Paddle:
-    def __init__(self, loc, consumer):
+    def __init__(self, loc, consumer, name):
         self.loc = loc
         self.y = 50
         self.movingUp = 0
@@ -15,6 +15,7 @@ class Paddle:
         self.x = 2
         self.score = 0
         self.hit = 0
+        self.name = name
 
     async def send_data(self):
         print("send to all")
@@ -45,13 +46,14 @@ class Paddle:
                 'speed': self.speed,
                 'x': self.x,
                 'y': self.y,
+                'name': self.name,
             }
         )
 
     async def init_paddle_chan(self, consumer):
         await consumer.send(json.dumps({
             'type': 'init_paddle', 'loc': self.loc, 'size': self.length, 'speed': self.speed, 'width': self.width,
-            'x': self.x, 'y': self.y,
+            'x': self.x, 'y': self.y, 'name': self.name,
         }))
 
     async def move(self, delta_time, room):
