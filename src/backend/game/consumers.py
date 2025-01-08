@@ -53,7 +53,9 @@ class GameConsumer(AsyncWebsocketConsumer):
         global group_rooms
 
         user = self.scope["user"]
+        print(user)
         self.room_name = self.scope['url_route']['kwargs']['room_id']
+        print(user.is_authenticated)
 
         if user.is_authenticated:
             # Convert the lazy User object into a real User instance

@@ -59,7 +59,7 @@ urlpatterns = [
 ]
 
 websocket_urlpatterns = [
-    re_path(r'ws/game/$', GameConsumer.as_asgi()), # Map WebSocket path to consumer
+    re_path(r'ws/game/(?P<room_id>\d+)/$', GameConsumer.as_asgi()), # Map WebSocket path to consumer
     re_path(r'ws/matchmaking/(?P<match_id>\d+)/$', MatchMakingConsumer.as_asgi()),
 ]
 

@@ -9,7 +9,9 @@ from user.models import UserProfile
 class MatchMakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.match_id = self.scope["url_route"]["kwargs"].get("match_id")
+        print("**********" + self.match_id + "*************")
         self.user = self.scope["user"]
+        print("***********" + str(self.user) + "****************")
 
         if not self.user.is_authenticated:
             await self.close()
