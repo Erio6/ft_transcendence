@@ -10,10 +10,60 @@ from user.models import UserProfile
 from django.contrib.sites.shortcuts import get_current_site
 from django.dispatch import receiver
 from two_factor.signals import user_verified
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.http import JsonResponse
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from two_factor.utils import default_device
+import json
+
+
+#TEST
+from django.http import HttpResponse
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def protected_view(request):
+    return HttpResponse("You have access to this protected view!")
+
+class CustomLoginView(LoginView):
+    def form_valid(self, form):
+        user = form.get_user()
+        if default_device(user):
+            return super().form_valid(form)
+        else:
+            return self.generate_jwt_response(user)
+
+    def done(self, form_list, **kwargs):
+        user = self.get_user()
+        return self.generate_jwt_response(user)
+
+    def generate_jwt_response(self, user):
+        refresh = RefreshToken.for_user(user)
+        return JsonResponse({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        })
 
 def login_view(request):
-	return redirect('two_factor:login')
-
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if default_device(user):
+                # User has 2FA enabled, redirect to 2FA verification
+                return redirect('two_factor:login')
+            else:
+                # User doesn't have 2FA, log them in and generate JWT
+                login(request, user)
+                refresh = RefreshToken.for_user(user)
+                return JsonResponse({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                })
+    return redirect('two_factor:login')
 
 def register(request):
     if request.method == "POST":
@@ -21,11 +71,26 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect("two_factor:setup")
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            data = {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
+            response = HttpResponseRedirect(reverse('two_factor:setup'))
+            response.set_cookie('jwt_tokens', json.dumps(data), httponly=True, secure=True)
+            return response
     else:
         form = UserCreationForm()
     return render(request, "authentication/register.html", {"form": form})
 
+@api_view(['POST'])
 def logout_view(request):
+    try:
+        refresh_token = request.data["refresh_token"]
+        token = RefreshToken(refresh_token)
+        token.blacklist()
         logout(request)
-        return redirect("/")
+        return redirect('home')
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)

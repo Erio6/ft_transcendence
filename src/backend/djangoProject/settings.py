@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
     #2FA
     'django_otp',
     #'two_factor.plugins.phonenumber',
@@ -133,8 +134,10 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
 SIMPLE_JWT = {
@@ -195,6 +198,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGIN_URL = 'two_factor:login'  # 2FA login view
+LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
