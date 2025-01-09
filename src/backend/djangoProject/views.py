@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.shortcuts import redirect
 from dashboard.models import GameHistory
+from user.models import UserProfile
 
 def home(request):
     game_histories = GameHistory.objects.order_by('-date_played')[:10]
@@ -19,9 +20,13 @@ def home(request):
                 'winner': game.winner,
                 'date_played': history.date_played,
             })
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
 
     context = {
         'user': request.user,
         'game_histories': history_data,
+        'profile': profile,
     }
     return render(request, 'djangoProject/home.html', context)

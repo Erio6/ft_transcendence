@@ -1,7 +1,25 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %}Solo Game{% endblock %}
-
+{% load static %}
 {% block content %}
+    <link rel="stylesheet" href="{% static 'css/solo_game.css' %}">
     <h1> Play against the machine </h1>
-    <a href="">Start the game</a>
+    <div class="container">
+        <h2>Select Your Side</h2>
+        <div class="selection-area">
+            <div id="left-side" class="side">Left</div>
+            <div id="cursor"></div>
+            <div id="right-side" class="side">Right</div>
+        </div>
+        <div class="ai-level-selection">
+            <label for="ai-level">Select AI difficulty:</label>
+            <select id="ai-level">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <button id="start-button">Start Game</button>
+    </div>
+    <script src="{% static 'js/solo_game.js' %}"></script>
 {% endblock %}

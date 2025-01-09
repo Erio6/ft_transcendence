@@ -28,7 +28,7 @@ def record_game_on_blockchain(game):
         game.player_one_score,
         game.player_two_score
     ).build_transaction({
-        'chainId': 1337,  # Sepolia 11155111,
+        'chainId': 31337,  # Sepolia 11155111,
         'gas': 200000,
         'gasPrice': w3.eth.gas_price,
         'nonce': w3.eth.get_transaction_count(account.address),

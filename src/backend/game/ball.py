@@ -6,8 +6,8 @@ from asgiref.sync import async_to_sync
 
 class Ball:
     def __init__(self):
-        self.min_speed = 10
-        self.current_speed = 10
+        self.min_speed = 100
+        self.current_speed = 100
         self.radius = 3
         self.x = 50
         self.y = 50

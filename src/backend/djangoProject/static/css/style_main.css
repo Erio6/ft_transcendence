@@ -15,8 +15,11 @@
 
 /* --- Global color variable --- */
 :root{
-    --background-color: #151515;
+    --background-color: #04011B;
+    --menubar-color: rgba(255,255,255,0.4);
     --toggle-color: #313131;
+    --menubar-icone-hover-color: #2176FF;
+    --menubar-hover-color: #FFFFFF;
     --sidebar-dark-color: #151515;
     --font-color: #f2f2f2;
 }
@@ -38,57 +41,68 @@ body.light
 
 
 /* --- Sidebar --- */
-.sidebar .image-text img {
-    width: 40px;
-    border-radius: 10px;
-}
+
+/*.sidebar .image-text img {*/
+/*    width: 40px;*/
+/*    border-radius: 10px;*/
+/*}*/
 
 .sidebar .image {
-    min-width: 60px;
     display : flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding-bottom: 30px;
     font-size: 35px;
 }
 
-.sidebar{
+.sidebar {
+    display:flex;
+    flex-direction: column;
+    align-items:center;
     position: fixed;
     top : 0;
     left: 0;
-    height: 100%;
-    width: 250px;
+    height : 100vh;
     transition: all 0.3s;
+    margin: 60px;
 }
 
-.sidebar.close {
-    width: 75px;
-}
+.sidebar .menu-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers menu-bar vertically */
+    align-items: center; /* Centers menu-bar horizontally */
 
-.sidebar.close .text {
-    opacity: 0;
 }
 
 .sidebar li {
-    height: 50px;
-    margin-top: 10px;
-    list-style: none; /* enleve le style des listes*/
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    list-style: none;
     align-items: center;
+    position: relative;
+    gap: 15px;
 }
 
 .sidebar li .icon,
 .sidebar li .text  {
     display: flex;
+    padding: 20px;
     align-items: center;
     font-size: 20px;
     color: var(--font-color);
-    min-width: 60px;
+    /*min-width: 60px;*/
     justify-content: center;
+
 }
 
 .sidebar header{
     position: relative;
-    padding :5px;
+    margin-top: -20px;
+    margin-bottom: 40px;
+    flex: 0.2;
 }
 
 .sidebar .image-text img {
@@ -101,85 +115,60 @@ body.light
     align-items: center;
 }
 
-.sidebar .text{
-    font-size: 13px;
-    font-weight: 200;
-    transition : all 0.2s;
-    white-space: nowrap; /* evite de wrap le texte quand la side-bar souvre*/
-    opacity: 1;
-}
-
 header .image-text .header-text{
     display: block;
     flex-direction: column;
     font-weight: 300;
     font-size: 20px;
-    padding-bottom: 30px;
-}
-
-/* --- Sidebar // boutton pour ouvrir/fermer la barre --- */
-.sidebar header .toggle
-{
-    position: absolute;
-    top: 50%;
-    right: -35px; /* position en dehors un peu de la sidebar*/
-    transform: translateY(-50%) rotate(180deg);
-    height: 25px;
-    width: 25px;
-    background : var(--toggle-color);
-    display : flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.sidebar.close header .toggle{
-    transform: translateY(-50%);
+    padding-bottom: 20px;
 }
 
 .sidebar li a {
     height: 100%;
-    display: flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
-    padding: 10px;
     transition: all 0.3s;
-    border-radius: 10px;
+    border-radius: 50px;
 }
-
 /* To see how to fix the hover its not good i think */
 .sidebar li a:hover{
-    background-color: var(--toggle-color);
+    background-color: #ffffff;
+    opacity:1;
+}
+.sidebar li .icon:hover {
+    color: var(--menubar-icone-hover-color);
 }
 
 .sidebar li .icon,
 .sidebar li .text  {
     display: flex;
     align-items: center;
-    font-size: 20px;
-    min-width: 60px;
+    font-size: 25px;
+    /*min-width: auto;*/
     justify-content: center;
 }
 
 .sidebar .menu-bar {
-    height: calc(100% - 150px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-}
-/* --- Sidebar // Night mode/Light Mode--- */
-.menu-bar .mode{
-    position: relative;
-    align-items: center;
-    display: flex;
-    border-radius: 6px;
-    padding: 10px;
+    width: 60px;
+    justify-content: center;
+    border-radius: 50px;
+    background-color: var(--menubar-color);
+    backdrop-filter: blur(200px);
+    gap: 15px;
+    height: fit-content;
 }
 
-.menu-bar .mode .moon-sun{
+/* --- Sidebar // Night mode/Light Mode--- */
+.bottom-content .mode{
+    border-radius: 6px;
+    width: 60px;
+    margin-top: auto;
+}
+
+.bottom-content .mode .moon-sun{
     height: 50px;
     width: 60px;
     display: flex;
@@ -188,23 +177,23 @@ header .image-text .header-text{
     min-width: 60px;
 }
 
-.menu-bar .mode i{
+.bottom-content .mode i{
     position: absolute;
     transition: all 0.2s;
 }
 
-.menu-bar .mode i.moon{
+.bottom-content .mode i.moon{
     opacity: 0;
 }
 
-body.light .menu-bar .mode i.sun{
+body.light .bottom-content .mode i.sun{
     opacity:0;
 }
-body.light .menu-bar .mode i.moon{
+body.light .bottom-content .mode i.moon{
     opacity:1;
 }
 
-.menu-bar .mode .toggle-switch {
+.bottom-content .mode .toggle-switch {
     position: absolute; /* met le toggle sur la lune ou le soleil pour etre dans la bar */
     display: flex;
     align-items: center;
@@ -212,16 +201,17 @@ body.light .menu-bar .mode i.moon{
     border-radius: 6px;
     right: 0;
     height: 100%;
-    min-width: 75px;
+    min-width: 60px;
     cursor: pointer;
+    flex-direction: column;
 }
 
 .toggle-switch .switch {
     position: relative;
     height: 22px;
-    width: 44px;
+    width: 60px;
     border-radius: 25px;
-    background: var(--toggle-color);
+    background: var(--menubar-color);
 }
 
 .switch::before{
@@ -237,42 +227,42 @@ body.light .menu-bar .mode i.moon{
 }
 
 body.light .switch::before {
-    left: 24px;
+    left: 40px;
 }
 
-/* --- Login Bar (TO REWORK) --- */
+/* --- Login Bar with avatar--- */
 .login-section {
-    position: absolute; /* Position relative to the viewport */
-    top: 10px; /* Distance from the top of the screen */
-    right: 10px; /* Distance from the right of the screen */
-    background-color: var(--background-color); /* Background color (adjust as needed) */
-    border: 1px solid #ccc; /* Light border */
-    padding: 10px; /* Spacing inside the container */
-    border-radius: 5px; /* Rounded corners */
-    text-align: right; /* Aligns text to the right */
+    position: fixed;
+    top: 20px;
+    right: 60px;
+    display:flex;
+    align-items:center;
+    padding: 15px;
+    font-size: 20px;
+}
+
+.login-section .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
 .login-section a {
-    color: var(--font-color); /* Light text color */
-    text-decoration: none; /* Removes underlines */
-    padding: 5px 10px; /* Adds spacing around links */
-    display: inline-block; /* Ensures padding works */
+    color: var(--font-color);
+    text-decoration: none;
+    padding:5px;
 }
 
 .home {
     position: relative;
     height: 100vh;
     top: 75px;
-    left: 250px;
-    margin: 10px;
+    left: 75px;
+    margin: 100px;
     width: calc(100% - 250px);
-    z-index:100;
+    z-index:1;
     transition: all 0.5s;
 }
 
-.sidebar.close ~.home {
-    left: 75px;
-    width: calc(100% - 75px);
-}
 
 
