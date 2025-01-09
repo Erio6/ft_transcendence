@@ -84,7 +84,7 @@ class Room:
             return
         await asyncio.sleep(3)
         if self.left_paddle:
-            await self.left_paddle.channel_layer.group_send(
+            await self.left_paddle.consumer.channel_layer.group_send(
                 self.left_paddle.consumer.room_name,
                 {
                     'type': 'start_game',

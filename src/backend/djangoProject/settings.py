@@ -74,6 +74,8 @@ CHANNEL_LAYERS = {
     }
 }
 
+LOGIN_URL = 'authentication:login'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
