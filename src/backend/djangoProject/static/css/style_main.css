@@ -8,15 +8,15 @@
     font-family: "Poppins", sans-serif;
     font-weight: 300;
     font-style: normal;
-    margin : 0;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 /* --- Global color variable --- */
-:root{
+:root {
     --background-color: #04011B;
-    --menubar-color: rgba(255,255,255,0.4);
+    --menubar-color: rgba(255, 255, 255, 0.4);
     --toggle-color: #313131;
     --menubar-icone-hover-color: #2176FF;
     --menubar-hover-color: #FFFFFF;
@@ -31,11 +31,11 @@ body {
     color: var(--font-color);
 }
 
-body.light
-{
+body.light {
     --background-color: #ffffff;
     --toggle-color: #b4b5b6;
     --sidebar-dark-color: #ffffff;
+    --menubar-color: #8c96a8;
     --font-color: #151515;
 }
 
@@ -48,7 +48,7 @@ body.light
 /*}*/
 
 .sidebar .image {
-    display : flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -57,13 +57,13 @@ body.light
 }
 
 .sidebar {
-    display:flex;
+    display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
     position: fixed;
-    top : 0;
+    top: 0;
     left: 0;
-    height : 100vh;
+    height: 100vh;
     transition: all 0.3s;
     margin: 60px;
 }
@@ -87,9 +87,9 @@ body.light
 }
 
 .sidebar li .icon,
-.sidebar li .text  {
+.sidebar li .text {
     display: flex;
-    padding: 20px;
+    padding: 15px;
     align-items: center;
     font-size: 20px;
     color: var(--font-color);
@@ -98,7 +98,7 @@ body.light
 
 }
 
-.sidebar header{
+.sidebar header {
     position: relative;
     margin-top: -20px;
     margin-bottom: 40px;
@@ -110,12 +110,12 @@ body.light
     border-radius: 10px;
 }
 
-.sidebar header .image-text{
-    display:flex;
+.sidebar header .image-text {
+    display: flex;
     align-items: center;
 }
 
-header .image-text .header-text{
+header .image-text .header-text {
     display: block;
     flex-direction: column;
     font-weight: 300;
@@ -125,23 +125,26 @@ header .image-text .header-text{
 
 .sidebar li a {
     height: 100%;
+    width: 100%;
     align-items: center;
     justify-content: center;
     text-decoration: none;
     transition: all 0.3s;
     border-radius: 50px;
 }
+
 /* To see how to fix the hover its not good i think */
-.sidebar li a:hover{
+.sidebar li a:hover {
     background-color: #ffffff;
-    opacity:1;
+    opacity: 1;
 }
+
 .sidebar li .icon:hover {
     color: var(--menubar-icone-hover-color);
 }
 
 .sidebar li .icon,
-.sidebar li .text  {
+.sidebar li .text {
     display: flex;
     align-items: center;
     font-size: 25px;
@@ -152,7 +155,6 @@ header .image-text .header-text{
 .sidebar .menu-bar {
     display: flex;
     flex-direction: column;
-    width: 60px;
     justify-content: center;
     border-radius: 50px;
     background-color: var(--menubar-color);
@@ -162,13 +164,13 @@ header .image-text .header-text{
 }
 
 /* --- Sidebar // Night mode/Light Mode--- */
-.bottom-content .mode{
+.bottom-content .mode {
     border-radius: 6px;
     width: 60px;
     margin-top: auto;
 }
 
-.bottom-content .mode .moon-sun{
+.bottom-content .mode .moon-sun {
     height: 50px;
     width: 60px;
     display: flex;
@@ -177,20 +179,26 @@ header .image-text .header-text{
     min-width: 60px;
 }
 
-.bottom-content .mode i{
+.bottom-content .mode i {
     position: absolute;
     transition: all 0.2s;
 }
 
-.bottom-content .mode i.moon{
+.bottom-content .mode i.moon {
+    opacity: 0;
+    left: 5px;
+}
+
+.bottom-content .mode i.sun {
+    right: 5px;
+}
+
+body.light .bottom-content .mode i.sun {
     opacity: 0;
 }
 
-body.light .bottom-content .mode i.sun{
-    opacity:0;
-}
-body.light .bottom-content .mode i.moon{
-    opacity:1;
+body.light .bottom-content .mode i.moon {
+    opacity: 1;
 }
 
 .bottom-content .mode .toggle-switch {
@@ -208,13 +216,14 @@ body.light .bottom-content .mode i.moon{
 
 .toggle-switch .switch {
     position: relative;
-    height: 22px;
+    height: 25px;
     width: 60px;
     border-radius: 25px;
     background: var(--menubar-color);
+    z-index: -1;
 }
 
-.switch::before{
+.switch::before {
     content: '';
     position: absolute;
     height: 15px;
@@ -227,7 +236,8 @@ body.light .bottom-content .mode i.moon{
 }
 
 body.light .switch::before {
-    left: 40px;
+    left: auto;
+    right: 5px;
 }
 
 /* --- Login Bar with avatar--- */
@@ -235,8 +245,8 @@ body.light .switch::before {
     position: fixed;
     top: 20px;
     right: 60px;
-    display:flex;
-    align-items:center;
+    display: flex;
+    align-items: center;
     padding: 15px;
     font-size: 20px;
 }
@@ -250,7 +260,7 @@ body.light .switch::before {
 .login-section a {
     color: var(--font-color);
     text-decoration: none;
-    padding:5px;
+    padding: 5px;
 }
 
 .home {
@@ -260,7 +270,7 @@ body.light .switch::before {
     left: 75px;
     margin: 100px;
     width: calc(100% - 250px);
-    z-index:1;
+    z-index: 1;
     transition: all 0.5s;
 }
 
