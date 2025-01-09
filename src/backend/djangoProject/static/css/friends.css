@@ -38,14 +38,7 @@
     background: var(--menubar-color)
 }
 
-a {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
 
-a li {
-    margin: 15px;
-}
 /* friends list */
 li {
     list-style: none;
