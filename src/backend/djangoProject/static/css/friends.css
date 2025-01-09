@@ -1,4 +1,43 @@
 /* static/css/friends.css */
+.my-friends {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 3fr 2fr;
+    grid-gap: 20px;
+    grid-auto-rows: minmax(100px,auto);
+    height: 65vh;
+    margin-top:20px;
+}
+
+.add-friends {
+    grid-column: 1;
+    grid-row: 1/ -1;
+    border-radius: 35px;
+    padding: 10px;
+    background: var(--menubar-color)
+}
+
+.add-friends .search-results {
+
+}
+
+
+.friend-list{
+    grid-column:2;
+    grid-row: 1;
+    border-radius: 35px;
+    padding: 10px;
+    background:var(--menubar-color)
+}
+
+.friend-request-received{
+    grid-column: 2;
+    grid-row:2;
+    border-radius: 35px;
+    padding: 10px;
+    background: var(--menubar-color)
+}
+
 
 /* friends list */
 li {
@@ -12,6 +51,7 @@ li {
     padding: 0;
     margin: 0;
 }
+
 /* status-dot */
 
 .status-dot {
