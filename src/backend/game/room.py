@@ -2,6 +2,7 @@ import asyncio
 import json
 import time
 
+from blockchain.utils import blockchain_score_storage
 from django.utils.timezone import now
 from asgiref.sync import sync_to_async
 
@@ -77,6 +78,10 @@ class Room:
         game.end_time = now()
         game.is_completed = True
         await sync_to_async(game.save)()
+        try:
+            await blockchain_score_storage(game)
+        except Exception as e:
+            print(f"Erreur lors de l'enregistrement sur la blockchain : {e}")
 
     async def start_game(self):
         if not self.left_paddle or not self.right_paddle:

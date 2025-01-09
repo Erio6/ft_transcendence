@@ -12,7 +12,7 @@ contract ScoreContract {
     }
 
     // mapping of game id to game result;
-    mapping(string => GameResult) private gameResults;
+    mapping(uint256 => GameResult) private gameResults;
 
     address public owner;
 
@@ -45,7 +45,7 @@ contract ScoreContract {
         });
     }
 
-    function getResult(string memory gameID) public view returns (GameResult memory) {
+    function getResult(uint256 gameID) public view returns (GameResult memory) {
         require(gameResults[gameID].timestamp != 0, "Game not found");
         return gameResults[gameID];
     }
