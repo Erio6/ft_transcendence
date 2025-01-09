@@ -10,8 +10,13 @@ import {createControls} from "../Systems/controls.js";
 import {Ball} from "../Systems/Ball.js";
 import {BufferGeometry, Group, Line, LineBasicMaterial, Vector3} from "three";
 import {Align, createFont} from "../Components/font.js";
+import {loadModel} from "../Components/modelLoader.js";
 
 let camera, renderer, scene, loop, loc, active_paddle, default_paddle;
+
+function degToRad(degrees) {
+    return degrees * (Math.PI / 180);
+}
 
 class World {
     constructor(container) {
@@ -50,7 +55,7 @@ class World {
                     let align = Align.Left;
                     if (loc === "right")
                         align = Align.Right;
-                    active_paddle = new Paddle(loc, json['name'], json['speed'], json['width'], json['size'], true, json['x'], 50, 50, webSocket);
+                    active_paddle = new Paddle(loc, json['name'], json['speed'], json['width'], json['size'], false, json['x'], 50, 50, webSocket);
                     createFont(scene, active_paddle.x, 55, -5, active_paddle.name, null, null, align, 7);
                     scene.add(active_paddle.model);
                     loop.updatables.push(active_paddle);
@@ -92,25 +97,6 @@ class World {
                 else
                     active_paddle.score = json['value'];
 
-                // scene.remove(fontGroup.children);
-                // const children = [...fontGroup.children];
-                // children.forEach((child) => {
-                //
-                //     // If the child has geometry and material, dispose of them
-                //     if (child.geometry) child.geometry.dispose();
-                //     if (child.material) {
-                //         if (Array.isArray(child.material)) {
-                //             child.material.forEach((mat) => mat.dispose());
-                //         }
-                //         else {
-                //             child.material.dispose();
-                //         }
-                //     }
-                //     // Remove the child from the group
-                //     fontGroup.remove(child);
-                //     // child.removeFromParent();
-                //     // scene.remove(child);
-                // });
                 let mult = -1;
                 if (active_paddle.location === "right")
                     mult = 1;
@@ -119,12 +105,21 @@ class World {
                 createFont(scene, 30 * -mult, 30, -5, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
                 scene.add(fontGroup);
             }
+            else if (json['type'] === 'start_game') {
+                active_paddle.active = true;
+            }
         }
 
 
         camera = createCamera();
         scene = createScene();
         renderer = createRenderer();
+        loadModel('/static/js/threejs/Models/nowall.glb', (obj) => {
+            obj.scale.set(130, 130, 130);
+            obj.position.set(0, 0, -25);
+            obj.rotation.set(degToRad(90), degToRad(90), 0);
+            scene.add(obj);
+        });
         const fontGroup = new Group();
         createFont(scene, -30, 30, -5, "00", fontGroup);
         createFont(scene, 30, 30, -5, "00", fontGroup);
@@ -133,10 +128,6 @@ class World {
 
         const top = createCube();
         const bot = createCube();
-        // const paddleLeft = createCube();
-        // const paddleLeft = new Paddle("left", 20, 3.5, 25, true, 2, 50, 50, webSocket);
-        // const paddleRight = new Paddle("right", 20, 3.5, 25, false, 2, 50, 50, webSocket);
-        // const ball = new Ball(50, 50, 0, 1, 10, 1, 19);
         const {ambientLight, light} = createLights();
 
         loop = new Loop(camera, scene, renderer);
@@ -146,12 +137,6 @@ class World {
         top.scale.set(50, 1, 1);
         bot.position.set(0, -51, 0);
         bot.scale.set(50, 1, 1);
-
-
-        // paddleLeft.position.set(-20, 0, 0);
-        //paddleRight.position.set(50, 0, 0);
-        // paddleLeft.scale.set(1, 5, 1);
-        //paddleRight.scale.set(1, 5, 1);
 
         const mat = new LineBasicMaterial({color: 0x0000ff});
         const points = [];
@@ -171,9 +156,6 @@ class World {
         scene.add(line);
 
         loop.updatables.push(controls);
-        // loop.updatables.push(paddleLeft);
-        // loop.updatables.push(ball);
-        // loop.updatables.push(cube);
 
         scene.add(top, bot, light, ambientLight, fontGroup);
 

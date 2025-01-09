@@ -88,6 +88,13 @@ class Room:
             self.running = False
             return
         await asyncio.sleep(3)
+        if self.left_paddle:
+            await self.left_paddle.channel_layer.group_send(
+                self.left_paddle.consumer.room_name,
+                {
+                    'type': 'start_game',
+                }
+            )
         self.last_time = time.time()
         await self.ball.init_ball(self.left_paddle.consumer)
         self.running = True
