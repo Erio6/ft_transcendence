@@ -1,9 +1,48 @@
 {% extends 'djangoProject/home.html' %}
 
 {% block content %}
-<div>
-    <h2>My Friends</h2>
-    {% if friends %}
+ <h2>My Friends</h2>
+<div class="my-friends">
+    <div class="add-friends"><a>Add a Friend</a>
+    <form method="GET" action="{% url 'friends:friends_overview' %}">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+            <button type="submit">Search</button>
+    </form>
+        <div class="search-results">
+    {% if query %}
+        <a>Search Results</a>
+        {% if search_results %}
+            <ul>
+                {% for user in search_results %}
+                    <li>
+                        {{ user.user.username }}
+                        <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" >Add Friend</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p> No users found for "{{ query }}".</p>
+        {% endif %}
+            </div>
+    {% endif %}
+        <a>Pending invitation sent</a>
+        {% for request in outgoing_requests %}
+            <li>
+                {{ request.receiver.user.userprofile }} (Pending)
+                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" >
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No invitation sent.</li>
+        {% endfor %}
+    </div>
+    <div class="friend-list"><a>Friend List</a>
+        {% if friends %}
     <ul>
         {% for friend in friends %}
            <li class="list-friends">
@@ -15,8 +54,9 @@
     {% else %}
         <p>You have no friends.</p>
    {% endif %}
-
-    <h3>Incoming Requests</h3>
+    </div>
+    <div class="friend-request-received">
+        <h3>Friend request received</h3>
     <ul>
         {% for request in incoming_requests %}
             <li>
@@ -36,45 +76,7 @@
             <li class="list-group-item">No incoming friend requests.</li>
         {% endfor %}
     </ul>
+    </div>
 
-    <h3>Pending invitation sent</h3>
-    <ul class="list-group mb-4">
-        {% for request in outgoing_requests %}
-            <li>
-                {{ request.receiver.user.userprofile }} (Pending)
-                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" >
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
-                </form>
-            </li>
-        {% empty %}
-            <li class="list-group-item">No invitation sent.</li>
-        {% endfor %}
-    </ul>
-
-    <h2>Add a Friend</h2>
-    <form method="GET" action="{% url 'friends:friends_overview' %}">
-            <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
-            <button type="submit">Search</button>
-    </form>
-
-    {% if query %}
-        <h3>Search Results</h3>
-        {% if search_results %}
-            <ul>
-                {% for user in search_results %}
-                    <li>
-                        {{ user.user.username }}
-                        <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" >Add Friend</button>
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p> No users found for "{{ query }}".</p>
-        {% endif %}
-    {% endif %}
 </div>
 {% endblock %}
