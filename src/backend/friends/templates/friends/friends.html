@@ -8,7 +8,6 @@
             <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
             <button type="submit">Search</button>
     </form>
-        <div class="search-results">
     {% if query %}
         <a>Search Results</a>
         {% if search_results %}
@@ -26,7 +25,6 @@
         {% else %}
             <p> No users found for "{{ query }}".</p>
         {% endif %}
-            </div>
     {% endif %}
         <a>Pending invitation sent</a>
         {% for request in outgoing_requests %}
