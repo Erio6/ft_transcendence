@@ -43,8 +43,8 @@ NOTE FOR ANTHONY:
 
 Game selection : 
 
-- Solo
-  - Choose your side and the IA level
+- Local
+  - Choose your side , the human or the IA level
 - Tournament
   - Create a tournament
     - Fill the information for the tournament
