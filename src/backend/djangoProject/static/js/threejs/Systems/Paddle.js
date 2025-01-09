@@ -25,54 +25,54 @@ class Paddle {
         this.model.scale.set(this.width, this.length, 1);
         this.pressUp = false;
         this.pressDown = false;
-
-        if (active) {
-            addEventListener("keydown", (event) => {
-                if (event.code === "ArrowDown") {
-                    this.pressDown = true;
-                    this.websocket.send(JSON.stringify({
-                        "type": 'move',
-                        "data": 1,
-                        "value": true,
-                        "loc": this.location
-                    }))
-                }
-                else if (event.code === "ArrowUp") {
-                    this.pressUp = true;
-                    this.websocket.send(JSON.stringify({
-                        "type": 'move',
-                        "data": -1,
-                        "value": true,
-                        "loc": this.location
-                    }))
-                }
-                console.log(this.pressDown + " | " + this.pressUp);
-            });
-            addEventListener("keyup", (event) => {
-                if (event.code === "ArrowDown") {
-                    this.pressDown = false;
-                    console.log("send");
-                    this.websocket.send(JSON.stringify({
-                        "type": 'move',
-                        "data": 1,
-                        "value": false,
-                        "loc": this.location
-                    }))
-                }
-                else if (event.code === "ArrowUp") {
-                    this.pressUp = false;
-                    this.websocket.send(JSON.stringify({
-                        "type": 'move',
-                        "data": -1,
-                        "value": false,
-                        "loc": this.location
-                    }))
-                }
-                console.log(this.pressDown + " | " + this.pressUp);
-            });
-        }
     }
-    
+
+    registerInput() {
+        addEventListener("keydown", (event) => {
+            if (event.code === "ArrowDown") {
+                this.pressDown = true;
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": 1,
+                    "value": true,
+                    "loc": this.location
+                }))
+            }
+            else if (event.code === "ArrowUp") {
+                this.pressUp = true;
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": -1,
+                    "value": true,
+                    "loc": this.location
+                }))
+            }
+            console.log(this.pressDown + " | " + this.pressUp);
+        });
+        addEventListener("keyup", (event) => {
+            if (event.code === "ArrowDown") {
+                this.pressDown = false;
+                console.log("send");
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": 1,
+                    "value": false,
+                    "loc": this.location
+                }))
+            }
+            else if (event.code === "ArrowUp") {
+                this.pressUp = false;
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": -1,
+                    "value": false,
+                    "loc": this.location
+                }))
+            }
+            console.log(this.pressDown + " | " + this.pressUp);
+        });
+    }
+
     tick(delta) {
         if (this.pressUp)
             this.y += this.speed * delta;

@@ -105,8 +105,9 @@ class World {
                 createFont(scene, 30 * -mult, 30, -5, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
                 scene.add(fontGroup);
             }
-            else if (json['type'] === 'start_game') {
+            else if (json['type'] === "start_game") {
                 active_paddle.active = true;
+                active_paddle.registerInput();
             }
         }
 

@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 
 from game.ball import Ball
 from game.models import Game
+from game.online_room import OnlineRoom
 from game.paddle import Paddle
 from game.room import Room
 from user.models import UserProfile
@@ -71,7 +72,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if self.room_name not in group_rooms:
             print("create Room, room name", type(self.room_name))
-            group_rooms[self.room_name] = Room(False, self.room_name)
+            group_rooms[self.room_name] = OnlineRoom(self.room_name)
         await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:

@@ -51,8 +51,6 @@ def online_game_creation(request):
 
 
 def game_3d(request, game_id):
-    print("in view = ")
-    print(request.user)
     if not request.user.is_authenticated:
         return redirect("authentication:login")
 
