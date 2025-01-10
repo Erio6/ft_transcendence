@@ -13,6 +13,7 @@ from user.models import UserProfile
 def quickPlay(request):
     return render(request, 'game/playmode.html')
 
+
 @login_required
 def soloGame(request):
     if request.method == 'POST':
@@ -77,8 +78,8 @@ def game_3d(request, game_id):
         return redirect("authentication:login")
 
     user_profile = UserProfile.objects.get(user=request.user)
-    if not Game.objects.filter(id=game_id).exists():
-        print("Game does not exist")
+    if not Game.objects.filter(id=game_id).exists() and game_id != 69:
+        print("Game does not exist", game_id)
         return redirect('/')
     print("load threejs.html")
     return render(request, 'game/threejs.html')

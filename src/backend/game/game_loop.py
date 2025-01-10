@@ -16,7 +16,7 @@ async def game_loop():
 
         for consumer, paddle in connected_clients.items():
             await paddle.move(delta_time)
-            await ball.paddles_collide_check(paddle)
+            ball.paddles_collide_check(paddle)
 
         await ball.send_data(connected_clients)
         await ball.send_score(connected_clients)

@@ -92,7 +92,7 @@ class Ball:
         )
         self.sending_score = None
 
-    async def paddles_collide_check(self, paddle):
+    def paddles_collide_check(self, paddle):
         if paddle.loc == "left":
             # print(str(self.x <= paddle.x + paddle.width) + " | " + str(
             #     paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2))
@@ -104,7 +104,7 @@ class Ball:
                 self.last_touch = "left"
                 self.sending_score = paddle
             elif self.last_touch == "right" and self.x - self.radius / 2 <= paddle.x + paddle.width and paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2:
-                await self.paddle_collide(paddle, self.x - (paddle.x + paddle.width))
+                self.paddle_collide(paddle, self.x - (paddle.x + paddle.width))
 
         elif paddle.loc == "right":
             if self.x > 100:
@@ -113,9 +113,9 @@ class Ball:
                 self.sending_score = paddle
             elif self.last_touch == "left" and self.x + self.radius / 2 >= 100 - (
                     paddle.width + paddle.x) and paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2:
-                await self.paddle_collide(paddle, 100 - (paddle.width + paddle.x) - self.x)
+                self.paddle_collide(paddle, 100 - (paddle.width + paddle.x) - self.x)
 
-    async def paddle_collide(self, paddle, diff_x):
+    def paddle_collide(self, paddle, diff_x):
         diff_y = min(abs((paddle.y - self.radius - paddle.length / 2) - self.y),
                      abs(self.y - (paddle.y + self.radius + paddle.length / 2)))
         diff_x = abs(diff_x)

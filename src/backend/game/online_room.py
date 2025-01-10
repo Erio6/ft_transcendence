@@ -22,8 +22,8 @@ class OnlineRoom(Room):
         await self.left_paddle.move(self.delta_time, self)
         await self.right_paddle.move(self.delta_time, self)
 
-        await self.ball.paddles_collide_check(self.left_paddle)
-        await self.ball.paddles_collide_check(self.right_paddle)
+        self.ball.paddles_collide_check(self.left_paddle)
+        self.ball.paddles_collide_check(self.right_paddle)
 
         await self.ball.send_data(self.left_paddle.consumer)
         await self.ball.send_score(self.left_paddle.consumer)

@@ -7,6 +7,7 @@ import neat
 from twisted.web.html import output
 
 import game.consumers
+from game.ai_room import AIRoom
 from game.room import Room
 
 
@@ -40,6 +41,7 @@ class AIGame:
             loop.run_until_complete(self.room.update())
             self.ai_movement(net1, net2, delta_time)
             if self.room.left_paddle.score > 0 or self.room.right_paddle.score > 0:
+                print("score > 0")
                 run = False
         self.compute_fitness(last_time - start_time)
 
@@ -72,13 +74,14 @@ class AIGame:
 
 
 def eval_genomes(genomes, config):
-    room = Room(True)
+    room = AIRoom(69)
     game.consumers.group_rooms["69"] = room
     loop = asyncio.get_event_loop()
     for i, (genome_id1, genome1) in enumerate(genomes):
         genome1.fitness = 0
 
         for genome_id2, genome2 in genomes[min(len(genomes) - 1, i + 1):]:
+            print(genome_id1, "vs", genome_id2)
             genome2.fitness = 0 if genome2.fitness is None else genome2.fitness
             ai_game = AIGame(room)
             loop.run_until_complete(room.reset())
