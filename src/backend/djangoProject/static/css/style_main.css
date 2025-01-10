@@ -16,7 +16,7 @@
 /* --- Global color variable --- */
 :root {
     --background-color: #04011B;
-    --menubar-color: rgba(255, 255, 255, 0.4);
+    --menubar-color: rgba(255, 255, 255, 0.12);
     --toggle-color: #313131;
     --menubar-icone-hover-color: #2176FF;
     --menubar-hover-color: #FFFFFF;
@@ -26,7 +26,6 @@
 
 /* --- Body --- */
 body {
-    height: 50vh;
     background: var(--background-color);
     color: var(--font-color);
 }
@@ -35,8 +34,48 @@ body.light {
     --background-color: #ffffff;
     --toggle-color: #b4b5b6;
     --sidebar-dark-color: #ffffff;
-    --menubar-color: #8c96a8;
+    --menubar-color: rgba(0, 0, 0, 0.12);
     --font-color: #151515;
+}
+
+/* --- Header --- */
+header {
+    z-index: 2;
+    background-color: var(--background-color);
+    width: 100%;
+    position: fixed;
+    top: 0;
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 72.5px;
+}
+
+.login-section {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    font-size: 20px;
+    z-index: 999;
+}
+
+.login-section .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.login-section a {
+    color: var(--font-color);
+    text-decoration: none;
+    padding: 5px;
+}
+
+header .image {
+    font-size: 35px;
 }
 
 
@@ -52,7 +91,6 @@ body.light {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 30px;
     font-size: 35px;
 }
 
@@ -60,12 +98,14 @@ body.light {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100%;
     transition: all 0.3s;
-    margin: 60px;
+    margin: 0 60px;
+    z-index: 999;
 }
 
 .sidebar .menu-container {
@@ -241,32 +281,10 @@ body.light .switch::before {
 }
 
 /* --- Login Bar with avatar--- */
-.login-section {
-    position: fixed;
-    top: 20px;
-    right: 60px;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    font-size: 20px;
-}
-
-.login-section .avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-}
-
-.login-section a {
-    color: var(--font-color);
-    text-decoration: none;
-    padding: 5px;
-}
 
 .home {
     position: relative;
-    height: 100vh;
-    top: 75px;
+    top: 35px;
     left: 75px;
     margin: 100px;
     width: calc(100% - 250px);
@@ -274,5 +292,19 @@ body.light .switch::before {
     transition: all 0.5s;
 }
 
+.diffuse-circle {
+    position: absolute;
+    border-radius: 100%;
+    background: rgba(203, 145, 115, 0.60);
+    filter: blur(150px);
+    z-index: -1;
+}
 
+.circle-2 {
+    right: 0;
+    top: -100px;
+    width: 350px;
+    height: 350px;
+    z-index: 5;
+}
 

@@ -13,6 +13,7 @@ import {Align, createFont} from "../Components/font.js";
 import {loadModel} from "../Components/modelLoader.js";
 
 let camera, renderer, scene, loop, loc, active_paddle, default_paddle;
+let local = false;
 
 function degToRad(degrees) {
     return degrees * (Math.PI / 180);
@@ -49,6 +50,10 @@ class World {
             else if (json['type'] === 'client') {
                 loc = json['loc'];
             }
+            else if (json['type'] === 'local_client') {
+                loc = "right";
+                local = true;
+            }
             else if (json['type'] === 'init_paddle') {
                 console.log(json['name']);
                 if (loc === json['loc']) {
@@ -63,6 +68,8 @@ class World {
                 else {
                     let align = Align.Left;
                     default_paddle = new Paddle(json['loc'], json['name'], json['speed'], json['width'], json['size'], false, json['x'], 50, 50, webSocket);
+                    if (local)
+                        default_paddle.registerLocalInput()
                     if (json['loc'] === "right")
                         align = Align.Right;
                     createFont(scene, default_paddle.x, 55, -5, default_paddle.name, null, null, align, 7);
@@ -105,8 +112,9 @@ class World {
                 createFont(scene, 30 * -mult, 30, -5, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
                 scene.add(fontGroup);
             }
-            else if (json['type'] === 'start_game') {
+            else if (json['type'] === "start_game") {
                 active_paddle.active = true;
+                active_paddle.registerInput();
             }
         }
 

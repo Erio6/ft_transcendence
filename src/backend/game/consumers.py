@@ -7,7 +7,9 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 
 from game.ball import Ball
+from game.local_room import LocalRoom
 from game.models import Game
+from game.online_room import OnlineRoom
 from game.paddle import Paddle
 from game.room import Room
 from user.models import UserProfile
@@ -71,7 +73,15 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if self.room_name not in group_rooms:
             print("create Room, room name", type(self.room_name))
-            group_rooms[self.room_name] = Room(False, self.room_name)
+            if self.game.type_of_game == "multiplayer":
+                group_rooms[self.room_name] = OnlineRoom(self.room_name)
+            elif self.game.type_of_game == "solo_player":
+                newRoom = LocalRoom(self.room_name)
+                await newRoom.register_left(self, self.user_profile.display_name)
+                await newRoom.register_right(self, "Player2")
+                await newRoom.start_game()
+                group_rooms[self.room_name] = newRoom
+
         await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:

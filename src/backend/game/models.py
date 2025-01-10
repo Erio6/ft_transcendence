@@ -6,7 +6,7 @@ from user.models import UserProfile
 # Create your models here.
 class Game(models.Model):
     player_one = models.ForeignKey(UserProfile, related_name='player_one_games', on_delete=models.CASCADE)
-    player_two = models.ForeignKey(UserProfile, related_name='player_two_games', null=True, on_delete=models.CASCADE)
+    player_two = models.ForeignKey(UserProfile, related_name='player_two_games', null=True, blank=True, on_delete=models.CASCADE)
     winner = models.ForeignKey(UserProfile, related_name='winner_games', null=True, on_delete=models.SET_NULL)
     looser = models.ForeignKey(UserProfile, related_name='looser_games', null=True, on_delete=models.SET_NULL)
     player_one_score = models.IntegerField(default=0, null=True, blank=True)
@@ -16,6 +16,7 @@ class Game(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
     is_completed = models.BooleanField(default=False)
+    type_of_game = models.CharField(max_length=20, choices=[('multiplayer', 'Multiplayer'), ('solo_IA_easy', 'Solo IA Easy'), ('solo_IA_medium', 'Solo IA Medium'), ('solo_IA_hard', 'Solo IA Hard'), ('solo_player', 'Solo Player'), ('tournament', 'Tournament')], default='multiplayer')
 
     def __str__(self):
         if self.player_two:
