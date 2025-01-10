@@ -1,5 +1,4 @@
 version: '3.10.12'
-
 services:
   web:
     build: .
@@ -10,7 +9,11 @@ services:
     depends_on:
       - vault
       - db
-
+    environment:
+      - VAULT_ADDR=http://vault:8200
+    networks:
+      - app-network
+      
   db:
     image: postgres:13
     environment:
@@ -19,7 +22,11 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - "5432:5432"
-
+    networks:
+      - app-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      
   vault:
     image: hashicorp/vault
     cap_add:
@@ -30,6 +37,14 @@ services:
       - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN}
       - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
     command: server -dev
+    networks:
+      - app-network
+    volumes:
+      - vault_data:/vault/data
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres_data:
