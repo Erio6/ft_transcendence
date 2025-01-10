@@ -1,11 +1,14 @@
 {% extends 'djangoProject/home.html' %}
 
 {% block content %}
- <h2>My Friends</h2>
+ <h1>My Friends</h1>
 <div class="my-friends">
-    <div class="add-friends"><a>Add a Friend</a>
+
+<!--    Add friends section-->
+    <div class="add-friends"><h3>Add Friends</h3>
+        <a>Search</a>
     <form method="GET" action="{% url 'friends:friends_overview' %}">
-            <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search for a friend...">
             <button type="submit">Search</button>
     </form>
     {% if query %}
@@ -39,13 +42,22 @@
             <li class="list-group-item">No invitation sent.</li>
         {% endfor %}
     </div>
-    <div class="friend-list"><a>Friend List</a>
+
+<!--    Friend lists section-->
+    <div class="friend-list"><h3>Friend List</h3>
         {% if friends %}
     <ul>
         {% for friend in friends %}
-           <li class="list-friends">
-                 <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
-                 <span>{{ friend.user.username }}</span>
+           <li>
+                <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
+                <img class="avatar" src="{{ friend.user.userprofile.avatar.url }}" alt="Profile Image">
+                <span class="username">{{ friend.user.username }}</span>
+                <form class="remove-form" method="POST" action="{% url 'friends:remove_friend' friend.user.id %}" onsubmit="return confirmRemove('{{ friend.user.username }}')">
+                    {% csrf_token %}
+                    <button type="submit" class="remove-btn">
+                        Remove
+                    </button>
+                </form>
             </li>
         {% endfor %}
     </ul>
@@ -53,6 +65,8 @@
         <p>You have no friends.</p>
    {% endif %}
     </div>
+
+<!--    Friend request received section-->
     <div class="friend-request-received">
         <h3>Friend request received</h3>
     <ul>
@@ -75,6 +89,11 @@
         {% endfor %}
     </ul>
     </div>
-
 </div>
+
+<script>
+    function confirmRemove(username) {
+        return confirm(`Are you sure you want to remove ${username} from your friends list?`);
+    }
+</script>
 {% endblock %}

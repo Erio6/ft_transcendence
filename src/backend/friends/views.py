@@ -102,7 +102,7 @@ def remove_friend(request, friend_id):
     friend_list = get_object_or_404(FriendList, user=request.user.userprofile)
     if request.method == 'POST':
         friend_list.remove_friend(friend)
-        other_friend_list = get_object_or_404(FriendList, name=friend)
+        other_friend_list = get_object_or_404(FriendList, user=friend)
         other_friend_list.remove_friend(friend_list.user)
         messages.info(request, f'Friend {friend.user.userprofile} Deleted.')
     return redirect('friends:friends_overview')

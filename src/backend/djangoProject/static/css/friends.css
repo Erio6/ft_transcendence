@@ -1,4 +1,8 @@
 /* static/css/friends.css */
+
+li {
+    list-style: none;
+}
 .my-friends {
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -7,6 +11,16 @@
     grid-auto-rows: minmax(100px,auto);
     height: 65vh;
     margin-top:20px;
+}
+
+.my-friends h3 {
+    font-size: 20px;
+    font-weight: 300;
+    padding: 20px;
+}
+
+.my-friends a {
+    padding: 20px;
 }
 
 .add-friends {
@@ -38,48 +52,31 @@
     background: var(--menubar-color)
 }
 
-a {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-a li {
-    margin: 15px;
-}
 /* friends list */
-li {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+/* avatar */
+.friend-list .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
 }
 
-.list-friends {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.friend-list li {
+    display : flex;
+    flex-direction: row;
 }
 
 /* status-dot */
-
-.status-dot {
+.friend-list .status-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    display: inline-block;
-    margin-right: 8px;
 }
 
-.status-dot.online {
+.friend-list .status-dot.online {
     background-color: #2ecc71;
-    box-shadow: 0 0 4px #2ecc71;
 }
 
-.status-dot.offline {
+.friend-list .status-dot.offline {
     background-color: #f30622;
-    opacity: 0.5;
 }
 
-.list-group-item {
-    border-radius: 0.25rem;
-    margin-bottom: 0.25rem;
-}
