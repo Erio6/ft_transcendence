@@ -13,6 +13,7 @@ import {Align, createFont} from "../Components/font.js";
 import {loadModel} from "../Components/modelLoader.js";
 
 let camera, renderer, scene, loop, loc, active_paddle, default_paddle;
+let local = false;
 
 function degToRad(degrees) {
     return degrees * (Math.PI / 180);
@@ -49,6 +50,10 @@ class World {
             else if (json['type'] === 'client') {
                 loc = json['loc'];
             }
+            else if (json['type'] === 'local_client') {
+                loc = "right";
+                local = true;
+            }
             else if (json['type'] === 'init_paddle') {
                 console.log(json['name']);
                 if (loc === json['loc']) {
@@ -63,6 +68,8 @@ class World {
                 else {
                     let align = Align.Left;
                     default_paddle = new Paddle(json['loc'], json['name'], json['speed'], json['width'], json['size'], false, json['x'], 50, 50, webSocket);
+                    if (local)
+                        default_paddle.registerLocalInput()
                     if (json['loc'] === "right")
                         align = Align.Right;
                     createFont(scene, default_paddle.x, 55, -5, default_paddle.name, null, null, align, 7);

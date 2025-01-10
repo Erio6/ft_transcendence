@@ -73,6 +73,52 @@ class Paddle {
         });
     }
 
+    registerLocalInput() {
+        addEventListener("keydown", (event) => {
+            if (event.code === "KeyS") {
+                this.pressDown = true;
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": 1,
+                    "value": true,
+                    "loc": this.location
+                }))
+            }
+            else if (event.code === "KeyW") {
+                this.pressUp = true;
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": -1,
+                    "value": true,
+                    "loc": this.location
+                }))
+            }
+            console.log(this.pressDown + " | " + this.pressUp);
+        });
+        addEventListener("keyup", (event) => {
+            if (event.code === "KeyS") {
+                this.pressDown = false;
+                console.log("send");
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": 1,
+                    "value": false,
+                    "loc": this.location
+                }))
+            }
+            else if (event.code === "KeyW") {
+                this.pressUp = false;
+                this.websocket.send(JSON.stringify({
+                    "type": 'move',
+                    "data": -1,
+                    "value": false,
+                    "loc": this.location
+                }))
+            }
+            console.log(this.pressDown + " | " + this.pressUp);
+        });
+    }
+
     tick(delta) {
         if (this.pressUp)
             this.y += this.speed * delta;

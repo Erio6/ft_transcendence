@@ -1,80 +1,83 @@
 {% extends 'djangoProject/home.html' %}
 
 {% block content %}
- <h2>My Friends</h2>
-<div class="my-friends">
-    <div class="add-friends"><a>Add a Friend</a>
-    <form method="GET" action="{% url 'friends:friends_overview' %}">
-            <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
-            <button type="submit">Search</button>
-    </form>
-    {% if query %}
-        <a>Search Results</a>
-        {% if search_results %}
+    <h2>My Friends</h2>
+    <div class="my-friends">
+        <div class="add-friends"><a>Add a Friend</a>
+            <form method="GET" action="{% url 'friends:friends_overview' %}">
+                <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+                <button type="submit">Search</button>
+            </form>
+            {% if query %}
+                <a>Search Results</a>
+                {% if search_results %}
+                    <ul>
+                        {% for user in search_results %}
+                            <li>
+                                {{ user.user.username }}
+                                <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button type="submit">Add Friend</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p> No users found for "{{ query }}".</p>
+                {% endif %}
+            {% endif %}
+            <a>Pending invitation sent</a>
+            {% for request in outgoing_requests %}
+                <li>
+                    {{ request.receiver.user.userprofile }} (Pending)
+                    <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+                    </form>
+                </li>
+                {% empty %}
+                <li class="list-group-item">No invitation sent.</li>
+            {% endfor %}
+        </div>
+        <div class="friend-list"><a>Friend List</a>
+            {% if friends %}
+                <ul>
+                    {% for friend in friends %}
+                        <li class="list-friends">
+                            <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
+                            <span>{{ friend.user.username }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You have no friends.</p>
+            {% endif %}
+        </div>
+        <div class="friend-request-received">
+            <h3>Friend request received</h3>
             <ul>
-                {% for user in search_results %}
+                {% for request in incoming_requests %}
                     <li>
-                        {{ user.user.username }}
-                        <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
-                            {% csrf_token %}
-                            <button type="submit" >Add Friend</button>
-                        </form>
+                        {{ request.sender.user.userprofile }}
+                        <div>
+                            <form action="{% url 'friends:accept_friend_request' request.id %}" method="post"
+                                  style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                            </form>
+                            <form action="{% url 'friends:decline_friend_request' request.id %}" method="post"
+                                  style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
+                            </form>
+                        </div>
                     </li>
+                    {% empty %}
+                    <li class="list-group-item">No incoming friend requests.</li>
                 {% endfor %}
             </ul>
-        {% else %}
-            <p> No users found for "{{ query }}".</p>
-        {% endif %}
-    {% endif %}
-        <a>Pending invitation sent</a>
-        {% for request in outgoing_requests %}
-            <li>
-                {{ request.receiver.user.userprofile }} (Pending)
-                <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" >
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
-                </form>
-            </li>
-        {% empty %}
-            <li class="list-group-item">No invitation sent.</li>
-        {% endfor %}
-    </div>
-    <div class="friend-list"><a>Friend List</a>
-        {% if friends %}
-    <ul>
-        {% for friend in friends %}
-           <li class="list-friends">
-                 <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
-                 <span>{{ friend.user.username }}</span>
-            </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-        <p>You have no friends.</p>
-   {% endif %}
-    </div>
-    <div class="friend-request-received">
-        <h3>Friend request received</h3>
-    <ul>
-        {% for request in incoming_requests %}
-            <li>
-                {{ request.sender.user.userprofile }}
-                <div>
-                    <form action="{% url 'friends:accept_friend_request' request.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
-                    </form>
-                    <form action="{% url 'friends:decline_friend_request' request.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
-                    </form>
-                </div>
-            </li>
-        {% empty %}
-            <li class="list-group-item">No incoming friend requests.</li>
-        {% endfor %}
-    </ul>
-    </div>
+        </div>
 
-</div>
+    </div>
+    <div class="diffuse-circle circle-1"></div>
 {% endblock %}
