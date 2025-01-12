@@ -4,7 +4,7 @@
 {% block content %}
     <h1> Choose your destiny </h1>
     <a href="{% url 'game:solo' %}">Solo Game</a>
-    <a href="">Tournament</a>
+    <a href="{% url 'tournaments:tournaments' %}">Tournament</a>
     <a href="{% url 'game:multi' %}">Multiplayer</a>
     <a href="{% url 'game:online' %}">Online</a>
 {% endblock %}

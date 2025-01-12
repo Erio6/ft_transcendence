@@ -56,6 +56,7 @@ urlpatterns = [
     path('api/', include('API.urls')),
     path('leaderboard/', include('dashboard.urls')),
     path('matchMaking', include('matchMaking.urls')),
+    path('tournament/', include('tournaments.urls')),
 ]
 
 websocket_urlpatterns = [
