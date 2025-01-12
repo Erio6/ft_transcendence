@@ -1,0 +1,24 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Tournament details{% endblock %}
+
+{% block content %}
+    <h1> {{ tournament.name }} </h1>
+    <p class="join_code">Code to join the game : <strong> {{ tournament.tournament_code_join }}</strong></p>
+    <p><strong>Tournament created by :</strong> {{ tournament.created_by.user.username }}</p>
+    <p><strong>Status :</strong> {{ tournament.status }}</p>
+
+    <h2>Players in the game ({{ players.count }}) :</h2>
+    <ul>
+        {% for player in players %}
+            <li>{{ player.user.username }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if tournament.status == 'waiting' and players.count >= 4 %}
+        <button onclick="location.href='{% url 'tournaments:start' tournament.id %}'">Start the tournament</button>
+    {% else %}
+        <p>The tournament is not ready yet, 4 players minimum.</p>
+    {% endif %}
+    <button onclick="location.href='{% url 'tournaments:home' %}'">Cancel</button>
+
+{% endblock %}

@@ -9,14 +9,21 @@ class Tournament(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(null=True)
     created_by = models.ForeignKey(UserProfile, related_name='tournament_creator' ,on_delete=models.CASCADE)
-    tournament_code_join = models.CharField(max_length=4)
+    tournament_code_join = models.CharField(max_length=4, unique=True)
     players = models.ManyToManyField(UserProfile, through='TournamentPlayer')
+    status = models.CharField(
+        max_length=20,
+        choices=[('waiting', 'Waiting for players'), ('ongoing', 'Ongoing'), ('completed', 'Completed')],
+        default='waiting'
+    )
     def __str__(self):
         return self.name
 
 class TournamentPlayer(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     player = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    is_eliminated = models.BooleanField(default=False)
+    round_reached = models.PositiveIntegerField(default=0)
     def __str__(self):
         return self.tournament.name
 
@@ -24,7 +31,9 @@ class TournamentGame(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     player_one = models.ForeignKey(UserProfile, related_name='tournament_player_one' ,on_delete=models.CASCADE)
     player_two = models.ForeignKey(UserProfile, related_name='tournament_player_two',on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
+    winner = models.ForeignKey(UserProfile, related_name='game_winner', null=True, on_delete=models.SET_NULL)
+    round_number = models.PositiveIntegerField()
     def __str__(self):
         return  f'{self.player_one.display_name} vs {self.player_two.display_name} (Tournament)'
 
