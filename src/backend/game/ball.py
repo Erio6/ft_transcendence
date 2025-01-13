@@ -1,18 +1,22 @@
 import json
 import math
+import random
 
 from asgiref.sync import async_to_sync
 
 
 class Ball:
     def __init__(self):
-        self.min_speed = 100
-        self.current_speed = 100
+        self.min_speed = 60
+        self.current_speed = 60
         self.radius = 3
         self.x = 50
-        self.y = 50
+        # self.y = 50
         self.v_x = 1
         self.v_y = 0
+        self.y = random.randint(10, 90)
+        # self.v_x = random.randint(65, 100) / 100
+        # self.v_y = 1 - self.v_x
         self.sending_data = False
         self.sending_score = None
         self.last_touch = "left"
@@ -72,7 +76,10 @@ class Ball:
             return
 
         self.x = 50
-        self.y = 50
+        self.y = random.randint(10, 90)
+        # self.v_x = random.randint(65, 100) / 100
+        # self.v_y = 1 - self.v_x
+        # self.y = 50
         self.v_x = 1
         self.v_y = 0
         self.current_speed = self.min_speed

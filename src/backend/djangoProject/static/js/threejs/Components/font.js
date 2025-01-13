@@ -22,7 +22,7 @@ function loadFont(scene, x, y, z, score, group = null, existingMesh = null, alig
 }
 
 function generateObject(scene, x, y, z, score, group = null, existingMesh = null, align = Align.Center, size = 10) {
-    console.log(font);
+    // console.log(font);
     const geometry = new TextGeometry(score, {
         font: font,
         size: size,
@@ -62,7 +62,7 @@ function generateObject(scene, x, y, z, score, group = null, existingMesh = null
         const material = new MeshStandardMaterial({color: "blue"});
         const materials = [material, material];
         const model = new Mesh(geometry, materials);
-        console.log(model + " | " + x + " | " + y + " | " + z);
+        // console.log(model + " | " + x + " | " + y + " | " + z);
         model.position.set(-offsetX + x, -offsetY + y, z);
         if (group)
             group.add(model);

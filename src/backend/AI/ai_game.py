@@ -1,5 +1,6 @@
 import asyncio
 import os
+import pickle
 import time
 from math import trunc
 
@@ -17,8 +18,6 @@ class AIGame:
         self.genome2 = None
         self.genome1 = None
         self.room = room
-        self.left_paddle = self.room.left_paddle
-        self.right_paddle = self.room.right_paddle
         self.ball = self.room.ball
 
     def train_ai(self, genome1, genome2, config):
@@ -39,38 +38,50 @@ class AIGame:
             delta_time = time.time() - last_time
             last_time = time.time()
             loop.run_until_complete(self.room.update())
+            old_pos = [self.room.left_paddle.y, self.room.right_paddle.y]
             self.ai_movement(net1, net2, delta_time)
+            new_pos = [self.room.left_paddle.y, self.room.right_paddle.y]
+            if new_pos[0] != old_pos[0]:
+                self.room.send_left = True
+            if new_pos[1] != old_pos[1]:
+                self.room.send_right = True
+            # print(old_pos, new_pos)
+            # print(old_pos == new_pos)
             if self.room.left_paddle.score > 0 or self.room.right_paddle.score > 0:
-                print("score > 0")
+                # print("score > 0")
                 run = False
         self.compute_fitness(last_time - start_time)
 
     def ai_movement(self, net1, net2, delta_time):
-        players = [(self.genome1, net1, self.left_paddle, True), (self.genome2, net2, self.right_paddle, False)]
+        players = [(self.genome1, net1, self.room.left_paddle, True),
+                   (self.genome2, net2, self.room.right_paddle, False)]
+        i = 1
         for genome, net, paddle, left in players:
-            output = net.activate((paddle.y, abs(paddle.x - self.ball.x), self.ball.y, self.ball.v_x, self.ball.v_y))
+            output = net.activate(
+                (int(paddle.loc == "left"), paddle.y, self.ball.x, self.ball.y, self.ball.v_x, self.ball.v_y))
             decision = output.index(max(output))
+            # print(i, decision)
             value = paddle.speed * delta_time
-            if decision == 0:
-                genome.fitness -= 0.01
-            elif decision == 1:
+            if decision == 1:
                 self.move_paddle(-value, genome, left=left)
-            else:
+            elif decision != 0:
                 self.move_paddle(value, genome, left=left)
+            i += 1
 
     def move_paddle(self, value, genome, left=True):
+        # print("ai should move", value)
         isValid = True
         if left:
-            isValid = self.left_paddle.force_move(value)
+            isValid = self.room.left_paddle.force_move(value)
         else:
-            isValid = self.right_paddle.force_move(value)
+            isValid = self.room.right_paddle.force_move(value)
 
         if not isValid:
-            genome.fitness -= 1
+            genome.fitness -= 0.01
 
     def compute_fitness(self, duration):
-        self.genome1.fitness += duration + self.left_paddle.hit
-        self.genome2.fitness += duration + self.right_paddle.hit
+        self.genome1.fitness += self.room.left_paddle.hit * 2
+        self.genome2.fitness += self.room.right_paddle.hit * 2
 
 
 def eval_genomes(genomes, config):
@@ -89,12 +100,17 @@ def eval_genomes(genomes, config):
 
 
 def run_neat(config):
+    # p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-2')
     p = neat.Population(config)
     p.add_reporter(neat.StdOutReporter(True))
+    p.add_reporter(neat.Checkpointer(1))
+
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    winner = p.run(eval_genomes, 50)
+    winner = p.run(eval_genomes, 100)
+    with open("best.pickle", "wb") as f:
+        pickle.dump(winner, f)
 
 
 def main():

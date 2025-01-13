@@ -77,9 +77,11 @@ class Paddle:
             return False
 
         self.y += value
+        # print("y after changes", self.y)
 
         if self.y > 100 - self.length / 2:
             self.y = 100 - self.length / 2
         elif self.y < self.length / 2:
             self.y = self.length / 2
+
         return True
