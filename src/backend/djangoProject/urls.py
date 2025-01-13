@@ -7,6 +7,7 @@ from django.conf import settings
 import matchMaking
 from game.consumers import GameConsumer
 from matchMaking.consumers import MatchMakingConsumer
+from tournaments.consumers import TournamentConsumer
 from . import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -62,6 +63,7 @@ urlpatterns = [
 websocket_urlpatterns = [
     re_path(r'ws/game/(?P<room_id>\d+)/$', GameConsumer.as_asgi()), # Map WebSocket path to consumer
     re_path(r'ws/matchmaking/(?P<match_id>\d+)/$', MatchMakingConsumer.as_asgi()),
+    re_path(r'ws/tournaments/(?P<tournament_id>\d+)/$', TournamentConsumer.as_asgi()),
 ]
 
 # only for production to change for deploying
