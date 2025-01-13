@@ -64,6 +64,10 @@ wait_for_service db 5432 "PostgreSQL"
 # Initialize Vault and store credentials
 initialize_vault
 
+# Flush the database (clear all data)
+echo "Flushing the database..."
+python manage.py flush --no-input
+
 # Run Django migrations
 echo "Running migrations..."
 python manage.py migrate
