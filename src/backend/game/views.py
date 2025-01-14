@@ -2,19 +2,46 @@ from contextlib import nullcontext
 from xxlimited_35 import error
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .forms import ScoreInputForm
+from .forms import GameCreationForm
 from .models import Game
 from user.models import UserProfile
+
 
 def quickPlay(request):
     return render(request, 'game/playmode.html')
 
+
+@login_required
 def soloGame(request):
-    return render(request, 'game/sologame.html')
+    if request.method == 'POST':
+        print(request.POST)
+        form = GameCreationForm(request.POST)
+        if form.is_valid():
+            print("valid")
+            player_side = form.cleaned_data['player_side']
+            game_type = form.cleaned_data['game_type']
+
+            try:
+                player_profile = request.user.userprofile
+            except UserProfile.DoesNotExist:
+                return redirect('user:edit_user_profile', username=request.user.username)
+
+            game = Game.objects.create(player_one=player_profile, is_completed=False, type_of_game=game_type)
+
+            return redirect(reverse('game:real_game', kwargs={'game_id': game.id}), player_side=player_side)
+        else:
+            print(form.errors)
+    else:
+        form = GameCreationForm()
+    return render(request, 'game/sologame.html', {'form': form})
+
 
 def multiGame(request):
     return render(request, 'game/multisearch.html')
+
 
 def game_creation(request):
     if request.method == 'POST':
@@ -29,7 +56,7 @@ def game_creation(request):
         return redirect(f'multi_scores/{new_game.id}')
 
     users = UserProfile.objects.all()
-    return render (request, 'game/multi_game.html', {"users": users})
+    return render(request, 'game/multi_game.html', {"users": users})
 
 
 def multi_scores(request, game_id):
@@ -38,6 +65,25 @@ def multi_scores(request, game_id):
     except Game.DoesNotExist:
         return redirect(error, 'Game does not exist')
     return render(request, 'game/multiscores.html', {"game": game})
+
+
+def online_game_creation(request):
+    # print(request.user.id, UserProfile.objects.get(id=request.user.id))
+    games = Game.objects.filter(is_completed=False).all()
+    return render(request, 'game/online.html', {"games": games})
+
+
+def game_3d(request, game_id):
+    if not request.user.is_authenticated:
+        return redirect("authentication:login")
+
+    user_profile = UserProfile.objects.get(user=request.user)
+    if not Game.objects.filter(id=game_id).exists() and game_id != 69:
+        print("Game does not exist", game_id)
+        return redirect('/')
+    print("load threejs.html")
+    return render(request, 'game/threejs.html')
+
 # def test_pong_game(request):
 #     if request.method == "POST":
 #         form = ScoreInputForm(request.POST)

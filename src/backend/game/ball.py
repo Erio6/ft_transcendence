@@ -1,18 +1,22 @@
 import json
 import math
+import random
 
 from asgiref.sync import async_to_sync
 
 
 class Ball:
     def __init__(self):
-        self.min_speed = 10
-        self.current_speed = 10
+        self.min_speed = 60
+        self.current_speed = 60
         self.radius = 3
         self.x = 50
-        self.y = 0
-        self.v_x = 0.5
-        self.v_y = 0.5
+        # self.y = 50
+        self.v_x = 1
+        self.v_y = 0
+        self.y = random.randint(10, 90)
+        # self.v_x = random.randint(65, 100) / 100
+        # self.v_y = 1 - self.v_x
         self.sending_data = False
         self.sending_score = None
         self.last_touch = "left"
@@ -72,7 +76,10 @@ class Ball:
             return
 
         self.x = 50
-        self.y = 50
+        self.y = random.randint(10, 90)
+        # self.v_x = random.randint(65, 100) / 100
+        # self.v_y = 1 - self.v_x
+        # self.y = 50
         self.v_x = 1
         self.v_y = 0
         self.current_speed = self.min_speed
@@ -92,7 +99,7 @@ class Ball:
         )
         self.sending_score = None
 
-    async def paddles_collide_check(self, paddle):
+    def paddles_collide_check(self, paddle):
         if paddle.loc == "left":
             # print(str(self.x <= paddle.x + paddle.width) + " | " + str(
             #     paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2))
@@ -104,7 +111,7 @@ class Ball:
                 self.last_touch = "left"
                 self.sending_score = paddle
             elif self.last_touch == "right" and self.x - self.radius / 2 <= paddle.x + paddle.width and paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2:
-                await self.paddle_collide(paddle, self.x - (paddle.x + paddle.width))
+                self.paddle_collide(paddle, self.x - (paddle.x + paddle.width))
 
         elif paddle.loc == "right":
             if self.x > 100:
@@ -113,9 +120,9 @@ class Ball:
                 self.sending_score = paddle
             elif self.last_touch == "left" and self.x + self.radius / 2 >= 100 - (
                     paddle.width + paddle.x) and paddle.y - self.radius - paddle.length / 2 <= self.y <= paddle.y + self.radius + paddle.length / 2:
-                await self.paddle_collide(paddle, 100 - (paddle.width + paddle.x) - self.x)
+                self.paddle_collide(paddle, 100 - (paddle.width + paddle.x) - self.x)
 
-    async def paddle_collide(self, paddle, diff_x):
+    def paddle_collide(self, paddle, diff_x):
         diff_y = min(abs((paddle.y - self.radius - paddle.length / 2) - self.y),
                      abs(self.y - (paddle.y + self.radius + paddle.length / 2)))
         diff_x = abs(diff_x)
@@ -138,6 +145,7 @@ class Ball:
         self.v_x *= -1
         self.current_speed += 10
         self.last_touch = paddle.loc
+        paddle.hit += 1
         self.sending_data = True
 
     def normalize(self):

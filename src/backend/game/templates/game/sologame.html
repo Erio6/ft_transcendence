@@ -1,7 +1,17 @@
 {% extends 'djangoProject/home.html' %}
-{% block title %}Solo Game{% endblock %}
-
+{% block title %}Local Game{% endblock %}
 {% block content %}
-    <h1> Play against the machine </h1>
-    <a href="">Start the game</a>
+    <h2>Start a Local Game</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>{{ form.player_side.label }}</p>
+        {{ form.player_side }}
+
+        <p>{{ form.game_type.label }}</p>
+        {{ form.game_type }}
+
+        {{ form.player_profile }}  <!-- Hidden input field -->
+
+        <button type="submit">Start Game</button>
+    </form>
 {% endblock %}

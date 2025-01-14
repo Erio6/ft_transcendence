@@ -37,3 +37,19 @@ for the Profile picture in authentication:
 ```sh
 pip install Pillow
 ```
+
+
+NOTE FOR ANTHONY: 
+
+Game selection : 
+
+- Local
+  - Choose your side , the human or the IA level
+- Tournament
+  - Create a tournament
+    - Fill the information for the tournament
+      - Waiting for the player / start the tournament
+  - Join a tournament
+    - Insert the tournament code
+- Multi
+  - Find a game

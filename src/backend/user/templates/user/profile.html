@@ -1,19 +1,44 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %} User Profile {% endblock %}
-{% block profile %}
-<img src="{{ profile.avatar.url }}" alt="Profile Image" >
-    <h2>{{ profile.display_name }}</h2>
-        <p><strong>Username:</strong> {{ profile.user.username }}</p>
-        <p><strong>Rank:</strong> {{ profile.leaderboard_rank }}</p>
-        <p><strong>Wins:</strong> {{ profile.total_wins }}</p>
-        <p><strong>Losses:</strong> {{ profile.total_losses }}</p>
-        <p><strong>Score stored in the blockchain (TEST):</strong> {{ score }}</p>
- <a href="{% url 'friends:friends_overview' %}">Friend list</a>
+
+{% block content %}
+<img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
+<h2>{{ profile.display_name }}</h2>
+<p><strong>Username:</strong> {{ profile.user.username }}</p>
+<p><strong>Country:</strong> {{ profile.country.name }}
+    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag"></p>
+<p><strong>Rank:</strong> {{ profile.leaderboard_rank }}</p>
+<p><strong>Wins:</strong> {{ profile.total_wins }}</p>
+<p><strong>Losses:</strong> {{ profile.total_losses }}</p>
+
+<a href="{% url 'friends:friends_overview' %}">Friend list</a>
+
 {% if user == profile.user %}
 <hr>
 <h3>Edit Profile</h3>
 <a href="{% url 'user:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Update Profile</a>
 {% endif %}
-{% endblock %}
 
-<p class="text-center">
+<!-- Two-factor authentication management -->
+<hr>
+<h3>Two-Factor Authentication</h3>
+
+{% if user.has_usable_password %}
+    {% if user.is_authenticated and user.totpdevice_set.exists %}
+        <!-- If 2FA is enabled, show the option to disable it -->
+        <p>Your two-factor authentication is enabled.</p>
+        <a href="{% url 'two_factor:disable' %}" class="btn btn-danger">Disable Two-Factor Authentication</a>
+
+        <!-- Button to view backup tokens -->
+        <p><a href="/account/two_factor/backup/tokens/" class="btn btn-warning">View Backup Tokens</a></p>
+
+    {% else %}
+        <!-- If 2FA is not enabled, show the option to enable it -->
+        <p>Your account does not have two-factor authentication enabled.</p>
+        <a href="{% url 'two_factor:setup' %}" class="btn btn-primary">Enable Two-Factor Authentication</a>
+    {% endif %}
+{% else %}
+    <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
+{% endif %}
+
+{% endblock %}

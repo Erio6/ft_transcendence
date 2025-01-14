@@ -1,90 +1,88 @@
+import asyncio
 import json
 import time
 
-from asgiref.sync import async_to_sync
-
 from game.ball import Ball
-from game.paddle import Paddle
 
 
 class Room:
-    def __init__(self):
+    def __init__(self, room_id):
         self.left_paddle = None
         self.right_paddle = None
         self.spectators = []
+        self.id = room_id
         self.ball = Ball()
         self.last_time = time.time()
-        self.running = True
+        self.running = False
+        self.delta_time = 0
 
     async def update(self):
+        if not self.running:
+            return False
         current_time = time.time()
-        delta_time = current_time - self.last_time
+        self.delta_time = current_time - self.last_time
         self.last_time = current_time
 
         if not self.left_paddle or not self.right_paddle:
+            return False
+
+        if self.left_paddle.score >= 10 or self.right_paddle.score >= 10:
+            await self.end_game()
+            return False
+        return True
+
+    async def end_game(self):
+        pass
+
+    async def start_game(self):
+        if not self.left_paddle or not self.right_paddle:
+            self.running = False
             return
-
-        await self.ball.wall_collide()
-        await self.left_paddle.move(delta_time, self)
-        await self.right_paddle.move(delta_time, self)
-        await self.ball.paddles_collide_check(self.left_paddle)
-        await self.ball.paddles_collide_check(self.right_paddle)
-
-        await self.ball.send_data(self.left_paddle.consumer)
-        await self.ball.send_score(self.left_paddle.consumer)
-        await self.ball.move(delta_time)
+        await asyncio.sleep(3)
+        if self.left_paddle:
+            await self.left_paddle.consumer.channel_layer.group_send(
+                self.left_paddle.consumer.room_name,
+                {
+                    'type': 'start_game',
+                }
+            )
+        self.last_time = time.time()
+        await self.ball.init_ball(self.left_paddle.consumer)
+        self.running = True
 
     async def handle_paddle_msg(self, consumer, message):
-        if consumer == self.left_paddle.consumer:
-            if message['data'] == 1:
-                self.left_paddle.movingDown = 1 if message['value'] else 0
-            else:
-                self.left_paddle.movingUp = 1 if message['value'] else 0
-
-            # self.left_paddle.moving = int(message['data'])
-            # if self.left_paddle.moving == 0:
-            #     self.left_paddle.send_data_chan(self.left_paddle.consumer)
-            # await self.left_paddle.send_data()
-        elif consumer == self.right_paddle.consumer:
-            if message['data'] == 1:
-                self.right_paddle.movingDown = 1 if message['value'] else 0
-            else:
-                self.right_paddle.movingUp = 1 if message['value'] else 0
-            # self.right_paddle.moving = int(message['data'])
-            # await self.right_paddle.send_data()
+        pass
 
     async def register_consumer(self, consumer):
-        if not self.left_paddle:
-            self.left_paddle = Paddle("left", consumer)
-            await consumer.send(json.dumps({'type': 'client', 'loc': 'left', 'speed': self.left_paddle.speed}))
-            await self.left_paddle.init_paddle()
-            await self.ball.init_ball_chan(consumer)
-        elif not self.right_paddle:
-            self.right_paddle = Paddle("right", consumer)
-            await consumer.send(json.dumps({'type': 'client', 'loc': 'right', 'speed': self.right_paddle.speed}))
-            await self.right_paddle.init_paddle()
-            await self.left_paddle.init_paddle_chan(consumer)
-            await self.ball.init_ball_chan(consumer)
-        else:
-            self.spectators.append(consumer)
+        pass
+
+    async def remove_consumer(self, consumer):
+        pass
+
+    def get_consumers(self, left=True, right=True):
+        consumers = []
+        if left and self.left_paddle:
+            consumers.append(self.left_paddle.consumer)
+        if right and self.right_paddle:
+            consumers.append(self.right_paddle.consumer)
+        for consumer in self.spectators:
+            consumers.append(consumer)
+
+        return consumers
+
+    async def reset(self):
+        self.running = True
+        self.last_time = time.time()
+        self.ball = Ball()
+        for consumer in self.spectators:
             await consumer.send(json.dumps({'type': 'client', 'loc': 'spectator'}))
             await self.ball.init_ball_chan(consumer)
             await self.left_paddle.init_paddle_chan(consumer)
             await self.right_paddle.init_paddle_chan(consumer)
 
-    async def remove_consumer(self, consumer):
-        if consumer in self.spectators:
-            self.spectators.remove(consumer)
-        # elif consumer == self.left_paddle.consumer:
-        #     self.left_paddle.consumer = None
-        # elif consumer == self.right_paddle.consumer:
-        #     self.right_paddle.consumer = None
-        elif consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:
-            self.running = False
-
-    def get_consumers(self):
-        consumers = [self.left_paddle, self.right_paddle]
-        for consumer in self.spectators:
-            consumers.append(consumer)
-
-        return consumers
+    def is_empty(self):
+        if len(self.spectators) != 0:
+            return False
+        if self.left_paddle or self.right_paddle:
+            return False
+        return True

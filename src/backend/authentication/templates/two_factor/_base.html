@@ -1,7 +1,9 @@
+<!-- templates/two_factor/_base.html -->
 {% extends 'djangoProject/home.html' %}
-{% block title %}User Login{% endblock %}
 
-{% block login %}
+{% block title %}Two Factor Authentication{% endblock %}
+
+{% block content %}
     <div class="container">
         <div class="row justify-content-center mt-5">
             <div class="col-md-6">
@@ -11,7 +13,7 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        {% block content %}{% endblock %}
+                        {% block two_factor_content %}{% endblock %}
                     </div>
                 </div>
             </div>

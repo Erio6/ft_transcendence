@@ -18,7 +18,6 @@ from .vault_config import get_db_credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ALLOWED_HOSTS = ['*']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -30,7 +29,6 @@ SECRET_KEY = 'django-insecure-vfvsk%cx11j^o)to!8om3mt^tf72j81h3dlp&d_%)8-8e=-q-g
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -50,18 +48,20 @@ INSTALLED_APPS = [
     'friends.apps.FriendsConfig',
     'tournaments.apps.TournamentsConfig',
     'dashboard.apps.DashboardConfig',
+    'matchMaking',
     'rest_framework',
+    'asgiref',
     'rest_framework_simplejwt.token_blacklist',
-    #2FA
+    # 2FA
     'django_otp',
-    #'two_factor.plugins.phonenumber',
+    # 'two_factor.plugins.phonenumber',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'qr_code',
     'channels',
     'django_countries',
     'two_factor',
-    #JWT
+    # JWT
     'rest_framework_simplejwt',
 ]
 
@@ -71,10 +71,12 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [('127.0.0.1', 6379)],
         }
     }
 }
+
+LOGIN_URL = 'authentication:login'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -112,7 +114,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -129,7 +130,7 @@ DATABASES = {
     }
 }
 
-#JWT
+# JWT
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -181,7 +182,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -193,12 +193,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS =[os.path.join(BASE_DIR, "djangoProject/static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "djangoProject/static")]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -212,8 +211,12 @@ LOGIN_REDIRECT_URL = 'home'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
-CONTRACT_ADDRESS = '0xf1796A4610C9b1cb11f1e9Fd4f78Ff197a0AD97F'
+# Blockchain settings
+# note: do not forget to change contract address when new deploy
+# note : do not forget to change the provider URI when deploying on a new network
+#WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
+WEB3_PROVIDER_URI = 'http://127.0.0.1:8545'
+CONTRACT_ADDRESS = '0x68a14A854C7397811b4c5FB5D83889a7874C817D'
 ABI_FILE_PATH = os.path.join(BASE_DIR, 'blockchain', 'ScoreContract.json')
 ETHERSCAN_BASE_URL = 'https://sepolia.etherscan.io/tx'
 

@@ -1,0 +1,9 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Quick Play{% endblock %}
+
+{% block content %}
+    <h1>Online Game</h1>
+    {% for game in games %}
+        <a href="/game/game/{{ game.id }}">game no {{ game.id }} vs {{ game.player_one.display_name }}</a>
+    {% endfor %}
+{% endblock %}

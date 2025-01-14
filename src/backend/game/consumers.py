@@ -2,11 +2,17 @@ import asyncio
 import json
 import time
 
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from django.contrib.auth.models import User
 
 from game.ball import Ball
+from game.local_room import LocalRoom
+from game.models import Game
+from game.online_room import OnlineRoom
 from game.paddle import Paddle
 from game.room import Room
+from user.models import UserProfile
 
 connected_clients = {}
 group_rooms = {}
@@ -22,25 +28,6 @@ async def game_loop():
             await room.update()
         await asyncio.sleep(1 / 60)
 
-    # while True:
-    #     current_time = time.time()
-    #     delta_time = current_time - last_time
-    #     last_time = current_time
-    #
-    #     await ball.wall_collide()
-    #
-    #     if default_consumer is None or default_consumer.group_consumers[default_consumer.room_name] is None:
-    #         break
-    #     for consumer in default_consumer.group_consumers[default_consumer.room_name]:
-    #         await consumer.paddle.move(delta_time)
-    #         await ball.paddles_collide_check(consumer.paddle)
-    #
-    #     await ball.send_data(default_consumer)
-    #     await ball.send_score(default_consumer)
-    #     await ball.move(delta_time)
-
-    # await asyncio.sleep(1 / 60)
-
 
 class GameConsumer(AsyncWebsocketConsumer):
     room_name = ""
@@ -48,10 +35,43 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         global group_rooms
 
-        start_loop = False
-        print("connect")
-
+        user = self.scope["user"]
+        print(user)
         self.room_name = self.scope['url_route']['kwargs']['room_id']
+        print(user.is_authenticated)
+
+        if user.is_authenticated:
+
+            if self.room_name == "69":
+                print("connect to ai room")
+                await self.accept()
+                await self.channel_layer.group_add(self.room_name, self.channel_name)
+                await group_rooms[self.room_name].register_consumer(self)
+                return
+
+            # Convert the lazy User object into a real User instance
+            user = await sync_to_async(lambda: User.objects.get(pk=user.pk))()
+
+            # Fetch the UserProfile asynchronously
+            self.user_profile = await sync_to_async(UserProfile.objects.get)(user=user)
+            await sync_to_async(print)(self.user_profile)
+            try:
+                self.game = await sync_to_async(Game.objects.get)(id=self.room_name)
+                if self.room_name in group_rooms:
+                    for consumer in group_rooms[self.room_name].get_consumers():
+                        if consumer.user_profile == self.user_profile:
+                            print("already in the game")
+                            return
+
+                print("valid id")
+            except Game.DoesNotExist:
+                print("invalid id")
+                return
+        else:
+            return
+
+        start_loop = False
+
         await self.channel_layer.group_add(self.room_name, self.channel_name)
 
         if len(group_rooms) == 0:
@@ -60,7 +80,16 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         if self.room_name not in group_rooms:
-            group_rooms[self.room_name] = Room()
+            print("create Room, room name", type(self.room_name))
+            if self.game.type_of_game == "multiplayer":
+                group_rooms[self.room_name] = OnlineRoom(self.room_name)
+            elif self.game.type_of_game == "solo_player":
+                newRoom = LocalRoom(self.room_name)
+                await newRoom.register_left(self, self.user_profile.display_name)
+                await newRoom.register_right(self, "Player2")
+                await newRoom.start_game()
+                group_rooms[self.room_name] = newRoom
+
         await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:
@@ -92,10 +121,12 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
         print("disconnect")
-        if self.room_name in group_rooms:
+        if self.room_name in group_rooms and self in group_rooms[self.room_name].get_consumers():
             await group_rooms[self.room_name].remove_consumer(self)
-            if not group_rooms[self.room_name]:
+            print("is room empty :", group_rooms[self.room_name].is_empty())
+            if group_rooms[self.room_name].is_empty():
                 del group_rooms[self.room_name]
+                print("delete room")
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
@@ -137,5 +168,10 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def init_paddle(self, event):
         await self.send(text_data=json.dumps({
             'type': 'init_paddle', 'loc': event['loc'], 'size': event['size'], 'width': event['width'], 'y': event['y'],
-            'x': event['x'], 'speed': event['speed']
+            'x': event['x'], 'speed': event['speed'], 'name': event['name']
+        }))
+
+    async def start_game(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'start_game',
         }))
