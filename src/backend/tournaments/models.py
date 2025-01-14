@@ -33,7 +33,7 @@ class TournamentGame(models.Model):
     player_two = models.ForeignKey(UserProfile, related_name='tournament_player_two',on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
     winner = models.ForeignKey(UserProfile, related_name='game_winner', null=True, on_delete=models.SET_NULL)
-    round_number = models.PositiveIntegerField()
+    round_number = models.PositiveIntegerField(default=0)
     def __str__(self):
         return  f'{self.player_one.display_name} vs {self.player_two.display_name} (Tournament)'
 

@@ -14,7 +14,7 @@
         {% endfor %}
     </ul>
     {% if current_user == tournament.created_by.user %}
-        <button id="start-button" onclick="" style="display:none;">Start the tournament</button>
+        <button id="start-button" onclick="location.href= '{% url "tournaments:start_tournament" tournament.id %}'" style="display:none;">Start the tournament</button>
     {% endif %}
     {% if current_user == tournament.created_by.user %}
         <button onclick="confirmCancel()">Cancel</button>

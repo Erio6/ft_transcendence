@@ -1,0 +1,18 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Tournaments Tree{% endblock %}
+{% load static %}
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/gojs@3.0/release/go.js"></script>
+    <script src="{% static 'js/tournament_tree.js' %}"></script>
+    <h1>{{ tournament.name }} - Tournament Tree</h1>
+
+    <div id="myDiagramDiv" style="border: solid 1px blue; width:1000px; height:1000px"></div>
+    <script>
+        const nodes = {{ nodes|safe }};
+        const links = {{ links|safe }};
+
+        renderTournamentTree(nodes, links);
+    </script>
+    <script src="{% static 'js/tournament_tree.js' %}"></script>
+
+{% endblock %}
