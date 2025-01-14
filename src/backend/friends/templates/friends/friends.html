@@ -1,52 +1,152 @@
 {% extends 'djangoProject/home.html' %}
 
+{% load static %}
+
 {% block content %}
+    <link rel="stylesheet" href="{% static 'flags/sprite-hq.css' %}">
     <h2>My Friends</h2>
     <div class="my-friends">
-        <div class="add-friends"><a>Add a Friend</a>
-            <form method="GET" action="{% url 'friends:friends_overview' %}">
-                <input type="text" name="q" value="{{ query }}" placeholder="Search for users...">
-                <button type="submit">Search</button>
-            </form>
-            {% if query %}
-                <a>Search Results</a>
-                {% if search_results %}
+        <div class="add-friends">
+            <div class="search">
+                <h2>Add a Friend</h2>
+                <form method="GET" action="{% url 'friends:friends_overview' %}">
+                    <input class="input" type="text" name="q" value="{{ query }}" placeholder="Search for users...">
+                    <button class="btn" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="form-result">
+                {% if query %}
+                    <h3>{{ search_results.count }} result(s) found</h3>
+                {% else %}
+                    <h3>Friends search</h3>
+                {% endif %}
+                <div class="sep"></div>
+                <div class="friends-container">
+                    {% if query %}
+                        {% if search_results %}
+                            <ul>
+                                {% for user in search_results %}
+                                    <li class="friend-item">
+                                        <div class="profile">
+                                            <div class="img-container">
+                                                <img src="{{ user.avatar.url }}" alt="">
+                                            </div>
+                                            <p>{{ user.user.username }}</p>
+                                        </div>
+                                        <div class="country">
+                                            <div class="img-container">
+                                                {#                                                <i class="flag4x {{ user.country.flag_css }}"></i>#}
+                                                <img src="{{ user.country.flag }}"
+                                                     alt="{{ user.country.name }}">
+                                                {# <img src="{% country_flag_url your_object.country %}" alt="{{ your_object.country.name }} flag" />#}
+                                            </div>
+                                            <p>{{ user.country.name }}</p>
+                                        </div>
+                                        <form action="{% url 'friends:send_friend_request' user.user.id %}"
+                                              method="POST">
+                                            {% csrf_token %}
+                                            <button class="accept" type="submit">Add Friend
+                                                <span>
+                                                <img src=" {% static 'img/accept.png' %}" alt="">
+                                            </span>
+                                            </button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p> No users found for "{{ query }}".</p>
+                        {% endif %}
+                    {% endif %}
+                    {#                    <li class="friend-item">#}
+                    {#                        <div class="profile">#}
+                    {#                            <div class="img-container">#}
+                    {#                                <img src="https://picsum.photos/200/200" alt="">#}
+                    {#                            </div>#}
+                    {#                            <p>username</p>#}
+                    {#                        </div>#}
+                    {#                        <div class="country">#}
+                    {#                            <div class="img-container">#}
+                    {#                                <img src="https://picsum.photos/100/100" alt="">#}
+                    {#                                <img src="{% country_flag_url your_object.country %}"#}
+                    {#                                     alt="{{ your_object.country.name }} flag"/>#}
+                    {#                            </div>#}
+                    {#                            <p>country name</p>#}
+                    {#                        </div>#}
+                    {#                        <form action="./" method="POST">#}
+                    {#                            {% csrf_token %}#}
+                    {#                            <button class="accept" type="submit">Add Friend <span><img#}
+                    {#                                    src=" {% static 'img/accept.png' %}" alt=""></span>#}
+                    {#                            </button>#}
+                    {#                        </form>#}
+                    {#                    </li>#}
+                </div>
+            </div>
+            <div class="pending">
+                <h3>Pending invitation sent</h3>
+                <div class="sep"></div>
+                <div class="friends-container">
                     <ul>
-                        {% for user in search_results %}
-                            <li>
-                                {{ user.user.username }}
-                                <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
+                        {% for request in outgoing_requests %}
+                            <li class="friend-item">
+                                <div class="profile">
+                                    <div class="img-container">
+                                        <img src="{{ request.receiver.avatar.url }}" alt="">
+                                    </div>
+                                    <p>{{ request.receiver.user.username }}</p>
+                                </div>
+                                <div class="country">
+                                    <div class="img-container">
+                                        <img src="{{ request.receiver.country.url }}"
+                                             alt="{{ request.receiver.country.name }}">
+                                        {# <img src="{% country_flag_url your_object.country %}" alt="{{ your_object.country.name }} flag" />#}
+                                    </div>
+                                    <p>{{ request.receiver.country.name }}</p>
+                                </div>
+                                <form action="{% url 'friends:cancel_friend_request' request.id %}"
+                                      method="POST">
                                     {% csrf_token %}
-                                    <button type="submit">Add Friend</button>
+                                    <button class="accept" type="submit">Cancel request
+                                        <span>
+                                                <img src=" {% static 'img/deny.png' %}" alt="">
+                                            </span>
+                                    </button>
                                 </form>
                             </li>
+                            {% empty %}
+                            <li class="list-group-item">No invitation sent.</li>
                         {% endfor %}
                     </ul>
-                {% else %}
-                    <p> No users found for "{{ query }}".</p>
-                {% endif %}
-            {% endif %}
-            <a>Pending invitation sent</a>
-            {% for request in outgoing_requests %}
-                <li>
-                    {{ request.receiver.user.userprofile }} (Pending)
-                    <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
-                    </form>
-                </li>
-                {% empty %}
-                <li class="list-group-item">No invitation sent.</li>
-            {% endfor %}
+                </div>
+            </div>
+
+
         </div>
-        <div class="friend-list"><a>Friend List</a>
+        <div class="friend-list"><h2>Friend List</h2>
             {% if friends %}
                 <ul>
                     {% for friend in friends %}
-                        <li class="list-friends">
-                            <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
-                            <span>{{ friend.user.username }}</span>
+                        <li class="friend-item">
+                            <div class="profile">
+                                <div class="img-container">
+                                    <img src="{{ friend.avatar.url }}" alt="">
+                                </div>
+                                <p>{{ friend.user.username }}</p>
+                            </div>
+                            <form action="{% url 'friends:remove_friend' friend.id %}"
+                                  method="POST">
+                                {% csrf_token %}
+                                <button class="accept" type="submit">Remove
+                                    <span>
+                                        <img src=" {% static 'img/deny.png' %}" alt="">
+                                    </span>
+                                </button>
+                            </form>
                         </li>
+                        {#                        <li class="list-friends">#}
+                        {#                            <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>#}
+                        {#                            <span>{{ friend.user.username }}</span>#}
+                        {#                        </li>#}
                     {% endfor %}
                 </ul>
             {% else %}
@@ -57,20 +157,29 @@
             <h3>Friend request received</h3>
             <ul>
                 {% for request in incoming_requests %}
-                    <li>
-                        {{ request.sender.user.userprofile }}
-                        <div>
-                            <form action="{% url 'friends:accept_friend_request' request.id %}" method="post"
-                                  style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-success btn-sm">Accept</button>
-                            </form>
-                            <form action="{% url 'friends:decline_friend_request' request.id %}" method="post"
-                                  style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
-                            </form>
+                    <li class="friend-item">
+                        <div class="profile">
+                            <div class="img-container">
+                                <img src="{{ request.receiver.avatar.url }}" alt="">
+                            </div>
+                            <p>{{ request.receiver.user.username }}</p>
                         </div>
+                        <form action="{% url 'friends:accept_friend_request' request.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="accept" type="submit">Accept
+                                <span>
+                                        <img src=" {% static 'img/accept.png' %}" alt="">
+                                    </span>
+                            </button>
+                        </form>
+                        <form action="{% url 'friends:decline_friend_request' request.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="accept" type="submit">Deny
+                                <span>
+                                        <img src=" {% static 'img/deny.png' %}" alt="">
+                                    </span>
+                            </button>
+                        </form>
                     </li>
                     {% empty %}
                     <li class="list-group-item">No incoming friend requests.</li>

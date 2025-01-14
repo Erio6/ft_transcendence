@@ -2,14 +2,11 @@ import asyncio
 import os
 import pickle
 import time
-from math import trunc
 
 import neat
-from twisted.web.html import output
 
 import game.consumers
 from game.ai_room import AIRoom
-from game.room import Room
 
 
 class AIGame:
@@ -49,6 +46,10 @@ class AIGame:
             # print(old_pos == new_pos)
             if self.room.left_paddle.score > 0 or self.room.right_paddle.score > 0:
                 # print("score > 0")
+                if self.room.left_paddle.score > 0 and self.room.left_paddle.hit > 0:
+                    self.genome1.fitness += 1
+                elif self.room.right_paddle.score > 0 and self.room.right_paddle.hit > 0:
+                    self.genome2.fitness += 1
                 run = False
         self.compute_fitness(last_time - start_time)
 
@@ -57,31 +58,37 @@ class AIGame:
                    (self.genome2, net2, self.room.right_paddle, False)]
         i = 1
         for genome, net, paddle, left in players:
-            output = net.activate(
-                (int(paddle.loc == "left"), paddle.y, self.ball.x, self.ball.y, self.ball.v_x, self.ball.v_y))
+            if i == 1:
+                output = net.activate(
+                    (0.02, paddle.y / 100, self.ball.x / 100, self.ball.y / 100, self.ball.v_x, self.ball.v_y))
+            else:
+                output = net.activate(
+                    (0.98, paddle.y / 100, self.ball.x / 100, self.ball.y / 100, self.ball.v_x, self.ball.v_y))
+
             decision = output.index(max(output))
             # print(i, decision)
             value = paddle.speed * delta_time
             if decision == 1:
                 self.move_paddle(-value, genome, left=left)
-            elif decision != 0:
+            elif decision == 0:
+                genome.fitness -= 0.1
+            else:
                 self.move_paddle(value, genome, left=left)
             i += 1
 
     def move_paddle(self, value, genome, left=True):
         # print("ai should move", value)
-        isValid = True
         if left:
-            isValid = self.room.left_paddle.force_move(value)
+            is_valid = self.room.left_paddle.force_move(value)
         else:
-            isValid = self.room.right_paddle.force_move(value)
+            is_valid = self.room.right_paddle.force_move(value)
 
-        if not isValid:
-            genome.fitness -= 0.01
+        if not is_valid:
+            genome.fitness -= 0.1
 
     def compute_fitness(self, duration):
-        self.genome1.fitness += self.room.left_paddle.hit * 2
-        self.genome2.fitness += self.room.right_paddle.hit * 2
+        self.genome1.fitness += self.room.left_paddle.hit * 5
+        self.genome2.fitness += self.room.right_paddle.hit * 5
 
 
 def eval_genomes(genomes, config):
@@ -100,8 +107,8 @@ def eval_genomes(genomes, config):
 
 
 def run_neat(config):
-    # p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-2')
-    p = neat.Population(config)
+    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-15')
+    # p = neat.Population(config)
     p.add_reporter(neat.StdOutReporter(True))
     p.add_reporter(neat.Checkpointer(1))
 
