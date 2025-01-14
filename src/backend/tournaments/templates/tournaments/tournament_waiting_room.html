@@ -16,8 +16,26 @@
     {% if current_user == tournament.created_by.user %}
         <button id="start-button" onclick="" style="display:none;">Start the tournament</button>
     {% endif %}
-    <button onclick="location.href='{% url 'tournaments:cancel_tournament' %}'">Cancel</button>
+    {% if current_user == tournament.created_by.user %}
+        <button onclick="confirmCancel()">Cancel</button>
+    {% endif %}
+    {% if current_user != tournament.created_by.user %}
+        <button onclick="confirmLeave()">Leave Tournament</button>
+    {% endif %}
     <script> const tournamentID = "{{ tournament.id }}"</script>
+    <script>
+    function confirmCancel() {
+        if (confirm("Are you sure you want to cancel this tournament?")) {
+            window.location.href = '{% url "tournaments:cancel_tournament" tournament.id %}';
+        }
+    }
+
+    function confirmLeave() {
+        if (confirm("Are you sure you want to leave this tournament?")) {
+            window.location.href = '{% url "tournaments:leave_tournament" tournament.id %}';
+        }
+    }
+</script>
     <script src="{% static 'js/waiting_room.js' %}"></script>
 
 {% endblock %}

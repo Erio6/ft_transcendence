@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 from tournaments.models import Tournament, TournamentPlayer
 
@@ -57,6 +58,39 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                     'message': 'Tournament started!',
                 }
             )
+
+    async def handle_player_leave(self, event):
+        players = await self.get_current_players()
+        await self.channel_layer.group_send(
+            self.tournament_group_name,
+            {
+                'type': 'update_players',
+                'content': {
+                    'event': 'player_leave',
+                    'players': players,
+                }
+            }
+        )
+
+    async def handle_tournament_cancel(self, event):
+        tournament_home_url = reverse('tournaments:tournaments')
+        await self.channel_layer.group_send(
+            self.tournament_group_name,
+            {
+                'type': 'tournament_cancelled',
+                'content': {
+                    'event': 'tournament_cancelled',
+                    'message': 'the Tournament has been cancelled by the creator.',
+                    'tournament_home_url' : tournament_home_url
+                }
+            }
+        )
+
+    async def update_players(self, event):
+        await self.send_json(event['content'])
+
+    async def tournament_cancelled(self, event):
+        await self.send_json(event['content'])
 
     async def tournament_update(self, event):
         players = event['players']

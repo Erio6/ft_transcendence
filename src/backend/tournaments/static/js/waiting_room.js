@@ -26,6 +26,26 @@ ws.onmessage = function (event) {
             playerList.appendChild(li);
         });
     }
+
+    if (data.event === 'player_leave') {
+        console.log('Player left');
+        updatePlayerList(data.players);
+    }
+
+    if (data.event === 'tournament_cancelled') {
+        alert(data.message);
+        window.location.href = data.tournament_home_url;
+    }
+}
+
+function updatePlayerList(players) {
+    playerList.innerHTML = '';
+    players.forEach(player => {
+        const li = document.createElement('li');
+        li.id = `player-${player.id}`;
+        li.innerHTML = player.name;
+        playerList.appendChild(li);
+    });
 }
 
 ws.onopen = function () {
