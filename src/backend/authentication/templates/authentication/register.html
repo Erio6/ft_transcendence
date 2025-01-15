@@ -1,12 +1,17 @@
 {% extends 'djangoProject/home.html' %}
-{% block title %}Register page{% endblock %}
+{% load static %}
+{% block title %}Register Page{% endblock %}
 
 {% block content %}
-    <a>Registration page</a>
-    <form  method="post">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<div class="form-container">
+    <h2 class="form-header">Registration Page</h2>
+    <form method="post" class="register-form">
         {% csrf_token %}
-        {{ form }}
-    <button type="submit">Register</button>
+        <div class="form-elements">
+            {{ form }}
+        </div>
+        <button type="submit" class="register-button">Register</button>
     </form>
-
+</div>
 {% endblock %}
