@@ -6,7 +6,7 @@
     <script src="{% static 'js/tournament_tree.js' %}"></script>
     <h1>{{ tournament.name }} - Tournament Tree</h1>
 
-    <div id="myDiagramDiv" style="border: solid 1px blue; width:1000px; height:1000px"></div>
+    <div id="myDiagramDiv" style="border: solid 1px blue; width:100%; height:600px"></div>
     <script>
         const nodes = {{ nodes|safe }};
         const links = {{ links|safe }};

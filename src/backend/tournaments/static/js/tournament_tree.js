@@ -1,25 +1,72 @@
 function renderTournamentTree(nodes, links) {
+    console.log(nodes);
+    console.log(links);
     const $ = go.GraphObject.make;
 
     const diagram = $(go.Diagram, "myDiagramDiv", {
-        layout: $(go.LayeredDigraphLayout, {
-            direction: 90, layerSpacing: 50})
+        layout: $(go.TreeLayout, {
+            angle: 180,}),
+        "undoManager.isEnabled": true
     });
 
-    diagram.nodeTemplateMap.add("player", $(go.Node, "Auto",
-        $(go.Shape, "Rectangle", {fill:"lightblue", stroke: null},
-            new go.Binding("fill", "color")),
-        $(go.TextBlock, {margin: 5, font: "bold 12px sans-serif"},
-            new go.Binding("text", "text"))
+    diagram.nodeTemplateMap.add("match", $(go.Node, "Auto", { selectable: false },
+        $(go.Shape, "Rectangle", { fill:"lightyellow", stroke: null}),
+            new go.Binding("fill", "color"),
+        $(go.Panel, "Table")
+            .addColumnDefinition(0, { separatorStroke: "black"})
+            .addColumnDefinition(1, { separatorStroke: "black", background: "#BABABA"})
+            .addRowDefinition(0, { separatorStroke: "black"})
+            .addRowDefinition(1, { separatorStroke: "black"})
+            .add($(go.TextBlock, {
+                    margin: 5,
+                    font: "10pt Segoe UI, sans-serif",
+                    row: 0,
+                    wrap: go.Wrap.None,
+                    width: 90,
+                    isMultiline: false,
+                    textAlign: "left",
+                    stroke: "black",
+                }, new go.Binding("text", "player_one")),
+                $(go.TextBlock, {
+                    row: 1,
+                    wrap: go.Wrap.None,
+                    margin: 5,
+                    width: 90,
+                    isMultiline: false,
+                    textAlign: "left",
+                    font: "10pt Segoe UI, sans-serif",
+                    stroke: "black",
+                }, new go.Binding("text", "player_two")),
+                $(go.TextBlock, {
+                    row: 0,
+                    column: 1,
+                    wrap: go.Wrap.None,
+                    margin: 2,
+                    width: 25,
+                    isMultiline: false,
+                    textAlign: "center",
+                    font: "10pt Segoe UI, sans-serif",
+                    stroke: "black",
+                }, new go.Binding("text", "score_one")),
+                $(go.TextBlock, {
+                    row: 1,
+                    column: 1,
+                    wrap: go.Wrap.None,
+                    margin: 2,
+                    width: 25,
+                    isMultiline: false,
+                    textAlign: "center",
+                    font: "10pt Segoe UI, sans-serif",
+                    stroke: "black",
+                }, new go.Binding("text", "score_two"))
+            )
     ));
 
-    diagram.nodeTemplateMap.add("", $(go.Node, "Auto",
-        $(go.Shape, "Rectangle", { fill:"lightyellow", stroke: null}),
-        $(go.TextBlock, { margin: 5, font: "bold 12px sans-serif"},
-            new go.Binding("text", "text"))
-    ));
+    diagram.linkTemplate = $(go.Link, { routing : go.RoutingOrthogonal , selectable: false },
+        $(go.Shape, { stroke: "red", strokeWidth: 2 })
+    );
 
     diagram.model = new go.GraphLinksModel(nodes, links);
 
-    diagram.model.nodeCategoryProperty = "isPlayer";
+    diagram.model.nodeCategoryProperty = "category";
 }

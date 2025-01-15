@@ -29,8 +29,8 @@ class TournamentPlayer(models.Model):
 
 class TournamentGame(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
-    player_one = models.ForeignKey(UserProfile, related_name='tournament_player_one' ,on_delete=models.CASCADE)
-    player_two = models.ForeignKey(UserProfile, related_name='tournament_player_two',on_delete=models.CASCADE)
+    player_one = models.ForeignKey(UserProfile, related_name='tournament_player_one' ,on_delete=models.CASCADE, null=True, blank=True)
+    player_two = models.ForeignKey(UserProfile, related_name='tournament_player_two',on_delete=models.CASCADE, null=True, blank=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
     winner = models.ForeignKey(UserProfile, related_name='game_winner', null=True, on_delete=models.SET_NULL)
     round_number = models.PositiveIntegerField(default=0)
