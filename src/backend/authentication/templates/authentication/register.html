@@ -9,9 +9,32 @@
     <form method="post" class="register-form">
         {% csrf_token %}
         <div class="form-elements">
-            {{ form }}
+            {% for field in form %}
+                <div class="form-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="error-list">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div id="username-guidelines" class="guidelines" style="display:none;">
+            <p>Username: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+        </div>
+        <div id="password-guidelines" class="guidelines" style="display:none;">
+            <p>Password: Must contain at least 8 characters.</p>
+            <p>Your password can’t be too similar to your other personal information.</p>
+            <p>Your password can’t be a commonly used password.</p>
+            <p>Your password can’t be entirely numeric.</p>
         </div>
         <button type="submit" class="register-button">Register</button>
     </form>
 </div>
+
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

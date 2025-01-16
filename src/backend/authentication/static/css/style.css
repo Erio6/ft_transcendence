@@ -1,8 +1,8 @@
 .form-container {
     max-width: 500px;
     margin: 50px auto;
-    background-color: #A19CA3; /* Light grey */
-    border-radius: 10px;
+    background-color: var(--menubar-color); /* Light grey */
+    border-radius: 35px;
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -40,18 +40,18 @@ input:focus {
 }
 
 .register-button {
-    background-color: #1abc9c;
+    background-color: #2176FF;
     color: #fff;
     padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 35px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .register-button:hover {
-    background-color: #16a085;
+    background-color: #2176FF;
 }
 
 a {
@@ -62,4 +62,12 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+.form-elements input {
+    border: solid 1px var(--font-color);
+    background-color: rgba(0, 0, 0, 0);
+    padding: 11px;
+    border-radius: 35px;
+    color: var(--font-color);
 }

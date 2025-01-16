@@ -1,0 +1,21 @@
+<!-- templates/two_factor/login.html -->
+{% extends "two_factor/_base.html" %}
+{% load i18n two_factor %}
+
+{% block two_factor_content %}
+    <h2>{% trans "Login" %}</h2>
+    <form method="post" action="">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <ul class="error-messages">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <button type="submit">{% trans "Login" %}</button>
+    </form>
+{% endblock %}
