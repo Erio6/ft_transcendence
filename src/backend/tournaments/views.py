@@ -5,7 +5,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db import transaction
 from math import ceil, log2
-from .utils import create_games , generate_links
+from .utils import create_games , generate_links, assign_parent_child_relationships
 
 from tournaments.models import Tournament, TournamentPlayer, TournamentGame
 
@@ -128,9 +128,13 @@ def start_tournament(request, tournament_id):
         bye_players = [None] * num_byes
         player_slots = players + bye_players
 
+        print("*********** Player Slots ***********")
+        print(player_slots)
 
         games = []
         create_games(tournament, player_slots, 1, total_rounds, games)
+
+        assign_parent_child_relationships(games)
 
         # for i in range(0, len(player_slots), 2):
         #     player_one = player_slots[i].player if i < len(players) else None
@@ -160,8 +164,8 @@ def tournament_tree_view(request, tournament_id):
             "key": f"match-{game.id}",
             "text": f"Match {game.round_number}-{game.id}",
             "round": game.round_number,
-            "player_one": game.player_one.display_name if game.player_one else None,
-            "player_two": game.player_two.display_name if game.player_two else None,
+            "player_one": game.player_one.player.display_name if game.player_one else None,
+            "player_two": game.player_two.player.display_name if game.player_two else None,
             "score_one" : game.game.player_one_score if game.game else "0",
             "score_two" : game.game.player_two_score if game.game else "0",
             "winner": game.winner.display_name if game.winner else None,

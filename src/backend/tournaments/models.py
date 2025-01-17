@@ -29,14 +29,14 @@ class TournamentPlayer(models.Model):
 
 class TournamentGame(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
-    player_one = models.ForeignKey(UserProfile, related_name='tournament_player_one' ,on_delete=models.CASCADE, null=True, blank=True)
-    player_two = models.ForeignKey(UserProfile, related_name='tournament_player_two',on_delete=models.CASCADE, null=True, blank=True)
+    player_one = models.ForeignKey(TournamentPlayer, related_name='tournament_player_one' ,on_delete=models.CASCADE, null=True, blank=True)
+    player_two = models.ForeignKey(TournamentPlayer, related_name='tournament_player_two',on_delete=models.CASCADE, null=True, blank=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE, null=True, blank=True)
-    winner = models.ForeignKey(UserProfile, related_name='game_winner', null=True, on_delete=models.SET_NULL)
+    winner = models.ForeignKey(TournamentPlayer, related_name='game_winner', null=True, on_delete=models.SET_NULL)
     round_number = models.PositiveIntegerField(default=0)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='child_games')
-    def __str__(self):
-        return  f'{self.player_one.display_name} vs {self.player_two.display_name} (Tournament)'
+    # def __str__(self):
+    #     return  f'{self.player_one.display_name} vs {self.player_two.display_name} (Tournament)'
 
     # - Tournament game (player one, player two, game ID, tournament ID)
     # - Tournament (je reprend le model tournament qui existe deja)
