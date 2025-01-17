@@ -14,13 +14,6 @@ from django.contrib.auth.signals import user_logged_in
 def login_view(request):
 	return redirect('two_factor:login')
 
-from two_factor.views import SetupCompleteView
-from django.urls import reverse_lazy
-
-class CustomSetupCompleteView(SetupCompleteView):
-    def get_success_url(self):
-        return reverse_lazy('home')
-
 
 def register(request):
     if request.method == "POST":
