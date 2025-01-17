@@ -202,6 +202,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "djangoProject/static")]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+TWO_FACTOR_SETUP_REDIRECT_URL = 'home'
 LOGIN_URL = 'two_factor:login'  # 2FA login view
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'

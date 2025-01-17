@@ -40,6 +40,11 @@ from rest_framework_simplejwt.views import (
 )
 
 from . import views
+from django.contrib import admin
+from django.conf.urls import include
+from django.urls import path
+from django.urls import path, include
+from authentication.views import CustomSetupCompleteView
 
 urlpatterns = [
     path('', views.home, name="home"),
@@ -55,6 +60,9 @@ urlpatterns = [
     path('api/', include('API.urls')),
     path('leaderboard/', include('dashboard.urls')),
     path('matchMaking', include('matchMaking.urls')),
+    path('account/two_factor/setup/complete/',
+            CustomSetupCompleteView.as_view(),
+            name='setup_complete'),
 ]
 
 websocket_urlpatterns = [

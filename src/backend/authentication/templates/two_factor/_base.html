@@ -1,25 +1,5 @@
-<!-- templates/two_factor/_base.html -->
 {% extends 'djangoProject/home.html' %}
 
-{% block title %}Two Factor Authentication{% endblock %}
-
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/2falogin.css' %}">  
-
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-6">
-                <!-- Home button -->
-                <div class="text-center mb-3">
-                    <a href="/" class="btn btn-secondary">Back to Home</a>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        {% block two_factor_content %}{% endblock %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% block two_factor_content %}{% endblock %}
 {% endblock %}

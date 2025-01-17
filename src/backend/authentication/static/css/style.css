@@ -71,3 +71,16 @@ a:hover {
     border-radius: 35px;
     color: var(--font-color);
 }
+
+input:focus {
+    border-color: #2176FF;  /* Changed from #1abc9c to match login blue */
+    outline: none;
+    box-shadow: 0 0 5px rgba(33, 118, 255, 0.3);  /* Added this line for the blue glow */
+}
+
+/* Or more specifically */
+.form-elements input:focus {
+    border-color: #2176FF;
+    outline: none;
+    box-shadow: 0 0 5px rgba(33, 118, 255, 0.3);
+}
