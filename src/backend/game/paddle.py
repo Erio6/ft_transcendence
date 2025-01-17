@@ -16,6 +16,7 @@ class Paddle:
         self.score = 0
         self.hit = 0
         self.name = name
+        self.dist = 0
 
     async def send_data(self):
         print("send to all")
