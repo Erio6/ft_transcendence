@@ -17,7 +17,6 @@ def update_ranks():
 
 
 @receiver(post_save, sender=Game)
-@receiver(post_save, sender=TournamentGame)
 def log_multiplayer_game(sender, instance, created, **kwargs):
     # Trigger only when the game is marked as completed
     print("Before")

@@ -9,7 +9,7 @@ function renderTournamentTree(nodes, links) {
         "undoManager.isEnabled": true
     });
 
-    diagram.nodeTemplateMap.add("match", $(go.Node, "Auto", { selectable: false },
+    diagram.nodeTemplateMap.add("match", $(go.Node, "Auto",
         $(go.Shape, "Rectangle", { fill:"lightyellow", stroke: null}),
             new go.Binding("fill", "color"),
         $(go.Panel, "Table")
@@ -62,11 +62,11 @@ function renderTournamentTree(nodes, links) {
             )
     ));
 
-    diagram.linkTemplate = $(go.Link, { routing : go.RoutingOrthogonal , selectable: false },
+    diagram.linkTemplate = $(go.Link, { routing : go.Routing.Orthogonal , selectable: false },
         $(go.Shape, { stroke: "red", strokeWidth: 2 })
     );
 
-    diagram.model = new go.GraphLinksModel(nodes, links);
+    diagram.model = new go.TreeModel(nodes);
 
     diagram.model.nodeCategoryProperty = "category";
 }

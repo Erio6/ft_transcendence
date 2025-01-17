@@ -144,7 +144,7 @@ def start_tournament(request, tournament_id):
         #         )
         #     )
 
-        TournamentGame.objects.bulk_create(games)
+        # TournamentGame.objects.bulk_create(games)
 
     return redirect('tournaments:tournament_tree', tournament_id=tournament.id)
 
@@ -162,7 +162,10 @@ def tournament_tree_view(request, tournament_id):
             "round": game.round_number,
             "player_one": game.player_one.display_name if game.player_one else None,
             "player_two": game.player_two.display_name if game.player_two else None,
+            "score_one" : game.game.player_one_score if game.game else "0",
+            "score_two" : game.game.player_two_score if game.game else "0",
             "winner": game.winner.display_name if game.winner else None,
+            "parent": f"match-{game.parent.id}" if game.parent else None,
             "category": "match",
         }
         nodes.append(match_node)
