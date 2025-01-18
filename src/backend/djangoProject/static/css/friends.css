@@ -1,14 +1,10 @@
 /* static/css/friends.css */
-.my-friends {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    grid-template-rows: 3fr 2fr;
-    grid-gap: 20px;
-    grid-auto-rows: minmax(100px, auto);
-    height: 65vh;
-    margin-top: 20px;
-}
 
+/*Global styles */
+
+.my-friends li {
+    list-style: none;
+}
 .my-friends h3 {
     font-size: 20px;
     font-weight: 300;
@@ -19,6 +15,46 @@
     padding: 20px;
 }
 
+/* avatar - container include the avatar and the status dot*/
+
+.my-friends .avatar-container {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.my-friends .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.line {
+     border-top: 1px solid #ffffff;
+}
+
+.button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* The grids configurations */
+.my-friends {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 3fr 2fr;
+    grid-gap: 20px;
+    grid-auto-rows: minmax(100px, auto);
+    height: 65vh;
+    margin-top: 20px;
+    padding:20px;
+}
+
 .add-friends {
     grid-column: 1;
     grid-row: 1/ -1;
@@ -27,11 +63,6 @@
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
 }
-
-.add-friends .search-results {
-
-}
-
 
 .friend-list {
     grid-column: 2;
@@ -51,40 +82,88 @@
     backdrop-filter: blur(201px);
 }
 
-/* friends list */
-/* avatar */
-.friend-list .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+/* add friends section */
+
+.add-friends .search-bar {
+    position: relative;
+    margin-right: auto;
+    width: 60%;
+    border-radius: 20px;
+    background-color: rgba(248, 249, 250, 0.7);
 }
 
-.friend-list li {
+.search-results {
+    width: 100%;
+    padding: 20px;
+    border: none;
+}
+
+.friend-requests-sent {
+    padding: 20px;
+}
+
+
+/* friends list section */
+/* avatar - container include the avatar and the status dot*/
+
+.my-friends li {
     display : flex;
     flex-direction: row;
 }
+.my-friends .user-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    justify-content: space-between;
+}
 
-/* status-dot */
-.friend-list .status-dot {
+.my-friends .user-item .button{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.my-friends .user-item .username {
+    margin-right: 8px;
+}
+.my-friends .user-item .flag {
+    display:flex;
+}
+
+/* avatar - container include the avatar and the status dot*/
+
+.my-friends .user-item .avatar-container {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.my-friends .user-item .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.my-friends .user-item .status-dot {
+    position: absolute;
+    bottom: 5px;
+    right : 5px;
     width: 8px;
     height: 8px;
     border-radius: 50%;
 }
 
-.friend-list .status-dot.online {
+.my-friends .status-dot.online {
     background-color: #2ecc71;
 }
 
-.friend-list .status-dot.offline {
+.my-friends .status-dot.offline {
     background-color: #f30622;
 }
+/* friend request received section */
 
-
-.list-group-item {
-    border-radius: 0.25rem;
-    margin-bottom: 0.25rem;
-}
-
+/* background effect */
 .circle-1 {
     left: -200px;
     bottom: -108px;

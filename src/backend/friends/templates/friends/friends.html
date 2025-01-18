@@ -8,53 +8,68 @@
     <div class="add-friends"><h3>Add Friends</h3>
         <a>Search</a>
     <form method="GET" action="{% url 'friends:friends_overview' %}">
-            <input type="text" name="q" value="{{ query }}" placeholder="Search for a friend...">
-            <button type="submit">Search</button>
+            <input type="text" class="search-bar" name="q" value="{{ query }}" placeholder="Search for a friend...">
+            <button type="submit" class= "button">Search</button>
     </form>
     {% if query %}
-        <a>Search Results</a>
+        <div class="search-results">
+
         {% if search_results %}
+                 {{ search_results|length }} user{{ search_results|length|pluralize }} found{{ search_results|length|pluralize }}
+            <div class="line"></div>
             <ul>
                 {% for user in search_results %}
-                    <li>
-                        {{ user.user.username }}
+                <li class="user-item">
+                <div class="avatar-container">
+                        <span class="status-dot {% if user.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
+                    <img class="avatar" src="{{ user.user.userprofile.avatar.url }}" alt="Profile Image">
+                </div>
+                    <span class="username">{{ user.user.username }}</span>
+                     <img src="{{ user.user.userprofile.country.flag }}" class="flag" alt="flag">
+                    <span class="coalition">Coalition</span>
                         <form action="{% url 'friends:send_friend_request' user.user.id %}" method="POST">
                             {% csrf_token %}
-                            <button type="submit" >Add Friend</button>
+                            <button class="button" type="submit" >Add Friend</button>
                         </form>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p> No users found for "{{ query }}".</p>
+            <p> No user found for "{{ query }}".</p>
         {% endif %}
+        </div>
     {% endif %}
-        <a>Pending invitation sent</a>
+        <a>Friend requests sent</a>
+        <div class="friend-requests-sent">
+            <div class="line"></div>
         {% for request in outgoing_requests %}
-            <li>
+            <li class="user-item">
                 {{ request.receiver.user.userprofile }} (Pending)
                 <form action="{% url 'friends:cancel_friend_request' request.id %}" method="post" >
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+                    <button class= "button" type="submit" class="btn btn-warning btn-sm">Cancel</button>
                 </form>
             </li>
         {% empty %}
-            <li class="list-group-item">No invitation sent.</li>
+            <li class="user-item">No invitation sent.</li>
         {% endfor %}
-    </div>
+            </div>
+         </div>
 
 <!--    Friend lists section-->
     <div class="friend-list"><h3>Friend List</h3>
         {% if friends %}
     <ul>
         {% for friend in friends %}
-           <li>
+           <li class="user-item">
+               <div class="avatar-container">
                 <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
                 <img class="avatar" src="{{ friend.user.userprofile.avatar.url }}" alt="Profile Image">
-                <span class="username">{{ friend.user.username }}</span>
+               </div>
+               <span class="username">{{ friend.user.username }}</span>
                 <form class="remove-form" method="POST" action="{% url 'friends:remove_friend' friend.user.id %}" onsubmit="return confirmRemove('{{ friend.user.username }}')">
                     {% csrf_token %}
-                    <button type="submit" class="remove-btn">
+                    <button type="submit" class= "button">
                         Remove
                     </button>
                 </form>
@@ -80,7 +95,7 @@
                     </form>
                     <form action="{% url 'friends:decline_friend_request' request.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-secondary btn-sm">Decline</button>
+                        <button type="submit" class= "button">Decline</button>
                     </form>
                 </div>
             </li>
@@ -90,6 +105,7 @@
     </ul>
     </div>
 </div>
+<div class="diffuse-circle circle-1"></div>
 
 <script>
     function confirmRemove(username) {
