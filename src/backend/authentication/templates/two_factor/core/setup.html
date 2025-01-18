@@ -26,18 +26,18 @@
             <p>Enter the code from your authenticator app to verify the setup:</p>
         {% endif %}
 
-        <form action="" method="post" class="login-form">
+        <form action="" method="post" class="login-form" onsubmit="return handleSubmit(event)">
             {% csrf_token %}
             {{ wizard.management_form }}
             {{ form.as_p }}
 
             <div class="button-group">
                 {% if wizard.steps.prev %}
-                    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">
+                    <button type="button" class="back-btn" name="wizard_goto_step" value="{{ wizard.steps.prev }}">
                         {% trans "Back" %}
                     </button>
                 {% endif %}
-                <button type="submit">
+                <button type="submit" class="next-btn" name="wizard_goto_step" value="{{ wizard.steps.next }}">
                     {% if wizard.steps.current == 'validation' %}
                         {% trans "Verify" %}
                     {% else %}
@@ -47,5 +47,27 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const nextBtn = form.querySelector('.next-btn');
+            form.wizard_goto_step.value = nextBtn.value;
+            form.submit();
+            return false;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.querySelector('.back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', function() {
+                    const form = this.closest('form');
+                    form.wizard_goto_step.value = this.value;
+                    form.submit();
+                });
+            }
+        });
+    </script>
     {% endblock %}
 {% endblock %}

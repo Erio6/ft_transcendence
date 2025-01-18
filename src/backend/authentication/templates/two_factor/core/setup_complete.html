@@ -1,0 +1,16 @@
+{% extends "two_factor/_base.html" %}
+{% load i18n %}
+
+{% block two_factor_content %}
+    <div class="login-container">
+        <h2 class="login-header">{% trans "Setup Complete" %}</h2>
+
+        <p>{% trans "Two-factor authentication has been enabled successfully." %}</p>
+
+        <form class="login-form">
+            <div class="button-group">
+                <button type="button" onclick="window.location.href='/'">{% trans "Back to Home" %}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
