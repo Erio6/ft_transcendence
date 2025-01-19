@@ -1,7 +1,7 @@
 
 .my-profile {
     display: grid;
-    grid-template-columns: 3fr 2fr;
+    grid-template-columns: 2fr 3fr;
     grid-template-rows: 360px 240px;
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
@@ -11,7 +11,6 @@
 
 .hi-profile {
     grid-column: 1;
-    grid-row: 1/ -1;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
@@ -21,17 +20,6 @@
 
 .my-profile-pic {
     grid-column: 1;
-    grid-row: 1/ -1;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
-    display: flex;
-    flex-direction: column;
-}
-
-.my-settings {
-    grid-column: 1;
-    grid-row: 1/ -1;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
@@ -41,13 +29,13 @@
 
 .my-informations {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 1/ -1;
     border-radius: 35px;
-    padding: 25px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
 }
-
 
 .avatar {
     width: 130px;

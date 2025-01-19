@@ -1,21 +1,31 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %} User Profile {% endblock %}
+{% load static %
 
 {% block content %}
-<img class=avatar src="{{ profile.avatar.url }}" alt="Profile Image" >
-    <h2>{{ profile.display_name }}</h2>
-        <p><strong>Username:</strong> {{ profile.user.username }}</p>
-        <p><strong>Country:</strong> {{ profile.country.name }}
-        <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag"></p>
-        <p><strong>Rank:</strong> {{ profile.leaderboard_rank }}</p>
-        <p><strong>Wins:</strong> {{ profile.total_wins }}</p>
-        <p><strong>Losses:</strong> {{ profile.total_losses }}</p>
- <a href="{% url 'friends:friends_overview' %}">Friend list</a>
-{% if user == profile.user %}
-<hr>
-<h3>Edit Profile</h3>
-<a href="{% url 'user:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Update Profile</a>
-{% endif %}
+<h2>My Profile</h2>
+<div class="my-profile">
+    <div class="hi-profile">
+        <a>Hi, {{ profile.display_name }}</a>
+    </div>
+    <div class="my-profile-pic">
+    <img class=avatar src="{{ profile.avatar.url }}" alt="Profile Image" >
+    </div>
+    <div class="my-informations">
+        <h2>{{ profile.display_name }}</h2>
+            <p><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p><strong>Country:</strong> {{ profile.country.name }}
+            <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag"></p>
+            <p><strong>Rank:</strong> {{ profile.leaderboard_rank }}</p>
+            <p><strong>Wins:</strong> {{ profile.total_wins }}</p>
+            <p><strong>Losses:</strong> {{ profile.total_losses }}</p>
+             <a href="{% url 'friends:friends_overview' %}">Friend list</a>
+            {% if user == profile.user %}
+            <hr>
+            <h3>Edit Profile</h3>
+            <a href="{% url 'user:edit_user_profile' profile.user.username %}" class="btn btn-secondary">Update Profile</a>
+            {% endif %}
+    </div>
+</div>
+ <div class="diffuse-circle circle-1"></div>
 {% endblock %}
-
-<p class="text-center">
