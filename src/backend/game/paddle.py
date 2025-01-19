@@ -16,6 +16,7 @@ class Paddle:
         self.score = 0
         self.hit = 0
         self.name = name
+        self.dist = 0
 
     async def send_data(self):
         print("send to all")
@@ -77,9 +78,11 @@ class Paddle:
             return False
 
         self.y += value
+        # print("y after changes", self.y)
 
         if self.y > 100 - self.length / 2:
             self.y = 100 - self.length / 2
         elif self.y < self.length / 2:
             self.y = self.length / 2
+
         return True

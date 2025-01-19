@@ -41,6 +41,14 @@ class GameConsumer(AsyncWebsocketConsumer):
         print(user.is_authenticated)
 
         if user.is_authenticated:
+
+            if self.room_name == "69":
+                print("connect to ai room")
+                await self.accept()
+                await self.channel_layer.group_add(self.room_name, self.channel_name)
+                await group_rooms[self.room_name].register_consumer(self)
+                return
+
             # Convert the lazy User object into a real User instance
             user = await sync_to_async(lambda: User.objects.get(pk=user.pk))()
 
