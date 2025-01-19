@@ -10,7 +10,7 @@ class UserProfile(models.Model):
     display_name = models.CharField(max_length=100, unique=True)
     is_online = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
-    country = CountryField(blank_label='(select country)',null=True,blank=True)
+    country = CountryField(blank_label='(select country)',null=True,blank=True, default='LU')
     #wins = models.IntegerField(default=0)
     #losses = models.IntegerField(default=0)
     #total_points = models.IntegerField(default=0)
