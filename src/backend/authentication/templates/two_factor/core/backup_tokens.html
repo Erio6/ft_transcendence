@@ -1,0 +1,34 @@
+{% extends "two_factor/_base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/2fa_custom.css' %}">
+{% endblock %}
+
+{% block two_factor_content %}
+<div class="backup-tokens-container">
+    <h2 class="header">{% trans "Backup Tokens" %}</h2>
+    <p class="description">
+        {% trans "Backup tokens can be used when your primary and backup phone numbers aren't available. The backup tokens below can be used for login verification. If you've used up all your backup tokens, you can generate a new set of backup tokens. Only the backup tokens shown below will be valid." %}
+    </p>
+    
+    {% if backup_tokens %}
+        <ul class="tokens-list">
+            {% for token in backup_tokens %}
+                <li class="token-item">{{ token }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-tokens">{% trans "You don't have any backup codes yet." %}</p>
+    {% endif %}
+
+    <div class="button-container">
+        <a href="{% url 'account_security' %}" class="btn back-btn">{% trans "Back to Account Security" %}</a>
+        <form action="{% url 'two_factor:backup_tokens' %}" method="post" class="generate-form">
+            {% csrf_token %}
+            <button type="submit" class="btn generate-btn">{% trans "Generate Backup Tokens" %}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
