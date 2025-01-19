@@ -2,7 +2,7 @@
 .my-profile {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    grid-template-rows: 360px 240px;
+    grid-template-rows: 1fr 2fr;
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
     height: 65vh;
@@ -11,8 +11,9 @@
 
 .hi-profile {
     grid-column: 1;
+    grid-row: 1;
     border-radius: 35px;
-    background: var(--menubar-color);
+    background: var(--menubar-icone-hover-color);
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
@@ -20,6 +21,17 @@
 
 .my-profile-pic {
     grid-column: 1;
+    grid-row: 2;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.my-settings {
+    grid-column: 1;
+    grid-row: 3;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
@@ -37,12 +49,20 @@
     flex-direction: column;
 }
 
+.hi-profile {
+    margin-bottom: 10px;
+    padding: 25px;
+}
+
+.my-profile-pic h2 {
+    margin-bottom: 10px;
+    padding: 25px;
+}
+
 .avatar {
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    overflow: hidden;
     margin: 0 auto;
-    object-fit: cover;
     object-position: center;
 }

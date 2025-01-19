@@ -6,10 +6,20 @@
 <h2>My Profile</h2>
 <div class="my-profile">
     <div class="hi-profile">
-        <a>Hi, {{ profile.display_name }}</a>
+        <h2>Hi, {{ profile.display_name }} you are in your profile page!</h2>
     </div>
     <div class="my-profile-pic">
-    <img class=avatar src="{{ profile.avatar.url }}" alt="Profile Image" >
+        <h2>My Profile Picture</h2>
+        <div class="profile-pic">
+        <img class=avatar src="{{ profile.avatar.url }}" alt="Profile Image">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.picture_field }}
+            <button type="submit" class="btn btn-primary">Edit Picture</button>
+            </form>
+        </div>
+    </div>
+    <div class="my-settings">
     </div>
     <div class="my-informations">
         <h2>{{ profile.display_name }}</h2>
