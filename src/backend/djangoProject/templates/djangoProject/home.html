@@ -89,11 +89,11 @@
 <section class="home">
     <main>
         {% block content %}
-            <h1> Welcome to the most beautiful Pong! </h1>
             {% include 'dashboard/game_history.html' %}
         {% endblock %}
     </main>
 </section>
+
 <script src="{% static 'js/main.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/script.js' %}"></script>

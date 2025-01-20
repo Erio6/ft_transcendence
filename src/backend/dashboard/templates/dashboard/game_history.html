@@ -1,5 +1,8 @@
-<section class="game-history-section">
+{% block title %}Welcome !{% endblock %}
+
+{% block content %}
     <h2>Game History</h2>
+    <div class="game-history-section">
     {% if game_histories %}
         {% for history in game_histories %}
         <div class="game-history">
@@ -28,4 +31,6 @@
     {% else %}
         <p>No games played yet.</p>
     {% endif %}
-</section>
+</div>
+<div class="diffuse-circle circle-1"></div>
+{% endblock %}
