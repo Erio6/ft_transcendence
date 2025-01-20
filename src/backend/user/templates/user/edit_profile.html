@@ -70,4 +70,27 @@
     </div>
 </div>
  <div class="diffuse-circle circle-1"></div>
+
+ <!-- Two-factor authentication management -->
+ <hr>
+ <h3>Two-Factor Authentication</h3>
+
+{% if user.has_usable_password %}
+    {% if user.is_authenticated and user.totpdevice_set.exists %}
+        <!-- If 2FA is enabled, show the option to disable it -->
+        <p>Your two-factor authentication is enabled.</p>
+        <a href="{% url 'two_factor:disable' %}" class="btn btn-danger">Disable Two-Factor Authentication</a>
+
+        <!-- Button to view backup tokens -->
+        <p><a href="/account/two_factor/backup/tokens/" class="btn btn-warning">View Backup Tokens</a></p>
+
+    {% else %}
+        <!-- If 2FA is not enabled, show the option to enable it -->
+        <p>Your account does not have two-factor authentication enabled.</p>
+        <a href="{% url 'two_factor:setup' %}" class="btn btn-primary">Enable Two-Factor Authentication</a>
+    {% endif %}
+{% else %}
+    <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
+{% endif %}
+
 {% endblock %}
