@@ -64,7 +64,7 @@
                 <button type="submit" class="btn btn-secondary">Update Profile</button>
             {% endif %}
         </form>
-        <h2>Change Password</h2>
+        <br>
     <form method="POST" action="{% url 'user:change_password' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Change Password</button>
