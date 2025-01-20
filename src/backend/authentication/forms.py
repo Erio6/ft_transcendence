@@ -1,16 +1,21 @@
-from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-""""
-class UserRegistrationForm(forms.ModelForm):
-    password= forms.CharField(label='Password', widget= forms.PasswordInput)
-    password2= forms.CharField(label='Repeat Password', widget= forms.PasswordInput)
+from django import forms
 
+class CustomUserCreationForm(UserCreationForm):
     class Meta:
-        model= User
-        fields = ['username', 'first_name', 'email']
+        model = User
+        fields = ['username', 'password1', 'password2']
 
-    def clean_password2(self):
-        cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
-            raise forms.ValidationError("Passwords don´t match.")
-        return cd ['password2']"""
+    # Optionally, you can add custom validation or help_text
+    username = forms.CharField(
+        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput,
+        help_text="Your password must contain at least 8 characters."
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput,
+        help_text="Enter the same password as before, for verification."
+    )

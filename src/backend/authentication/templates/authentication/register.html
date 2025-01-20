@@ -1,12 +1,40 @@
 {% extends 'djangoProject/home.html' %}
-{% block title %}Register page{% endblock %}
+{% load static %}
+{% block title %}Register Page{% endblock %}
 
 {% block content %}
-    <a>Registration page</a>
-    <form  method="post">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<div class="form-container">
+    <h2 class="form-header">Registration Page</h2>
+    <form method="post" class="register-form">
         {% csrf_token %}
-        {{ form }}
-    <button type="submit">Register</button>
+        <div class="form-elements">
+            {% for field in form %}
+                <div class="form-field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="error-list">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div id="username-guidelines" class="guidelines" style="display:none;">
+            <p>Username: Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+        </div>
+        <div id="password-guidelines" class="guidelines" style="display:none;">
+            <p>Password: Must contain at least 8 characters.</p>
+            <p>Your password can’t be too similar to your other personal information.</p>
+            <p>Your password can’t be a commonly used password.</p>
+            <p>Your password can’t be entirely numeric.</p>
+        </div>
+        <button type="submit" class="register-button">Register</button>
     </form>
+</div>
 
+<script src="{% static 'js/script.js' %}"></script>
 {% endblock %}

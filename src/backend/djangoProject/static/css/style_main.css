@@ -24,6 +24,7 @@ button {
     border: none;
 }
 
+
 /* --- Global color variable --- */
 :root {
     --background-color: #04011B;
@@ -33,6 +34,10 @@ button {
     --menubar-hover-color: #FFFFFF;
     --sidebar-dark-color: #151515;
     --font-color: #f2f2f2;
+}
+
+.bg-white{
+    background-color: white;
 }
 
 /* --- Body --- */
