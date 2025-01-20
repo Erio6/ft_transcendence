@@ -1,9 +1,13 @@
+
 .game-history-section {
-    margin: 20px 0;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
 }
 
 .game-history {

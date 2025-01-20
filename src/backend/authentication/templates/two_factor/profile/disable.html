@@ -1,0 +1,32 @@
+{% extends "two_factor/_base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/2falogin.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/2fadisable.css' %}">
+{% endblock %}
+
+{% block two_factor_content %}
+<div class="login-container">
+    <h2 class="login-header">Disable Two-factor Authentication</h2>
+
+    <div class="disable-info">
+        <p>
+            You are about to disable two-factor authentication. This weakens your account security, are you sure?
+        </p>
+    </div>
+
+    <form method="post" class="login-form">
+        {% csrf_token %}
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="confirm-disable" name="understand" required>
+            <label for="confirm-disable">Yes, I am sure</label>
+        </div>
+
+        <button type="submit" class="login-btn" name="disable">
+            Disable Two-Factor
+        </button>
+    </form>
+</div>
+{% endblock %}

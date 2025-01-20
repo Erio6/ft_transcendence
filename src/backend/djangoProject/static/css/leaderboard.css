@@ -2,7 +2,7 @@
 .container-leaderboard {
     display: flex;
     flex-direction: column;
-    height: 65vh;
+    height: 75vh;
     margin-top: 20px;
     padding: 20px;
     border-radius: 35px;

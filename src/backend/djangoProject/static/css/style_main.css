@@ -1,7 +1,8 @@
 @import url("friends.css");
 @import url("edit_profile.css");
 @import url("leaderboard.css");
-
+@import url("dashboard.css");
+@import url("game_history.css");
 
 /* Googl Font import - Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
@@ -24,6 +25,7 @@ button {
     border: none;
 }
 
+
 /* --- Global color variable --- */
 :root {
     --background-color: #04011B;
@@ -33,6 +35,10 @@ button {
     --menubar-hover-color: #FFFFFF;
     --sidebar-dark-color: #151515;
     --font-color: #f2f2f2;
+}
+
+.bg-white{
+    background-color: white;
 }
 
 /* --- Body --- */

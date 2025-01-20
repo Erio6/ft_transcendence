@@ -1,55 +1,61 @@
 
 .my-profile {
     display: grid;
-    grid-template-columns: 2fr 3fr;
-    grid-template-rows: 1fr 2fr;
+    grid-template-areas: 'hi info info'
+                         'my-profile-pic info info'
+                         'my-profile-pic info info'
+                         'my-settings info info';
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
-    height: 65vh;
     margin-top: 20px;
 }
 
 .hi-profile {
-    grid-column: 1;
-    grid-row: 1;
+    grid-area: hi;
     border-radius: 35px;
     background: var(--menubar-icone-hover-color);
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 
 .my-profile-pic {
-    grid-column: 1;
-    grid-row: 2;
+    grid-area: my-profile-pic;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
-
 
 .my-informations {
-    grid-column: 2;
-    grid-row: 1/ -1;
+    grid-area: info;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
+}
+
+.my-settings {
+    grid-area: my-settings;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
 }
 
 
-.hi-profile {
-    margin-bottom: 10px;
-    padding: 25px;
-}
-
+.hi-profile h2,
 .my-profile-pic h2,
-.my-informations h2 {
-    margin-bottom: 10px;
-    padding: 25px;
+.my-informations h2,
+.my-settings h2 {
+    margin-bottom: 20px;
 }
 
 .form-group {
@@ -64,9 +70,15 @@
 .form-group input,
 .form-group select,
 .form-group textarea {
-    width: 100%;
+    border: solid 1px var(--font-color);
+    background-color: rgba(0, 0, 0, 0);
     padding: 8px;
-    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 35px;
+    color: var(--font-color);
+    width: 100%;
+
 }
 
 .error-message {
@@ -93,11 +105,26 @@
     height: 20px;
     object-fit: cover;
 }
+.profile-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;  /* Space between avatar and edit button */
+}
+
+.file-input-wrapper {
+    position: relative;
+}
+.file-input-wrapper .edit-pic {
+    align-items: center;
+}
+
+.file-input-wrapper input[type="file"] {
+    display: none;
+}
 
 .avatar {
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    margin: 0 auto;
     object-position: center;
 }

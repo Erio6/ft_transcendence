@@ -15,6 +15,14 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ['display_name', 'country']
 
 class AvatarUpdateForm(forms.ModelForm):
+    avatar = forms.ImageField(
+        label='',  # Remove label
+        widget=forms.FileInput(attrs={
+            'class': 'hidden-input',
+            'show_initial': False  # Don't show current file
+        })
+    )
+
     class Meta:
         model = UserProfile
         fields = ['avatar']

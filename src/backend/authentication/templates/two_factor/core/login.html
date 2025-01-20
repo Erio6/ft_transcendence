@@ -1,0 +1,23 @@
+{% extends "two_factor/_base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/2falogin.css' %}">
+{% endblock %}
+
+{% block two_factor_content %}
+<div class="login-container">
+    <h2 class="login-header">{% if wizard.steps.current == 'token' %}Verify{% else %}Login{% endif %}</h2>
+
+    <form action="" method="post" class="login-form">
+        {% csrf_token %}
+        {{ wizard.management_form }}
+        {{ form.as_p }}
+
+        <button type="submit" class="login-btn">
+            {% if wizard.steps.current == 'token' %}Verify{% else %}Login{% endif %}
+        </button>
+    </form>
+</div>
+{% endblock %}

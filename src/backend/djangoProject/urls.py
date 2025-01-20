@@ -38,9 +38,12 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from two_factor.views import SetupView
 
 from . import views
+from django.contrib import admin
+from django.conf.urls import include
+from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path('', views.home, name="home"),

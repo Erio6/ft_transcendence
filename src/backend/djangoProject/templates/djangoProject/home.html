@@ -8,6 +8,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static 'css/style_main.css' %}">
     <link rel="stylesheet" href="{% static 'css/gameHistory.css' %}">
+    <link rel="stylesheet" href="{% static 'css/2falogin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/2fasetup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/2fadisable.css' %}">
     <!-- Boxicons CSS - On a le droit de load des boxicons cest plus simple non?-->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel="stylesheet">
     <title>
@@ -86,17 +89,14 @@
 <section class="home">
     <main>
         {% block content %}
-            <h1> Welcome to the most beautiful Pong! </h1>
             {% include 'dashboard/game_history.html' %}
         {% endblock %}
     </main>
 </section>
+
 <script src="{% static 'js/main.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/script.js' %}"></script>
 
 </body>
 </html>
-
-
-
