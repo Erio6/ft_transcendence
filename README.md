@@ -2,42 +2,18 @@
 
 ## Project Structure
 
-The project is organized as follows: **TO BE UPDATED**
 
-- `backend/`: Contains the main backend module of project.
-  - `djangoProject/`: The main Django project directory.
-    - `settings.py`: Configuration settings for the project.
-    - `urls.py`: URL declarations for the Django project.
-    - `wsgi.py`: WSGI configuration for deploying the Django project.
-  - `API/`: Contains the API application.
-    - `apps.py`: Configuration for the API application.
-  - `authentication/`: Contains the authentication application.
-    - `apps.py`: Configuration for the authentication application.
-  - `game/`: Contains the game application.
-    - `apps.py`: Configuration for the game application.
-
-- `manage.py`: Command-line utility for administrative tasks.
-
+install the requirements.txt
 ```sh
-python manage.py runserver:
+pip install -r requirements.txt
 ```
-to install the postgresSQL database
-```sh
-brew install postgresql
-pip install psycopg2-binary
-```
-After creation you need to do a superuser and to create the database (Settings in django for the db:settings.py)
-```sh
-for 2FA - a check avec Mehdi
-```sh
-django-otp
-phonenumbers
-```
-for the Profile picture in authentication:
-```sh
-pip install Pillow
-```
-
+Notes :
+- compute les scores elo
+- page once victory or loss + to add the blockchain tx link to the etherscan
+- to do game history front
+- to do dashboard front
+- to do github front page with our github/linkedin or idk.
+- make the docker and see how we deploy and update?
 
 NOTE FOR ANTHONY: 
 

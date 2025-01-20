@@ -42,7 +42,7 @@
 .win-loss-container {
     grid-area: win-loss;
     border-radius: 35px;
-    background: var(--menubar-color);
+    background: var(--menubar-icone-hover-color);
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;

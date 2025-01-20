@@ -1,10 +1,10 @@
 
 .my-profile {
     display: grid;
-    grid-template-areas: 'hi my-informations my-informations'
-                         'my-profile-pic my-informations my-informations'
-                        'my-profile-pic my-informations my-informations'
-                        'my-settings my-informations my-informations';
+    grid-template-areas: 'hi info info'
+                         'my-profile-pic info info'
+                         'my-profile-pic info info'
+                         'my-settings info info';
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
     margin-top: 20px;
@@ -17,6 +17,7 @@
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 
 .my-profile-pic {
@@ -26,15 +27,17 @@
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 
 .my-informations {
-    grid-area: my-informations;
+    grid-area: info;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 
 .my-settings {
@@ -44,19 +47,15 @@
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    padding: 20px;
 }
 
 
-.hi-profile {
-    margin-bottom: 10px;
-    padding: 25px;
-}
-
+.hi-profile h2,
 .my-profile-pic h2,
 .my-informations h2,
 .my-settings h2 {
-    margin-bottom: 10px;
-    padding: 10px;
+    margin-bottom: 20px;
 }
 
 .form-group {
@@ -71,9 +70,15 @@
 .form-group input,
 .form-group select,
 .form-group textarea {
-    width: 100%;
+    border: solid 1px var(--font-color);
+    background-color: rgba(0, 0, 0, 0);
     padding: 8px;
-    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 35px;
+    color: var(--font-color);
+    width: 100%;
+
 }
 
 .error-message {
@@ -99,6 +104,22 @@
     width: 30px;
     height: 20px;
     object-fit: cover;
+}
+.profile-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;  /* Space between avatar and edit button */
+}
+
+.file-input-wrapper {
+    position: relative;
+}
+.file-input-wrapper .edit-pic {
+    align-items: center;
+}
+
+.file-input-wrapper input[type="file"] {
+    display: none;
 }
 
 .avatar {

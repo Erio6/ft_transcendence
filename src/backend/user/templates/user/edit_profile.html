@@ -11,14 +11,24 @@
     </div>
     <div class="my-profile-pic">
         <h2>My Profile Picture</h2>
-        <div class="profile-pic">
-        <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
-            <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
-                {% csrf_token %}
-                <input type="hidden" name="form_type" value="avatar">
+        <div class="profile-container">
+            <div class="profile-pic">
+                <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
+            </div>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="avatar">
+            <div class="file-input-wrapper">
                 {{ avatar_form.avatar }}
-            <button type="submit" class="btn btn-primary">Edit Picture</button>
-            </form>
+                <label for="{{ avatar_form.avatar.id_for_label }}" class="edit-pic">
+                    <span>
+                        Edit picture
+                        <i class='bx bx-photo-album'></i>
+                    </span>
+                </label>
+´´
+            </div>
+        </form>
         </div>
     </div>
     <div class="my-informations">
@@ -39,6 +49,12 @@
                     {% endif %}
                 </div>
             {% endfor %}
+                        {% if profile.country %}
+                <div class="country-display">
+                    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
+                    <span>{{ profile.country.name }}</span>
+                </div>
+            {% endif %}
 
             {% for field in form2 %}
                 <div class="form-group">
@@ -52,13 +68,6 @@
                     {% endif %}
                 </div>
             {% endfor %}
-
-            {% if profile.country %}
-                <div class="country-display">
-                    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
-                    <span>{{ profile.country.name }}</span>
-                </div>
-            {% endif %}
 
             {% if user == profile.user %}
                 <button type="submit" class="btn btn-secondary">Update Profile</button>
