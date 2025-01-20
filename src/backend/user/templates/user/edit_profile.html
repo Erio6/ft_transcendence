@@ -15,6 +15,7 @@
         <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
             <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
                 {% csrf_token %}
+                <input type="hidden" name="form_type" value="avatar">
                 {{ avatar_form.avatar }}
             <button type="submit" class="btn btn-primary">Edit Picture</button>
             </form>
@@ -24,6 +25,7 @@
         <h2>My Informations</h2>
         <form method="POST" action="{% url 'user:edit_profile' profile.user.username %}">
             {% csrf_token %}
+            <input type="hidden" name="form_type" value="profile_info">
 
             {% for field in form %}
                 <div class="form-group">

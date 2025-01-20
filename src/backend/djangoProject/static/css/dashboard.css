@@ -4,6 +4,7 @@
     grid-template-areas: 'graph graph history'
                          'graph graph history'
                          'leaderboard win-loss history'
+                         'leaderboard win-loss history'
                          'leaderboard update-profile history';
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
