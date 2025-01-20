@@ -70,12 +70,10 @@
         <button type="submit" class="btn btn-primary">Change Password</button>
     </form>
     </div>
-</div>
- <div class="diffuse-circle circle-1"></div>
 
  <!-- Two-factor authentication management -->
- <hr>
- <h3>Two-Factor Authentication</h3>
+    <div class="my-settings">
+ <h2>Two-Factor Authentication</h2>
 
 {% if user.has_usable_password %}
     {% if user.is_authenticated and user.totpdevice_set.exists %}
@@ -94,5 +92,8 @@
 {% else %}
     <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
 {% endif %}
+</div>
+</div>
+ <div class="diffuse-circle circle-1"></div>
 
 {% endblock %}
