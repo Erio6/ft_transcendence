@@ -1,0 +1,11 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Dashboard{% endblock %}
+{% load static %
+
+{% block content %}
+<h2>My Dashboard</h2>
+
+<a href="{% url 'user:edit_profile' profile.user.username %}">
+    <button='bx bxs-heart icon'>Update my profile</button>
+</a>
+{% endblock %}

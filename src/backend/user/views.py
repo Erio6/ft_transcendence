@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import UserUpdateForm, ProfileUpdateForm
+from .forms import UserUpdateForm, ProfileUpdateForm, AvatarUpdateForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 from django.contrib import messages
@@ -21,27 +21,31 @@ def profile_view(request,username):
 def edit_profile_view(request,username):
     if request.user.username != username:
         messages.error(request, "You do not have the right to modify this profile.")
-        return redirect('user:edit_user_profile', username=username)
+        return redirect('user:edit_profile', username=username)
 
     profile = get_object_or_404(UserProfile,user=request.user)
 
     if request.method == "POST":
+        avatar_form = AvatarUpdateForm(request.POST, request.FILES, instance=profile)
         form = ProfileUpdateForm(request.POST,
                                     request.FILES,
                                     instance=profile)
-        form2 = UserUpdateForm(request.POST, instance=request.user)
-        if form.is_valid() & form2.is_valid():
+        form2 = UserUpdateForm(request.POST or None, instance=request.user)
+        if form.is_valid() & form2.is_valid() & avatar_form.is_valid():
             form.save()
             form2.save()
+            avatar_form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('user:user_profile', username=username)
+            return redirect('home')
     else:
         form = ProfileUpdateForm(instance=profile)
+        avatar_form = AvatarUpdateForm(instance=profile)
         form2 = UserUpdateForm(instance=request.user)
 
     context = {
         'form': form,
         'form2': form2,
+        'avatar_form': avatar_form,
         'profile': profile
     }
     return render(request, 'user/edit_profile.html',context)
@@ -54,7 +58,7 @@ def change_password(request):
             user = form.save()
             update_session_auth_hash(request, user)  # Prevents user from being logged out
             messages.success(request, 'Your password has been successfully updated!')
-            return redirect('profile')
+            return redirect('home')
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'user/change_pwd.html', {'form': form})

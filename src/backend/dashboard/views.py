@@ -17,6 +17,16 @@ def leaderboard(request):
 
     return render(request, 'dashboard/leaderboard.html', context)
 
+def dashboard(request):
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+        context = {
+            'profile': profile
+        }
+
+    return render(request, 'dashboard/dashboard.html', context)
+
 
 # def game_history_view(request):
 #     game_histories = GameHistory.objects.order_by('date_played')[:10]

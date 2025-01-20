@@ -29,15 +29,6 @@
     flex-direction: column;
 }
 
-.my-settings {
-    grid-column: 1;
-    grid-row: 3;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
-    display: flex;
-    flex-direction: column;
-}
 
 .my-informations {
     grid-column: 2;
@@ -49,14 +40,58 @@
     flex-direction: column;
 }
 
+
 .hi-profile {
     margin-bottom: 10px;
     padding: 25px;
 }
 
-.my-profile-pic h2 {
+.my-profile-pic h2,
+.my-informations h2 {
     margin-bottom: 10px;
     padding: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+.help-text {
+    color: green;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+.country-display {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    gap: 10px;
+}
+
+.country-flag {
+    width: 30px;
+    height: 20px;
+    object-fit: cover;
 }
 
 .avatar {
