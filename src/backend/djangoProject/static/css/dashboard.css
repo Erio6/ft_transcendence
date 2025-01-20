@@ -1,0 +1,62 @@
+
+.dashboard-container {
+    display: grid;
+    grid-template-areas: 'graph graph history'
+                         'graph graph history'
+                         'leaderboard win-loss history'
+                         'leaderboard update-profile history';
+    grid-gap: 20px;
+    grid-auto-rows: minmax(100px, auto);
+    margin-top: 20px;
+}
+
+.graph-container {
+    grid-area: graph;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.history-container {
+    grid-area: history;
+    border-radius: 35px;
+    padding: 25px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.leaderboard-container {
+    grid-area: leaderboard;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.win-loss-container {
+    grid-area: win-loss;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.update-profile-container {
+    grid-area: update-profile;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-container h2 {
+    margin-bottom: 10px;
+    padding: 25px;
+}
