@@ -1,12 +1,31 @@
 from django.shortcuts import render
 from .models import Leaderboard, GameHistory
+from user.models import UserProfile
 
 # Create your views here.
 
 def leaderboard(request):
     leaderboard = Leaderboard.objects.all().order_by('rank')
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
 
-    return render(request, 'dashboard/leaderboard.html', {'leaderboard': leaderboard})
+    context = {
+        'profile': profile,
+        'leaderboard': leaderboard,
+    }
+
+    return render(request, 'dashboard/leaderboard.html', context)
+
+def dashboard(request):
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+        context = {
+            'profile': profile
+        }
+
+    return render(request, 'dashboard/dashboard.html', context)
 
 
 # def game_history_view(request):

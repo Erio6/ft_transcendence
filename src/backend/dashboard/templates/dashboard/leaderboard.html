@@ -2,27 +2,34 @@
 {% block title %}Leaderboard{% endblock %}
 
 {% block content %}
-    <h1>Leaderboard</h1>
-    <table>
-        <thead>
+    <h2>Leaderboard</h2>
+    <div class="container-leaderboard">
+    <table id ="ranking">
+        <thead class="ladder-titles">
             <tr>
                 <th>Rank</th>
+                <th></th>
                 <th>Username</th>
                 <th>Total Points</th>
                 <th>Total Wins</th>
                 <th>Total Losses</th>
+                <th>Elo</th>
             </tr>
         </thead>
         <tbody>
             {% for entry in leaderboard %}
-            <tr>
-                <td>{{ entry.rank }}</td>
+         <tr {% if entry.player.user == request.user %} class="current-user"{% endif %}>
+                <td>{{ entry.rank }}.</td>
+                <td> <img src="{{ entry.player.avatar.url }}" alt=""></td>
                 <td>{{ entry.player.user.username }}</td>
                 <td>{{ entry.total_points }}</td>
                 <td>{{ entry.total_wins }}</td>
                 <td>{{ entry.total_losses }}</td>
+                <td>elo</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
+<div class="diffuse-circle circle-1"></div>
 {% endblock %}

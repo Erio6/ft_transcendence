@@ -1,25 +1,73 @@
 {% extends 'djangoProject/home.html' %}
-{% block title %}Edit Profile {% endblock %}
+{% block title %} User Profile {% endblock %}
+{% load static %
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Edit Profile</h2>
+<h2>My Profile</h2>
+<div class="my-profile">
+    <div class="hi-profile">
+        <h2>Hi, {{ profile.display_name }}</h2>
+        <p> Welcome to your profile page! </p>
+    </div>
+    <div class="my-profile-pic">
+        <h2>My Profile Picture</h2>
+        <div class="profile-pic">
+        <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
+                {% csrf_token %}
+                {{ avatar_form.avatar }}
+            <button type="submit" class="btn btn-primary">Edit Picture</button>
+            </form>
+        </div>
+    </div>
+    <div class="my-informations">
+        <h2>My Informations</h2>
+        <form method="POST" action="{% url 'user:edit_profile' profile.user.username %}">
+            {% csrf_token %}
 
-    <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_user_profile' profile.user.username %}">
-        {% csrf_token %}
-        {{ form2.as_p }}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update Profile</button>
-        <a href="{% url 'user:user_profile' profile.user.username %}" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
-<div class="container mt-4">
-    <h2>Change Password</h2>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error-message">{{ field.errors }}</div>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {% for field in form2 %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error-message">{{ field.errors }}</div>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {% if profile.country %}
+                <div class="country-display">
+                    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
+                    <span>{{ profile.country.name }}</span>
+                </div>
+            {% endif %}
+
+            {% if user == profile.user %}
+                <button type="submit" class="btn btn-secondary">Update Profile</button>
+            {% endif %}
+        </form>
+        <h2>Change Password</h2>
     <form method="POST" action="{% url 'user:change_password' %}">
         {% csrf_token %}
-        {{ password_form.as_p }}
-        <button type="submit" class="btn btn-primary">Update Password</button>
-        <a href="{% url 'user:user_profile' profile.user.username  %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Change Password</button>
     </form>
+    </div>
 </div>
+ <div class="diffuse-circle circle-1"></div>
 {% endblock %}

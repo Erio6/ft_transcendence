@@ -1,0 +1,25 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Dashboard{% endblock %}
+{% load static %
+
+{% block content %}
+<h2>My Dashboard</h2>
+<div class="dashboard-container">
+    <div class="graph-container">
+        <h2>Graph to do</h2>
+    </div>
+    <div class="history-container">
+    <h2>History</h2></div>
+    <div class="leaderboard-container">
+    <h2>Leaderboard</h2></div>
+    <div class="win-loss-container">
+    <h2>Statistics</h2></div>
+    <div class="update-profile-container">
+        <a href="{% url 'user:edit_profile' profile.user.username %}">
+    <button>Update my profile</button>
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}
