@@ -33,7 +33,6 @@ def dashboard(request):
                 Q(player_one=profile) | Q(player_two=profile)
             ).values_list('id', flat=True)
         ).order_by('-date_played')[:10]
-        print(f"Game histories: {game_histories}")
 
         history_data = []
         for history in game_histories:
