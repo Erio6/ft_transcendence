@@ -108,7 +108,7 @@
 .profile-container {
     display: flex;
     align-items: center;
-    gap: 20px;  /* Space between avatar and edit button */
+    gap: 30px;
 }
 
 .file-input-wrapper {

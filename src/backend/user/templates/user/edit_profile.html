@@ -21,8 +21,8 @@
             <div class="file-input-wrapper">
                 {{ avatar_form.avatar }}
                 <label for="{{ avatar_form.avatar.id_for_label }}" class="edit-pic">
-                    <i class='bx bx-photo-album'>Search for picture</i>
-                    <button type="submit" >Validate</button>
+                    Edit my picture<i class='bx bx-photo-album'></i>
+                    <button type="submit" class="btn btn-primary" >Validate</button>
                 </label>
             </div>
         </form>
@@ -79,7 +79,7 @@
 
  <!-- Two-factor authentication management -->
     <div class="my-settings">
- <h2>Two-Factor Authentication</h2>
+ <h2>2FA settings</h2>
 
 {% if user.has_usable_password %}
     {% if user.is_authenticated and user.totpdevice_set.exists %}

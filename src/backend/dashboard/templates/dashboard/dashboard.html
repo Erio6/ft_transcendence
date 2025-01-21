@@ -10,13 +10,39 @@
     </div>
     <div class="history-container">
     <h2>History</h2></div>
+
     <div class="leaderboard-container">
-    <h2>Leaderboard</h2></div>
+    <h2>Leaderboard</h2>
+    <table id ="ranking">
+        <tbody>
+            {% for entry in leaderboard %}
+         <tr {% if entry.player.user == request.user %} class="current-user"{% endif %}>
+                <td>{{ entry.rank }}.</td>
+                <td> <img src="{{ entry.player.avatar.url }}" alt=""></td>
+                <td>{{ entry.player.user.username }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
     <div class="win-loss-container">
-    <h2>Statistics</h2></div>
+    <h2>Statistics</h2>
+        {% if user_entry %}
+        <div class="wins-losses">
+            <p class="total">{{ user_entry.total_wins }} </p>
+            <p class="title">Win(s) </p>
+            <p class = total>{{ user_entry.total_losses }} </p>
+            <p class="title">Losse(s) </p>
+        </div>
+        {% else %}
+        <p>No data available for the authenticated user.</p>
+        {% endif %}
+    </div>
+
     <div class="update-profile-container">
         <a href="{% url 'user:edit_profile' profile.user.username %}">
-    <button>Update my profile</button>
+    <button class="btn btn-primary">Update my profile</button>
         </a>
     </div>
 </div>

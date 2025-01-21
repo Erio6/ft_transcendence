@@ -19,10 +19,14 @@ def leaderboard(request):
 
 def dashboard(request):
     profile = None
+    leaderboard = Leaderboard.objects.all().order_by('rank')
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
+        user_entry = Leaderboard.objects.filter(player__user=request.user).first()
         context = {
-            'profile': profile
+            'profile': profile,
+            'leaderboard': leaderboard,
+            'user_entry': user_entry,
         }
 
     return render(request, 'dashboard/dashboard.html', context)
