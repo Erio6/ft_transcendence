@@ -104,6 +104,7 @@
                         <li class="friend-item">
                             <div class="profile">
                                 <div class="img-container">
+                                    <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>
                                     <img src="{{ friend.avatar.url }}" alt="">
                                 </div>
                                 <p>{{ friend.user.username }}</p>
@@ -118,10 +119,6 @@
                                 </button>
                             </form>
                         </li>
-                        {#                        <li class="list-friends">#}
-                        {#                            <span class="status-dot {% if friend.user.userprofile.is_online %} online {% else %} offline {% endif %}"></span>#}
-                        {#                            <span>{{ friend.user.username }}</span>#}
-                        {#                        </li>#}
                     {% endfor %}
                 </ul>
             {% else %}
