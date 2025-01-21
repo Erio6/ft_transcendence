@@ -6,7 +6,7 @@ wait_for_service() {
     local host=$1
     local port=$2
     local service=$3
-    
+
     echo "Waiting for $service..."
     while ! nc -z $host $port; do
         echo "$service not available yet - sleeping"
@@ -15,23 +15,32 @@ wait_for_service() {
     echo "$service is up!"
 }
 
-# Function to initialize Vault
-initialize_vault() {
-    echo "Initializing Vault..."
-    
-    # Wait for Vault to be unsealed and ready
+# Wait longer for Vault to be ready
+wait_for_vault() {
+    echo "Waiting for Vault..."
     until curl -fs "${VAULT_ADDR}/v1/sys/health" > /dev/null 2>&1; do
-        echo "Waiting for Vault to be ready..."
-        sleep 2
+        echo "Vault not ready - sleeping"
+        sleep 5
     done
-    
+    echo "Vault is up!"
+}
+
+# Wait for services
+wait_for_service db 5432 "PostgreSQL"
+wait_for_vault
+
+# Initialize Vault
+echo "Initializing Vault..."
+sleep 5  # Give Vault a little more time to be fully ready
+
+# Rest of your initialization...
+initialize_vault() {
     # Enable KV secrets engine version 2
     curl --retry 5 --retry-delay 2 -fs -X POST "${VAULT_ADDR}/v1/sys/mounts/secret" \
         -H "X-Vault-Token: ${VAULT_TOKEN}" \
         -d '{"type": "kv", "options": {"version": "2"}}' || echo "KV secrets engine likely already enabled"
-    
+
     # Store database credentials
-    echo "Storing database credentials in Vault..."
     curl --retry 5 --retry-delay 2 -fs -X POST "${VAULT_ADDR}/v1/secret/data/database/credentials" \
         -H "X-Vault-Token: ${VAULT_TOKEN}" \
         -H "Content-Type: application/json" \
@@ -47,31 +56,19 @@ initialize_vault() {
             echo "Failed to store credentials in Vault"
             exit 1
         }
-        
-    # Verify credentials were stored
-    echo "Verifying credentials storage..."
-    curl --retry 5 --retry-delay 2 -fs "${VAULT_ADDR}/v1/secret/data/database/credentials" \
-        -H "X-Vault-Token: ${VAULT_TOKEN}" || {
-            echo "Failed to verify credentials in Vault"
-            exit 1
-        }
 }
 
-# Wait for services
-wait_for_service vault 8200 "Vault"
-wait_for_service db 5432 "PostgreSQL"
-
-# Initialize Vault and store credentials
 initialize_vault
 
-# Flush the database (clear all data)
-echo "Flushing the database..."
-python manage.py flush --no-input
+# Make sure directories exist
+mkdir -p /app/staticfiles
+mkdir -p /app/media
 
-# Run Django migrations
-echo "Running migrations..."
+# Collect static files
+echo "Collecting static files..."
+python manage.py collectstatic --no-input --clear
+
+# Start Django
+echo "Starting Django..."
 python manage.py migrate
-
-# Start Django app
-echo "Starting Django app..."
 exec python manage.py runserver 0.0.0.0:8000

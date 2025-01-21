@@ -117,16 +117,16 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# db_credentials = get_db_credentials()
+db_credentials = get_db_credentials()
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "db",
-        "USER": "postgres",
-        "PASSWORD": "1234",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": db_credentials['db_name'],
+        "USER": db_credentials['username'],
+        "PASSWORD": db_credentials['password'],
+        "HOST": db_credentials['host'],
+        "PORT": db_credentials['port'],
     }
 }
 
@@ -198,6 +198,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Add this line
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "djangoProject/static")]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

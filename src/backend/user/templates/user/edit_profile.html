@@ -11,28 +11,19 @@
     </div>
     <div class="my-profile-pic">
         <h2>My Profile Picture</h2>
-        <div class="profile-container">
-            <div class="profile-pic">
-                <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
-            </div>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="avatar">
-            <div class="file-input-wrapper">
+        <div class="profile-pic">
+        <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
+            <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
+                {% csrf_token %}
                 {{ avatar_form.avatar }}
-                <label for="{{ avatar_form.avatar.id_for_label }}" class="edit-pic">
-                    Edit my picture<i class='bx bx-photo-album'></i>
-                    <button type="submit" class="btn btn-primary" >Validate</button>
-                </label>
-            </div>
-        </form>
+            <button type="submit" class="btn btn-primary">Edit Picture</button>
+            </form>
         </div>
     </div>
     <div class="my-informations">
         <h2>My Informations</h2>
         <form method="POST" action="{% url 'user:edit_profile' profile.user.username %}">
             {% csrf_token %}
-            <input type="hidden" name="form_type" value="profile_info">
 
             {% for field in form %}
                 <div class="form-group">
@@ -46,16 +37,10 @@
                     {% endif %}
                 </div>
             {% endfor %}
-                        {% if profile.country %}
-                <div class="country-display">
-                    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
-                    <span>{{ profile.country.name }}</span>
-                </div>
-            {% endif %}
 
             {% for field in form2 %}
                 <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}"></label>{{ field.label }}</label>
                     {{ field }}
                     {% if field.errors %}
                         <div class="error-message">{{ field.errors }}</div>
@@ -66,20 +51,29 @@
                 </div>
             {% endfor %}
 
+            {% if profile.country %}
+                <div class="country-display">
+                    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
+                    <span>{{ profile.country.name }}</span>
+                </div>
+            {% endif %}
+
             {% if user == profile.user %}
                 <button type="submit" class="btn btn-secondary">Update Profile</button>
             {% endif %}
         </form>
-        <br>
+        <h2>Change Password</h2>
     <form method="POST" action="{% url 'user:change_password' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-primary">Change Password</button>
     </form>
     </div>
+</div>
+ <div class="diffuse-circle circle-1"></div>
 
  <!-- Two-factor authentication management -->
-    <div class="my-settings">
- <h2>2FA settings</h2>
+ <hr>
+ <h3>Two-Factor Authentication</h3>
 
 {% if user.has_usable_password %}
     {% if user.is_authenticated and user.totpdevice_set.exists %}
@@ -98,8 +92,5 @@
 {% else %}
     <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
 {% endif %}
-</div>
-</div>
- <div class="diffuse-circle circle-1"></div>
 
 {% endblock %}
