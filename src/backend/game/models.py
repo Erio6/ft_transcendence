@@ -1,10 +1,14 @@
 from django.contrib.auth.models import User
 from django.db import models
 from user.models import UserProfile
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 # Create your models here.
 class Game(models.Model):
+    game_histories = GenericRelation('dashboard.GameHistory',
+                                     content_type_field='game_type',
+                                     object_id_field='game_id')
     player_one = models.ForeignKey(UserProfile, related_name='player_one_games', on_delete=models.CASCADE)
     player_two = models.ForeignKey(UserProfile, related_name='player_two_games', null=True, blank=True, on_delete=models.CASCADE)
     winner = models.ForeignKey(UserProfile, related_name='winner_games', null=True, on_delete=models.SET_NULL)
