@@ -39,10 +39,10 @@
         <p>No data available for the authenticated user.</p>
         {% endif %}
     </div>
-
     <div class="update-profile-container">
+        <h2>Profile update</h2>
         <a href="{% url 'user:edit_profile' profile.user.username %}">
-    <button class="btn btn-primary">Update my profile</button>
+    <button class="btn btn-primary">Click here to update your profile</button>
         </a>
     </div>
 </div>

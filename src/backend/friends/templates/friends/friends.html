@@ -35,10 +35,8 @@
                                         </div>
                                         <div class="country">
                                             <div class="img-container">
-                                                {#                                                <i class="flag4x {{ user.country.flag_css }}"></i>#}
                                                 <img src="{{ user.country.flag }}"
                                                      alt="{{ user.country.name }}">
-                                                {# <img src="{% country_flag_url your_object.country %}" alt="{{ your_object.country.name }} flag" />#}
                                             </div>
                                             <p>{{ user.country.name }}</p>
                                         </div>
@@ -58,28 +56,6 @@
                             <p> No users found for "{{ query }}".</p>
                         {% endif %}
                     {% endif %}
-                    {#                    <li class="friend-item">#}
-                    {#                        <div class="profile">#}
-                    {#                            <div class="img-container">#}
-                    {#                                <img src="https://picsum.photos/200/200" alt="">#}
-                    {#                            </div>#}
-                    {#                            <p>username</p>#}
-                    {#                        </div>#}
-                    {#                        <div class="country">#}
-                    {#                            <div class="img-container">#}
-                    {#                                <img src="https://picsum.photos/100/100" alt="">#}
-                    {#                                <img src="{% country_flag_url your_object.country %}"#}
-                    {#                                     alt="{{ your_object.country.name }} flag"/>#}
-                    {#                            </div>#}
-                    {#                            <p>country name</p>#}
-                    {#                        </div>#}
-                    {#                        <form action="./" method="POST">#}
-                    {#                            {% csrf_token %}#}
-                    {#                            <button class="accept" type="submit">Add Friend <span><img#}
-                    {#                                    src=" {% static 'img/accept.png' %}" alt=""></span>#}
-                    {#                            </button>#}
-                    {#                        </form>#}
-                    {#                    </li>#}
                 </div>
             </div>
             <div class="pending">
@@ -97,9 +73,8 @@
                                 </div>
                                 <div class="country">
                                     <div class="img-container">
-                                        <img src="{{ request.receiver.country.url }}"
+                                        <img src="{{ request.receiver.country.flag }}"
                                              alt="{{ request.receiver.country.name }}">
-                                        {# <img src="{% country_flag_url your_object.country %}" alt="{{ your_object.country.name }} flag" />#}
                                     </div>
                                     <p>{{ request.receiver.country.name }}</p>
                                 </div>
