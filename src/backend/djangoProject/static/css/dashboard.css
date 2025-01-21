@@ -23,7 +23,6 @@
 .history-container {
     grid-area: history;
     border-radius: 35px;
-    padding: 25px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
     display: flex;
@@ -59,7 +58,11 @@
 
 .dashboard-container h2 {
     margin-bottom: 10px;
-    padding: 25px;
+    padding: 20px;
+}
+
+.dashboard-container p {
+    padding:10px;
 }
 
 .wins-losses {
