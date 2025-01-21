@@ -1,6 +1,16 @@
 function renderTournamentTree(nodes, links) {
     console.log(nodes);
     console.log(links);
+
+    const filteredNodes = nodes.filter(node => {
+        const keepNode = node.round !== 1 || node.player_one || node.player_two;
+        if (!keepNode) {
+            console.log("Removing node:", node); // Debug log for removed nodes
+        }
+        return keepNode;
+    });
+
+
     const $ = go.GraphObject.make;
 
     const diagram = $(go.Diagram, "myDiagramDiv", {
@@ -9,7 +19,7 @@ function renderTournamentTree(nodes, links) {
         "undoManager.isEnabled": true
     });
 
-    diagram.nodeTemplateMap.add("match", $(go.Node, "Auto",
+    diagram.nodeTemplateMap.add("match", $(go.Node, "Auto", { selectable: false },
         $(go.Shape, "Rectangle", { fill:"lightyellow", stroke: null}),
             new go.Binding("fill", "color"),
         $(go.Panel, "Table")
@@ -66,7 +76,7 @@ function renderTournamentTree(nodes, links) {
         $(go.Shape, { stroke: "red", strokeWidth: 2 })
     );
 
-    diagram.model = new go.TreeModel(nodes);
+    diagram.model = new go.TreeModel(filteredNodes);
 
     diagram.model.nodeCategoryProperty = "category";
 }

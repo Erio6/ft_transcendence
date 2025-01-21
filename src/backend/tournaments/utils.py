@@ -5,16 +5,21 @@ def create_games(tournament, player_slots, round_number, total_rounds, games):
     if round_number > total_rounds:
         return
 
-    num_games = 2 ** (total_rounds - round_number) // 2
-    # num_games = len(player_slots) // 2
+    # num_games = 2 ** (total_rounds - round_number) // 2
+    num_games = (len(player_slots) + 1) // 2
     current_round_games = []
-
-    for i in range(0, len(player_slots), 2):
-        player_one = player_slots[i] if player_slots[i] else None
-        player_two = player_slots[i + 1] if (i + 1) < len(player_slots) and player_slots[i + 1] else None
-        # player_two = player_slots[i + 1].player if (i + 1) < len(player_slots) else None
-        # player_two = player_slots[i + 1].player if player_slots[i + 1] else None
-        # parent_games = parent_game[i // 2] if parent_game else None
+    next_round_slots = []
+    # for i in range(0, len(player_slots), 2):
+    #     # player_one = player_slots[i] if player_slots[i] else None
+    #     # player_two = player_slots[i + 1] if (i + 1) < len(player_slots) and player_slots[i + 1] else None
+    #     # player_two = player_slots[i + 1].player if (i + 1) < len(player_slots) else None
+    #     # player_two = player_slots[i + 1].player if player_slots[i + 1] else None
+    #     # parent_games = parent_game[i // 2] if parent_game else None
+    #     player_one = player_slots[i]
+    #     player_two = player_slots[i + 1] if i + 1 < len(player_slots) else None
+    for i in range(num_games):
+        player_one = player_slots[i * 2] if i * 2 < len(player_slots) else None
+        player_two = player_slots[i * 2 + 1] if i * 2 + 1 < len(player_slots) else None
         game = TournamentGame(
             tournament=tournament,
             round_number=round_number,
@@ -22,6 +27,12 @@ def create_games(tournament, player_slots, round_number, total_rounds, games):
             player_two=player_two,
         )
         current_round_games.append(game)
+
+        if player_one and player_two:
+            next_round_slots.append(None)
+        else:
+            next_round_slots.append(player_one or player_two)
+
         # games.append(game)
         # next_round_games.append(game)
     TournamentGame.objects.bulk_create(current_round_games)
@@ -43,7 +54,7 @@ def create_games(tournament, player_slots, round_number, total_rounds, games):
     #         game.parent = next_round_slots[parent_index]
     #         game.save()
 
-    next_round_slots = [None] * (num_games * 2)
+    # next_round_slots = [None] * (num_games * 2)
     # for i, game in enumerate(current_round_games):
     #     if i // 2 < len(next_round_slots):
     #         next_round_slots[i // 2] = game
