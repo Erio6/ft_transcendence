@@ -135,9 +135,9 @@
                     <li class="friend-item">
                         <div class="profile">
                             <div class="img-container">
-                                <img src="{{ request.receiver.avatar.url }}" alt="">
+                                <img src="{{ request.sender.avatar.url }}" alt="">
                             </div>
-                            <p>{{ request.receiver.user.username }}</p>
+                            <p>{{ request.sender.user.username }}</p>
                         </div>
                         <form action="{% url 'friends:accept_friend_request' request.id %}" method="POST">
                             {% csrf_token %}
