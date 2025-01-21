@@ -3,7 +3,7 @@ import {createCube} from "../Components/cube.js";
 class Ball {
     constructor(x, y, v_x, v_y, speed, radius, field_height, field_width) {
         this.x = x;
-        this.y = y;
+        this.y = 100 - y;
         this.v_x = v_x;
         this.v_y = v_y;
         this.speed = speed;
@@ -36,8 +36,7 @@ class Ball {
         if (this.y >= 100 - this.radius) {
             this.y = 100 - this.radius;
             this.v_y *= -1;
-        }
-        else if (this.y <= this.radius) {
+        } else if (this.y <= this.radius) {
             this.y = this.radius;
             this.v_y *= -1;
         }
