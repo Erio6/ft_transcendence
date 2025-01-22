@@ -76,6 +76,7 @@ CHANNEL_LAYERS = {
     }
 }
 
+
 LOGIN_URL = 'authentication:login'
 
 MIDDLEWARE = [
@@ -129,6 +130,8 @@ DATABASES = {
         "PORT": db_credentials['port'],
     }
 }
+
+
 
 
 # JWT
