@@ -25,7 +25,7 @@ class AIGameRoom(Room):
 
         await self.ball.wall_collide()
         await self.left_paddle.move(self.delta_time, self)
-        self.move_ai()
+        await self.move_ai()
 
         self.ball.paddles_collide_check(self.left_paddle)
         self.ball.paddles_collide_check(self.right_paddle)
@@ -41,8 +41,9 @@ class AIGameRoom(Room):
 
         await self.ball.move(self.delta_time)
 
-    def move_ai(self):
-        output = self.net.activate((self.right_paddle.y / 100, self.ball.y / 100))
+    async def move_ai(self):
+        output = self.net.activate(
+            (self.right_paddle.y / 100, abs(0.02 - self.ball.x / 100), self.ball.y / 100, self.ball.v_x, self.ball.v_y))
         decision = output.index(max(output))
         print(decision)
 
@@ -53,6 +54,10 @@ class AIGameRoom(Room):
         elif decision == 2:
             self.right_paddle.force_move(value)
             self.send_right = True
+
+        if self.send_right:
+            await self.right_paddle.send_data_chan(self.left_paddle.consumer)
+            self.send_right = False
 
     async def end_game(self):
         self.running = False
@@ -75,8 +80,8 @@ class AIGameRoom(Room):
 
     def register_ai(self, mode):
         if mode == "solo_IA_easy":
-            config_name = "easy.txt"
-            with open("./AI/best.pickle", "rb") as f:
+            config_name = "medium.txt"
+            with open("./AI/medium.pickle", "rb") as f:
                 winner = pickle.load(f)
         else:
             return
@@ -106,3 +111,14 @@ class AIGameRoom(Room):
             await self.right_paddle.init_paddle_chan(consumer)
             if self.running:
                 await self.ball.init_ball_chan(consumer)
+
+    async def remove_consumer(self, consumer):
+        if consumer == self.left_paddle.consumer:
+            self.running = False
+            del self.left_paddle
+            del self.right_paddle
+            self.left_paddle = None
+            self.right_paddle = None
+            print("delete left", self.left_paddle)
+        if consumer in self.spectators:
+            self.spectators.remove(consumer)

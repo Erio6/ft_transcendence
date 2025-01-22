@@ -6,11 +6,13 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 
+from game.aigame_room import AIGameRoom
 from game.ball import Ball
 from game.local_room import LocalRoom
 from game.models import Game
 from game.online_room import OnlineRoom
 from game.paddle import Paddle
+from game.perfect_room import AIPerfectRoom
 from game.room import Room
 from user.models import UserProfile
 
@@ -62,7 +64,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                         if consumer.user_profile == self.user_profile:
                             print("already in the game")
                             return
-
+                if self.game.is_completed == True:
+                    print("game already completed")
+                    return
                 print("valid id")
             except Game.DoesNotExist:
                 print("invalid id")
@@ -80,17 +84,25 @@ class GameConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
         if self.room_name not in group_rooms:
-            print("create Room, room name", type(self.room_name))
+            print("create Room, room name", self.room_name)
             if self.game.type_of_game == "multiplayer":
                 group_rooms[self.room_name] = OnlineRoom(self.room_name)
+                await group_rooms[self.room_name].register_consumer(self)
             elif self.game.type_of_game == "solo_player":
                 newRoom = LocalRoom(self.room_name)
                 await newRoom.register_left(self, self.user_profile.display_name)
                 await newRoom.register_right(self, "Player2")
                 await newRoom.start_game()
                 group_rooms[self.room_name] = newRoom
-
-        await group_rooms[self.room_name].register_consumer(self)
+            elif self.game.type_of_game == "solo_IA_easy":
+                group_rooms[self.room_name] = AIGameRoom(self.room_name)
+                await group_rooms[self.room_name].register_consumer(self)
+            elif self.game.type_of_game == "solo_IA_hard":
+                group_rooms[self.room_name] = AIPerfectRoom(self.room_name)
+                await group_rooms[self.room_name].register_consumer(self)
+        else:
+            if self.game.type_of_game == "multiplayer":
+                await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:
             asyncio.create_task(game_loop())

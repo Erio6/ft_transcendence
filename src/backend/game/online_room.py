@@ -18,6 +18,7 @@ class OnlineRoom(Room):
             return
 
         await self.ball.wall_collide()
+        # await self.ball.send_data(self.left_paddle.consumer)
 
         await self.left_paddle.move(self.delta_time, self)
         await self.right_paddle.move(self.delta_time, self)
