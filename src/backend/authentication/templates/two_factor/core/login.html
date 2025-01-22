@@ -19,5 +19,19 @@
             {% if wizard.steps.current == 'token' %}Verify{% else %}Login{% endif %}
         </button>
     </form>
+
+    {% if wizard.steps.current == 'token' %}
+        <hr>
+        <div class="backup_tokens_form">
+            <form action="" method="post">
+                {% csrf_token %}
+                <p>As a last resort, you can use a backup token:</p>
+                <p>
+                    <button name="wizard_goto_step" type="submit" value="backup"
+                            class="btn btn-sm btn-secondary btn-block">Use Backup Token</button>
+                </p>
+            </form>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
