@@ -7,6 +7,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from itertools import chain
 from dashboard.signals import update_ranks
+from decimal import Decimal
 
 
 
@@ -24,10 +25,23 @@ class GameHistory(models.Model):
 
 class Leaderboard(models.Model):
     player = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='leaderboard')
-    total_points = models.IntegerField(default=0)
+    elo = models.FloatField(default=1500)
     total_wins = models.PositiveIntegerField(default=0)
     total_losses = models.PositiveIntegerField(default=0)
     rank = models.PositiveIntegerField(default=0)
+
+    def update_elo(self, opponent_leaderboard, is_winner, is_draw=False):
+        k_factor = 32
+        outcome = 0.5 if is_draw else (1.0 if is_winner else 0.0)
+        expected_score = 1 / (1 + 10 ** ((opponent_leaderboard.elo - self.elo) / 400))
+        self.elo += k_factor * (outcome - expected_score)
+        self.elo = round(self.elo, 2)
+        self.save()
+        if not is_draw:
+            opponent_outcome = 0.5 if is_draw else (0.0 if is_winner else 1.0)
+            opponent_expected_score = 1 / (1 + 10 ** ((self.elo - opponent_leaderboard.elo) / 400))
+            opponent_leaderboard.elo += k_factor * (opponent_outcome - opponent_expected_score)
+            opponent_leaderboard.save()
 
     def __str__(self):
         return f'Leaderboard: {self.player}'
@@ -61,8 +75,6 @@ class Leaderboard(models.Model):
         # Get or create the leaderboard entry for the player
         leaderboard, created = Leaderboard.objects.get_or_create(player=player)
 
-        # Update stats
-        leaderboard.total_points += points
         if win:
             leaderboard.total_wins += 1
         else:

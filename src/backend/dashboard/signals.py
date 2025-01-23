@@ -8,7 +8,7 @@ from tournaments.models import TournamentGame
 
 def update_ranks():
     from .models import Leaderboard
-    leaderboard_entries = Leaderboard.objects.all().order_by('-total_points')
+    leaderboard_entries = Leaderboard.objects.all().order_by('-elo')
 
     # Assign ranks based on total_points
     for rank, leaderboard in enumerate(leaderboard_entries, 1):  # Rank starts from 1
@@ -30,6 +30,10 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
             game_type=ContentType.objects.get_for_model(Game),
             game_id=instance.id
         )
+
+        leaderboard_one, created = Leaderboard.objects.get_or_create(player=instance.player_one)
+        leaderboard_two, created = Leaderboard.objects.get_or_create(player=instance.player_two)
+
         # Update the leaderboard
         Leaderboard.update_player_stats(instance.player_one, instance.player_one_score,
                                         win=(instance.winner == instance.player_one))
@@ -37,6 +41,24 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
         # Update for player two
         Leaderboard.update_player_stats(instance.player_two, instance.player_two_score,
                                         win=(instance.winner == instance.player_two))
+
+
+        is_draw = (instance.winner_score == instance.player_two_score)
+
+        try:
+            leaderboard_one.update_elo(
+                opponent_leaderboard=leaderboard_two,
+                is_winner=(instance.winner == instance.player_one),
+                is_draw=is_draw
+            )
+
+            leaderboard_two.update_elo(
+                opponent_leaderboard=leaderboard_one,
+                is_winner=(instance.winner == instance.player_two),
+                is_draw=is_draw
+            )
+        except Exception as e:
+            print(f"Error updating ELO ratings: {e}")
 
         update_ranks()
 

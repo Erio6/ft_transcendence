@@ -7,7 +7,6 @@ from PIL import Image
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField( default='avatar/default.jpg',upload_to='avatar')
-    elo_rating = models.DecimalField(default=1500, max_digits=6, decimal_places=2)
     display_name = models.CharField(max_length=100, unique=True)
     is_online = models.BooleanField(default=False)
     is_banned = models.BooleanField(default=False)
@@ -17,18 +16,6 @@ class UserProfile(models.Model):
     #total_points = models.IntegerField(default=0)
     #draws = models.IntegerField(default=0)
     #match_history = models.JSONField(default=list, blank=True)
-
-    def update_elo(self, opponent_profile, is_winner, is_draw=False):
-        k_factor = 32
-        outcome = 0.5 if is_draw else (1.0 if is_winner else 0.0)
-        expected_score = 1 / (1 + 10 ** ((opponent_profile.elo_rating - self.elo_rating) / 400))
-        self.elo_rating += k_factor * (outcome - expected_score)
-        self.save()
-        if not is_draw:
-            opponent_outcome = 0.5 if is_draw else (0.0 if is_winner else 1.0)
-            opponent_expected_score = 1 / (1 + 10 ** ((self.elo_rating - opponent_profile.elo_rating) / 400))
-            opponent_profile.elo_rating += k_factor * (opponent_outcome - opponent_expected_score)
-            opponent_profile.save()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
