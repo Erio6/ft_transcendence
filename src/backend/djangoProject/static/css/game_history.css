@@ -8,6 +8,7 @@
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
+    overflow: scroll;
 }
 
 .game-history {
@@ -71,4 +72,19 @@
     margin-left: 10px;
     margin-right: 5px;
     opacity: 70%;
+}
+
+.game-history-section::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+.game-history-section::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+}
+
+.game-history-section::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--font-color);
 }
