@@ -1,0 +1,15 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Join a Tournament{% endblock %}
+
+{% block content %}
+    <h1> Enter the code to join a tournament </h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="code">Tournament code :</label>
+        <input type="text" name="code" id="code" placeholder="Enter the tournament code" required>
+        <button type="submit">Join</button>
+    </form>
+    {% if error %}
+    <p>{{ error }}</p>
+    {% endif %}
+{% endblock %}

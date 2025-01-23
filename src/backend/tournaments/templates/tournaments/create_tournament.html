@@ -1,0 +1,12 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Create Tournament{% endblock %}
+
+{% block content %}
+    <h1> Create your tournament </h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="name">Tournament name :</label>
+        <input type="text" name="name" id="name" placeholder="Enter the tournament name" required>
+        <button type="submit">Create</button>
+    </form>
+{% endblock %}

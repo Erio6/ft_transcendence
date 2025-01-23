@@ -16,6 +16,7 @@ from django.core.asgi import get_asgi_application
 
 import matchMaking.routing
 import game.routing
+import tournaments.routing
 from game.routing import websocket_urlpatterns
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoProject.settings')
@@ -24,7 +25,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'djangoProject.settings')
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
     'websocket': AuthMiddlewareStack(
-        URLRouter(matchMaking.routing.websocket_urlpatterns + game.routing.websocket_urlpatterns)
+        URLRouter(matchMaking.routing.websocket_urlpatterns + game.routing.websocket_urlpatterns + tournaments.routing.websocket_urlpatterns)
     ),
 })
 
