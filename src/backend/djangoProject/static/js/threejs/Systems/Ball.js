@@ -21,7 +21,7 @@ class Ball {
         this.v_x = v_x;
         this.v_y = v_y;
         this.speed = parseInt(speed);
-        console.log("collide");
+        console.log("collide " + v_x);
     }
 
     normalize(value, ratio) {

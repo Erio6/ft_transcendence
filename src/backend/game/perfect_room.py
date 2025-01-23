@@ -8,10 +8,11 @@ from django.utils.timezone import now
 
 from game.models import Game
 from game.paddle import Paddle
+from game.perfect_paddle import PerfectPaddle
 from game.room import Room
 
 
-class AIGameRoom(Room):
+class AIPerfectRoom(Room):
     def __init__(self, room_id):
         super().__init__(room_id)
         self.old_pos = [0, 0]
@@ -25,10 +26,14 @@ class AIGameRoom(Room):
 
         await self.ball.wall_collide()
         await self.left_paddle.move(self.delta_time, self)
-        await self.move_ai()
+        await self.right_paddle.move(self.delta_time, self)
 
-        self.ball.paddles_collide_check(self.left_paddle)
-        self.ball.paddles_collide_check(self.right_paddle)
+        # print("-------------------")
+        # print(self.ball.v_x, self.ball.v_y)
+        hit1 = self.ball.paddles_collide_check(self.left_paddle)
+        hit2 = self.ball.paddles_collide_check(self.right_paddle)
+
+        hit3 = self.ball.sending_score
 
         await self.ball.send_data(self.left_paddle.consumer)
         await self.ball.send_score(self.left_paddle.consumer)
@@ -40,24 +45,9 @@ class AIGameRoom(Room):
             await self.right_paddle.send_data_chan(self.spectators[0])
 
         await self.ball.move(self.delta_time)
-
-    async def move_ai(self):
-        output = self.net.activate(
-            (self.right_paddle.y / 100, abs(0.02 - self.ball.x / 100), self.ball.y / 100, self.ball.v_x, self.ball.v_y))
-        decision = output.index(max(output))
-        print(decision)
-
-        value = self.right_paddle.speed * self.delta_time
-        if decision == 1:
-            self.right_paddle.force_move(-value)
-            self.send_right = True
-        elif decision == 2:
-            self.right_paddle.force_move(value)
-            self.send_right = True
-
-        if self.send_right:
-            await self.right_paddle.send_data_chan(self.left_paddle.consumer)
-            self.send_right = False
+        if hit1 or hit2 or hit3:
+            # print(self.ball.v_x, self.ball.v_y)
+            self.right_paddle.compute_pos(self.ball)
 
     async def end_game(self):
         self.running = False
@@ -69,6 +59,10 @@ class AIGameRoom(Room):
         game.is_completed = True
         await sync_to_async(game.save)(force_update=True)
 
+    async def start_game(self):
+        await super().start_game()
+        self.right_paddle.compute_pos(self.ball)
+
     async def handle_paddle_msg(self, consumer, message):
         if consumer == self.left_paddle.consumer:
             if message['data'] == 1:
@@ -78,28 +72,10 @@ class AIGameRoom(Room):
             if self.left_paddle.movingDown == 0 and self.left_paddle.movingUp == 0:
                 await self.left_paddle.send_data()
 
-    def register_ai(self, mode):
-        if mode == "solo_IA_easy":
-            config_name = "medium.txt"
-            with open("./AI/medium.pickle", "rb") as f:
-                winner = pickle.load(f)
-        else:
-            return
-
-        local_dir = os.path.dirname(__file__)
-        print(local_dir)
-        config_path = os.path.join(local_dir + "/AIs/", config_name)
-        config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction,
-                             neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                             config_path)
-
-        self.net = neat.nn.FeedForwardNetwork.create(winner, config)
-
     async def register_consumer(self, consumer):
         if not self.left_paddle:
             self.left_paddle = Paddle("left", consumer, consumer.user_profile.display_name)
-            self.right_paddle = Paddle("right", None, "IA Easy")
-            self.register_ai("solo_IA_easy")
+            self.right_paddle = PerfectPaddle("right", None, "IA Hard")
             await consumer.send(json.dumps({'type': 'client', 'loc': 'left', 'speed': self.left_paddle.speed}))
             await self.left_paddle.init_paddle_chan(self.left_paddle.consumer)
             await self.right_paddle.init_paddle_chan(self.left_paddle.consumer)
@@ -111,14 +87,3 @@ class AIGameRoom(Room):
             await self.right_paddle.init_paddle_chan(consumer)
             if self.running:
                 await self.ball.init_ball_chan(consumer)
-
-    async def remove_consumer(self, consumer):
-        if consumer == self.left_paddle.consumer:
-            self.running = False
-            del self.left_paddle
-            del self.right_paddle
-            self.left_paddle = None
-            self.right_paddle = None
-            print("delete left", self.left_paddle)
-        if consumer in self.spectators:
-            self.spectators.remove(consumer)

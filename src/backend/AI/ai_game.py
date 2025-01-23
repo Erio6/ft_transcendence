@@ -16,6 +16,8 @@ class AIGame:
         self.genome1 = None
         self.room = room
         self.ball = self.room.ball
+        self.new_pos = 0
+        self.direction = 0
 
     # def train_ai(self, genome1, genome2, config):
     #     net1 = neat.nn.FeedForwardNetwork.create(genome1, config)
@@ -84,11 +86,14 @@ class AIGame:
         net1 = neat.nn.FeedForwardNetwork.create(genome1, config)
 
         run = True
+        i = 0
 
         self.genome1 = genome1
 
         start_time = time.time()
         last_time = start_time
+        self.new_pos = 0
+        self.direction = 0
 
         loop = asyncio.get_event_loop()
 
@@ -97,38 +102,68 @@ class AIGame:
             #     self.genome1.fitness -= abs(self.room.left_paddle.y - self.room.ball.y) / 75
             delta_time = time.time() - last_time
             last_time = time.time()
-            loop.run_until_complete(self.room.update())
+            ball_hit = loop.run_until_complete(self.room.update())
             old_pos = self.room.left_paddle.y
             # print("ball x =", self.room.ball.x)
-            self.ai_movement(net1, delta_time)
+            if ball_hit or i == 0:
+                self.ai_movement(net1, delta_time)
+
+            value = self.room.left_paddle.speed * delta_time * self.direction
+            if value != 0:
+                is_valid = self.move_paddle(value, self.genome1, left=True)
+                if not is_valid:
+                    self.direction = 0
+                else:
+                    if self.room.left_paddle.y >= self.new_pos and self.direction == 1:
+                        self.direction = 0
+                    elif self.room.left_paddle.y <= self.new_pos and self.direction == -1:
+                        self.direction = 0
+
             new_pos = self.room.left_paddle.y
             if new_pos != old_pos:
                 self.room.send_left = True
             if self.room.left_paddle.score > 0:
                 # print("score > 0")
                 run = False
+            i += 1
         self.compute_fitness(last_time - start_time)
 
     def ai_movement(self, net1, delta_time):
-        i = 1
-        # print("y:", self.room.left_paddle.y / 100, " | x:", abs(0.02 - self.room.ball.x / 100), " | ball.y:",
-        #       self.room.ball.y / 100)
-        # print(self.room.left_paddle.y / 100, abs(0.02 - self.room.ball.x / 100), self.room.ball.y / 100)
         output = net1.activate(
             (self.room.left_paddle.y / 100, abs(0.02 - self.room.ball.x / 100), self.room.ball.y / 100,
              self.room.ball.v_x,
              self.room.ball.v_y))
-        decision = output.index(max(output))
+        decision = output[0] * 100
         # print(decision)
-        # print(i, decision)
-        value = self.room.left_paddle.speed * delta_time
-        if decision == 1:
-            self.move_paddle(-value, self.genome1, left=True)
-        elif decision == 0:
-            self.genome1.fitness -= 0.005
-        else:
-            self.move_paddle(value, self.genome1, left=True)
-        i += 1
+        self.new_pos = decision
+        if self.room.left_paddle.y > decision:
+            self.direction = -1
+        elif self.room.left_paddle.y < decision:
+            self.direction = 1
+
+    # def ai_movement(self, net1, delta_time):
+    #     i = 1
+    #     # print("y:", self.room.left_paddle.y / 100, " | x:", abs(0.02 - self.room.ball.x / 100), " | ball.y:",
+    #     #       self.room.ball.y / 100)
+    #     # print(self.room.left_paddle.y / 100, abs(0.02 - self.room.ball.x / 100), self.room.ball.y / 100)
+    #     output = net1.activate(
+    #         (self.room.left_paddle.y / 100, abs(0.02 - self.room.ball.x / 100), self.room.ball.y / 100,
+    #          self.room.ball.v_x,
+    #          self.room.ball.v_y))
+    #     decision = output.index(max(output))
+    #     # print(decision)
+    #     # print(i, decision)
+    #     # print(self.room.left_paddle.y)
+    #     value = self.room.left_paddle.speed * delta_time
+    #     if decision == 1:
+    #         # print("up", end=" ")
+    #         self.move_paddle(-value, self.genome1, left=True)
+    #     elif decision == 0:
+    #         self.genome1.fitness -= 0.005
+    #     else:
+    #         # print("down", end=" ")
+    #         self.move_paddle(value, self.genome1, left=True)
+    #     i += 1
 
     def move_paddle(self, value, genome, left=True):
         # print("ai should move", value)
@@ -137,12 +172,15 @@ class AIGame:
         else:
             is_valid = self.room.right_paddle.force_move(value)
 
+        # print(is_valid)
         if not is_valid:
-            genome.fitness -= 0.005
+            genome.fitness -= 3
+        return is_valid
 
     def compute_fitness(self, duration):
-        self.genome1.fitness += self.room.left_paddle.hit * 8
-        self.genome1.fitness -= self.room.left_paddle.dist / 100
+        self.genome1.fitness += self.room.left_paddle.hit * 10
+        self.genome1.fitness -= self.room.left_paddle.dist / 50
+        # print("final dist = ", self.room.left_paddle.dist / 25)
         # self.genome2.fitness += self.room.left_paddle.hit * 3 + duration
         # self.genome2.fitness -= self.room.left_paddle.dist / 100
 
@@ -159,7 +197,7 @@ def eval_genomes(genomes, config):
             ai_game = AIGame(room)
             loop.run_until_complete(room.reset())
             ai_game.train_ai(genome1, config)
-            print(ai_game.genome1.fitness)
+            print(genome_id1, "\t :", ai_game.genome1.fitness)
 
         # for genome_id2, genome2 in genomes[min(len(genomes) - 1, i + 1):]:
         #     print(genome_id1, "vs", genome_id2)
@@ -170,7 +208,7 @@ def eval_genomes(genomes, config):
 
 
 def run_neat(config):
-    # p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4-5inputs')
+    # p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-68-5inputs')
     p = neat.Population(config)
     p.add_reporter(neat.StdOutReporter(True))
     p.add_reporter(neat.Checkpointer(1))

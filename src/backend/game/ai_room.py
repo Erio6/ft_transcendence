@@ -30,11 +30,12 @@ class AIRoom(Room):
         # print(self.old_pos, new_pos)
 
         await self.ball.wall_collide()
-        self.ball.paddles_collide_check(self.left_paddle)
+        ball_hit = self.ball.paddles_collide_check(self.left_paddle)
         # self.ball.paddles_collide_check(self.right_paddle)
 
         # Play again wall
         if self.ball.x > 97.5:
+            ball_hit = True
             self.ball.last_touch = "right"
             if 0.05 > self.ball.v_y >= 0:
                 self.ball.v_y = 0.2
@@ -63,6 +64,7 @@ class AIRoom(Room):
         self.old_pos = [new_pos[0], new_pos[1]]
         await self.ball.move(self.delta_time)
         await asyncio.sleep(1 / 600)
+        return ball_hit
 
     async def reset(self):
         await super().reset()

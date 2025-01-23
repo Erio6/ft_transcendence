@@ -102,7 +102,7 @@ class World {
                     console.log("set to " + json['y']);
                 }
             } else if (json['type'] === 'ball') {
-                if (json['y'] > 2 && json['y'] < 97)
+                if ((json['y'] > 2 && json['y'] < 97) || (json['x'] < 10 || json['x'] > 90))
                     this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
             } else if (json['type'] === 'score') {
                 if (json['value'] >= 10) {
