@@ -55,6 +55,12 @@
     flex-direction: column;
 }
 
+.update-profile-container a {
+    display:flex;
+    justify-content:center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 .dashboard-container h2 {
     margin-bottom: 10px;
     padding-top: 20px;
@@ -77,4 +83,7 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+
+
+
 
