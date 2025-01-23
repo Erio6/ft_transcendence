@@ -18,21 +18,25 @@
                         <img src="{{ history.player_one.avatar.url }}" alt="Avatar">
                         <span>{{ history.player_one.user.username }} </span>
                     </div>
-                    <div class="vs">vs</div>
+                    <div class="scores">
+                    <span>{{ history.player_one_score }} - {{ history.player_two_score }}</span>
+                </div>
                     <div class="player">
                         <img src="{{ history.player_two.avatar.url }}" alt="Avatar">
                         <span>{{ history.player_two.user.username }}</span>
                     </div>
                 </div>
-                <div class="scores">
-                    <span>{{ history.player_one_score }} - {{ history.player_two_score }}</span>
-                </div>
+               <div class="win-and-date">
                 <div class="winner">
-                    Winner: <strong>{{ history.winner.user.username }}</strong>
+                    <span>
+                        <i class='bx bx-trophy'></i>
+                    </span>
+                     <strong>{{ history.winner.user.username }}</strong>
                 </div>
                 <div class="date">
                     Played on: {{ history.date_played|date:"M d, Y H:i" }}
                 </div>
+            </div>
             </div>
                 {% endfor %}
         {% else %}

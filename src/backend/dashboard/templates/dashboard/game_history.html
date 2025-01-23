@@ -1,4 +1,4 @@
-
+{% load static %}
 {% block content %}
     <h2>Game History</h2>
     <div class="game-history-section">
@@ -6,24 +6,28 @@
         {% for history in game_histories %}
         <div class="game-history">
             <div class="players">
-                <div class="player">
+                <div class="player1">
                     <img src="{{ history.player_one.avatar.url }}" alt="Avatar">
                     <span>{{ history.player_one.user.username }} (Rank: {{ history.player_one.leaderboard_rank }})</span>
                 </div>
-                <div class="vs">vs</div>
-                <div class="player">
+                <div class="scores">
+                <span>{{ history.player_one_score }} - {{ history.player_two_score }}</span>
+            </div>
+                <div class="player2">
                     <img src="{{ history.player_two.avatar.url }}" alt="Avatar">
                     <span>{{ history.player_two.user.username }} (Rank: {{ history.player_two.leaderboard_rank }})</span>
                 </div>
             </div>
-            <div class="scores">
-                <span>{{ history.player_one_score }} - {{ history.player_two_score }}</span>
-            </div>
-            <div class="winner">
-                Winner: <strong>{{ history.winner.user.username }}</strong>
-            </div>
-            <div class="date">
-                Played on: {{ history.date_played|date:"M d, Y H:i" }}
+            <div class="win-and-date">
+                <div class="winner">
+                    <span>
+                        <i class='bx bx-trophy'></i>
+                    </span>
+                     <strong>{{ history.winner.user.username }}</strong>
+                </div>
+                <div class="date">
+                    Played on: {{ history.date_played|date:"M d, Y H:i" }}
+                </div>
             </div>
         </div>
         {% endfor %}

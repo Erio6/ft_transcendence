@@ -4,7 +4,6 @@
     grid-template-areas: 'graph graph history'
                          'graph graph history'
                          'leaderboard win-loss history'
-                         'leaderboard win-loss history'
                          'leaderboard update-profile history';
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
@@ -58,7 +57,8 @@
 
 .dashboard-container h2 {
     margin-bottom: 10px;
-    padding: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
 }
 
 .dashboard-container p {
@@ -73,8 +73,8 @@
 
 .wins-losses .total{
     font-size: 60px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
