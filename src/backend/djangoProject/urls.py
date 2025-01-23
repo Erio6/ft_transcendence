@@ -47,6 +47,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', views.home, name="home"),
+    path('our_team', views.our_team, name="our_team"),
     path('', include(tf_urls)),  # Admin route
     path('admin/', admin.site.urls),  # Admin route
     path('game/', include('game.urls')),

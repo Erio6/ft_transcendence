@@ -30,3 +30,11 @@ def home(request):
         'profile': profile,
     }
     return render(request, 'djangoProject/home.html', context)
+
+def our_team(request):
+    profile = UserProfile.objects.get(user=request.user)
+    context = {
+        'user': request.user,
+        'profile': profile,
+    }
+    return render(request, 'djangoProject/our_team.html',context)
