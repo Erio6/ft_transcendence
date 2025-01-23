@@ -6,7 +6,7 @@
 <h2>My Profile</h2>
 <div class="my-profile">
     <div class="hi-profile">
-        <h2>Hi, {{ profile.display_name }}</h2>
+        <h2>Hi, {{ profile.user.username }}</h2>
         <p> Welcome to your profile page! </p>
     </div>
     <div class="my-profile-pic">
@@ -34,6 +34,19 @@
             {% csrf_token %}
             <input type="hidden" name="form_type" value="profile_info">
 
+            {% for field in form2 %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error-message">{{ field.errors }}</div>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
             {% for field in form %}
                 <div class="form-group">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -53,18 +66,6 @@
                 </div>
             {% endif %}
 
-            {% for field in form2 %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="error-message">{{ field.errors }}</div>
-                    {% endif %}
-                    {% if field.help_text %}
-                        <div class="help-text">{{ field.help_text }}</div>
-                    {% endif %}
-                </div>
-            {% endfor %}
 
             {% if user == profile.user %}
                 <button type="submit" class="btn btn-secondary">Update Profile</button>

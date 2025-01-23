@@ -29,7 +29,7 @@
         <div class="login-section">
             {% if user.is_authenticated %}
                 <img class=avatar src="{{ profile.avatar.url }}" alt="Profile Image">
-                <a> Hi, {{ profile.display_name }} !</a>
+                <a> Hi, {{ profile.user.username }} !</a>
                 <a href="{% url 'authentication:logout' %}" method="post">
                     {% csrf_token %}
                     <i class='bx bx-log-out'></i>
