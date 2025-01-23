@@ -1,4 +1,5 @@
 from tournaments.models import TournamentGame
+from game.models import Game
 
 
 def create_games(tournament, player_slots, round_number, total_rounds, games):
@@ -9,22 +10,27 @@ def create_games(tournament, player_slots, round_number, total_rounds, games):
     num_games = (len(player_slots) + 1) // 2
     current_round_games = []
     next_round_slots = []
-    # for i in range(0, len(player_slots), 2):
-    #     # player_one = player_slots[i] if player_slots[i] else None
-    #     # player_two = player_slots[i + 1] if (i + 1) < len(player_slots) and player_slots[i + 1] else None
-    #     # player_two = player_slots[i + 1].player if (i + 1) < len(player_slots) else None
-    #     # player_two = player_slots[i + 1].player if player_slots[i + 1] else None
-    #     # parent_games = parent_game[i // 2] if parent_game else None
-    #     player_one = player_slots[i]
-    #     player_two = player_slots[i + 1] if i + 1 < len(player_slots) else None
     for i in range(num_games):
         player_one = player_slots[i * 2] if i * 2 < len(player_slots) else None
         player_two = player_slots[i * 2 + 1] if i * 2 + 1 < len(player_slots) else None
+
+        game_instance = None
+        if player_one and player_two:
+            print(f"Creating game for {player_one.player} and {player_two.player}")
+            game_instance = Game.objects.create(
+                player_one=player_one.player,
+                player_two=player_two.player,
+                player_one_score=0,
+                player_two_score=0,
+                type_of_game='tournament'
+            )
+
         game = TournamentGame(
             tournament=tournament,
             round_number=round_number,
             player_one=player_one,
             player_two=player_two,
+            game=game_instance
         )
         current_round_games.append(game)
 
@@ -33,31 +39,11 @@ def create_games(tournament, player_slots, round_number, total_rounds, games):
         else:
             next_round_slots.append(player_one or player_two)
 
-        # games.append(game)
-        # next_round_games.append(game)
+    print(f"Round {round_number}: {[(game.player_one, game.player_two, game.game) for game in current_round_games]}")
+
     TournamentGame.objects.bulk_create(current_round_games)
     games.extend(current_round_games)
 
-    # next_round_games = current_round_games
-        # if parent_game:
-        #     parent_game.next_game = game
-
-    # next_round_slots = [None] * (num_games * 2)
-
-    # if round_number < total_rounds:
-    #     for i, game in enumerate(current_round_games):
-    #         parent_index = i // 2
-    #         next_round_slots[parent_index] = next_round_slots[parent_index] or TournamentGame(
-    #             tournament=tournament,
-    #             round_number=round_number + 1,
-    #         )
-    #         game.parent = next_round_slots[parent_index]
-    #         game.save()
-
-    # next_round_slots = [None] * (num_games * 2)
-    # for i, game in enumerate(current_round_games):
-    #     if i // 2 < len(next_round_slots):
-    #         next_round_slots[i // 2] = game
 
     create_games(tournament, next_round_slots, round_number + 1, total_rounds, games)
 
@@ -127,3 +113,43 @@ def assign_parent_child_relationships(games):
     for game in final_round_games:
         game.parent = game  # Self-reference for championship game
         game.save()
+
+
+
+
+
+
+# for i in range(0, len(player_slots), 2):
+    #     # player_one = player_slots[i] if player_slots[i] else None
+    #     # player_two = player_slots[i + 1] if (i + 1) < len(player_slots) and player_slots[i + 1] else None
+    #     # player_two = player_slots[i + 1].player if (i + 1) < len(player_slots) else None
+    #     # player_two = player_slots[i + 1].player if player_slots[i + 1] else None
+    #     # parent_games = parent_game[i // 2] if parent_game else None
+    #     player_one = player_slots[i]
+    #     player_two = player_slots[i + 1] if i + 1 < len(player_slots) else None
+
+
+ # games.append(game)
+        # next_round_games.append(game)
+
+
+# next_round_games = current_round_games
+        # if parent_game:
+        #     parent_game.next_game = game
+
+    # next_round_slots = [None] * (num_games * 2)
+
+    # if round_number < total_rounds:
+    #     for i, game in enumerate(current_round_games):
+    #         parent_index = i // 2
+    #         next_round_slots[parent_index] = next_round_slots[parent_index] or TournamentGame(
+    #             tournament=tournament,
+    #             round_number=round_number + 1,
+    #         )
+    #         game.parent = next_round_slots[parent_index]
+    #         game.save()
+
+    # next_round_slots = [None] * (num_games * 2)
+    # for i, game in enumerate(current_round_games):
+    #     if i // 2 < len(next_round_slots):
+    #         next_round_slots[i // 2] = game

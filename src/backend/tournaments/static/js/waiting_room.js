@@ -36,6 +36,11 @@ ws.onmessage = function (event) {
         alert(data.message);
         window.location.href = data.tournament_home_url;
     }
+
+    if (data.type === 'start_tournament') {
+        console.log(data.redirect_url);
+        window.location.href = data.redirect_url;
+    }
 }
 
 function updatePlayerList(players) {

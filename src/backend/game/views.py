@@ -79,6 +79,7 @@ def game_3d(request, game_id):
     user_profile = UserProfile.objects.get(user=request.user)
     if not Game.objects.filter(id=game_id).exists():
         print("Game does not exist")
+        print(game_id)
         return redirect('/')
     print("load threejs.html")
     return render(request, 'game/threejs.html')

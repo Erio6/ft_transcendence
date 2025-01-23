@@ -25,7 +25,7 @@ class TournamentPlayer(models.Model):
     is_eliminated = models.BooleanField(default=False)
     round_reached = models.PositiveIntegerField(default=0)
     def __str__(self):
-        return self.tournament.name
+        return f"{self.player.display_name} in {self.tournament.name}"
 
 class TournamentGame(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)

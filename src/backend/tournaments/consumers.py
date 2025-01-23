@@ -56,8 +56,16 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
                 {
                     'type': 'start_tournament',
                     'message': 'Tournament started!',
+                    'redirect_url': reverse('tournaments:tournament_tree', args=[self.tournament_id]),
                 }
             )
+
+    async def start_tournament(self, event):
+        await self.send_json({
+            'type': 'start_tournament',
+            'message': event['message'],
+            'redirect_url': event['redirect_url'],
+        })
 
     async def handle_player_leave(self, event):
         players = await self.get_current_players()

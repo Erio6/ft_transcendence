@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.utils.crypto import get_random_string
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
@@ -113,6 +113,7 @@ def start_tournament(request, tournament_id):
         return redirect('tournaments:waiting_room', tournament_id=tournament.id)
 
     players = list(TournamentPlayer.objects.filter(tournament=tournament))
+    print("Players before shuffle: ", players)
     if len(players) < 4:
         return redirect('tournaments:waiting_room', tournament_id=tournament.id)
 
@@ -136,19 +137,16 @@ def start_tournament(request, tournament_id):
 
         assign_parent_child_relationships(games)
 
-        # for i in range(0, len(player_slots), 2):
-        #     player_one = player_slots[i].player if i < len(players) else None
-        #     player_two = player_slots[i + 1].player if i + 1 < len(players) else None
-        #     games.append(
-        #         TournamentGame(
-        #             tournament=tournament,
-        #             round_number=round_number,
-        #             player_one=player_one,
-        #             player_two=player_two,
-        #         )
-        #     )
-
-        # TournamentGame.objects.bulk_create(games)
+    group_name = f'tournament_{tournament.id}'
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        group_name,
+        {
+            'type': 'start_tournament',
+            'message': 'Tournament started!',
+            'redirect_url': reverse('tournaments:tournament_tree', args=[tournament.id]),
+        }
+    )
 
     return redirect('tournaments:tournament_tree', tournament_id=tournament.id)
 
@@ -159,7 +157,23 @@ def tournament_tree_view(request, tournament_id):
     current_user = request.user.userprofile
 
     nodes = []
+    current_game_url = None
+    opponent_name = None
     for game in games:
+        print(f"TournamentGame ID: {game.id}, Game Linked: {bool(game.game)}")
+        is_current_user_in_game = (
+            (game.player_one and game.player_one.player == current_user) or
+            (game.player_two and game.player_two.player == current_user)
+        )
+
+        if is_current_user_in_game and not current_game_url:
+            current_game_url = reverse('game:real_game', kwargs={'game_id': game.game.id}) if game.game else None
+
+        if game.player_one and game.player_one.player == current_user:
+            opponent_name = game.player_two.player.display_name if game.player_two else None
+        elif game.player_two and game.player_two.player == current_user:
+            opponent_name = game.player_one.player.display_name if game.player_one else None
+
         match_node = {
             "key": f"match-{game.id}",
             "text": f"Match {game.round_number}-{game.id}",
@@ -174,7 +188,35 @@ def tournament_tree_view(request, tournament_id):
         }
         nodes.append(match_node)
 
-        # if game.player_one:
+    links = generate_links(games, tournament)
+
+    return render(request, 'tournaments/tournament_tree.html', {
+        'tournament': tournament,
+        'nodes': json.dumps(nodes),
+        'links': json.dumps(links),
+        'current_game_url': current_game_url,
+        'opponent_name': opponent_name,
+    })
+
+
+
+
+# for i in range(0, len(player_slots), 2):
+        #     player_one = player_slots[i].player if i < len(players) else None
+        #     player_two = player_slots[i + 1].player if i + 1 < len(players) else None
+        #     games.append(
+        #         TournamentGame(
+        #             tournament=tournament,
+        #             round_number=round_number,
+        #             player_one=player_one,
+        #             player_two=player_two,
+        #         )
+        #     )
+
+        # TournamentGame.objects.bulk_create(games)
+
+
+# if game.player_one:
         #     nodes.append(
         #         {"key": f"player-{game.player_one.id}",
         #          "text": game.player_one.display_name,
@@ -188,8 +230,7 @@ def tournament_tree_view(request, tournament_id):
         #          "category": "player",
         #          "color": "red" if current_user == game.player_two else "lightblue",})
 
-    links = generate_links(games, tournament)
-    # for game in games:
+# for game in games:
     #     if game.player_one:
     #         links.append(
     #             {"from": f"player-{game.player_one.id}",
@@ -210,11 +251,5 @@ def tournament_tree_view(request, tournament_id):
     # games_by_round = {}
     # for game in TournamentGame.objects.filter(tournament=tournament).order_by('round_number'):
     #     games_by_round.setdefault(game.round_number, []).append(game)
-
-    return render(request, 'tournaments/tournament_tree.html', {
-        'tournament': tournament,
-        'nodes': json.dumps(nodes),
-        'links': json.dumps(links),
-    })
 
 
