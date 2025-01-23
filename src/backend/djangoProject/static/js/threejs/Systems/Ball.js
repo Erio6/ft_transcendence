@@ -1,4 +1,5 @@
-import {createCube} from "../Components/cube.js";
+import {createCubeMat} from "../Components/cube.js";
+import {MeshStandardMaterial} from "three";
 
 class Ball {
     constructor(x, y, v_x, v_y, speed, radius, field_height, field_width) {
@@ -10,7 +11,8 @@ class Ball {
         this.radius = (radius / 100) * Math.max(field_width, field_height);
         this.field_height = field_height;
         this.field_width = field_width;
-        this.model = createCube();
+        const material = new MeshStandardMaterial({color: 0xaaaaaa, metalness: 1, roughness: 0.2});
+        this.model = createCubeMat(material);
         this.model.scale.set(this.radius, this.radius, this.radius);
         this.model.position.set(this.x - 50, this.y - 50, 0);
     }

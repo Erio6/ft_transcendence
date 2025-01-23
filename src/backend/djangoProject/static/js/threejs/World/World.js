@@ -8,7 +8,7 @@ import {Loop} from "../Systems/Loop.js";
 import {Paddle} from "../Systems/Paddle.js"
 import {createControls} from "../Systems/controls.js";
 import {Ball} from "../Systems/Ball.js";
-import {BufferGeometry, Group, Line, LineBasicMaterial, Vector3} from "three";
+import {BufferGeometry, Group, Line, LineBasicMaterial, Vector3, CameraHelper} from "three";
 import {Align, createFont} from "../Components/font.js";
 import {loadModel} from "../Components/modelLoader.js";
 
@@ -135,28 +135,29 @@ class World {
         scene = createScene();
         renderer = createRenderer();
         loadModel('/static/js/threejs/Models/nowall.glb', (obj) => {
-            obj.scale.set(130, 130, 130);
-            obj.position.set(0, 0, -25);
+            obj.scale.set(118, 118, 118);
+            obj.position.set(0, 0, -5);
             obj.rotation.set(degToRad(90), degToRad(90), 0);
+            obj.castShadow = true;
             scene.add(obj);
         });
         const fontGroup = new Group();
-        createFont(scene, -30, 30, -5, "00", fontGroup);
-        createFont(scene, 30, 30, -5, "00", fontGroup);
+        createFont(scene, -30, 30, 0, "00", fontGroup);
+        createFont(scene, 30, 30, 0, "00", fontGroup);
 
         const controls = createControls(camera, renderer.domElement);
 
-        const top = createCube();
-        const bot = createCube();
         const {ambientLight, light} = createLights();
 
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
 
-        top.position.set(0, 51, 0);
-        top.scale.set(50, 1, 1);
-        bot.position.set(0, -51, 0);
-        bot.scale.set(50, 1, 1);
+        // const top = createCube();
+        // const bot = createCube();
+        // top.position.set(0, 51, 0);
+        // top.scale.set(50, 1, 1);
+        // bot.position.set(0, -51, 0);
+        // bot.scale.set(50, 1, 1);
 
         const mat = new LineBasicMaterial({color: 0x0000ff});
         const points = [];
@@ -177,7 +178,7 @@ class World {
 
         loop.updatables.push(controls);
 
-        scene.add(top, bot, light, ambientLight, fontGroup);
+        scene.add(ambientLight, light, fontGroup);
 
         this.canvas = renderer.domElement;
 

@@ -26,7 +26,7 @@ function generateObject(scene, x, y, z, score, group = null, existingMesh = null
     const geometry = new TextGeometry(score, {
         font: font,
         size: size,
-        depth: 4,
+        depth: 1,
         curveSegments: 12,
         bevelEnabled: false,
         bevelThickness: 0.1,
@@ -57,12 +57,12 @@ function generateObject(scene, x, y, z, score, group = null, existingMesh = null
         existingMesh.geometry.dispose();
         existingMesh.geometry = geometry;
         existingMesh.position.set(-offsetX + x, -offsetY + y, z);
-    }
-    else {
+    } else {
         const material = new MeshStandardMaterial({color: "blue"});
         const materials = [material, material];
         const model = new Mesh(geometry, materials);
         // console.log(model + " | " + x + " | " + y + " | " + z);
+        model.receiveShadow = true;
         model.position.set(-offsetX + x, -offsetY + y, z);
         if (group)
             group.add(model);
