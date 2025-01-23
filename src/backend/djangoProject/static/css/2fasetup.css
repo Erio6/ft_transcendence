@@ -30,16 +30,24 @@
 
 /* QR code container */
 .qr-container {
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
+    background: white; /* Semi-transparent background */
+    padding: 20px;
     margin: 20px auto;
     width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px; /* Optional: adds rounded corners */
 }
 
 .qr-container img {
     display: block;
-    max-width: 200px;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    background: transparent; /* Make sure the image background is transparent */
+    mix-blend-mode: multiply;
+    border-radius: 0; /* This can help blend the white background */
 }
 
 /* Secret key display */

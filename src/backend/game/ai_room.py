@@ -31,19 +31,21 @@ class AIRoom(Room):
 
         await self.ball.wall_collide()
         self.ball.paddles_collide_check(self.left_paddle)
-        self.ball.paddles_collide_check(self.right_paddle)
-        # if self.ball.x > 97.5:
-        #     self.ball.last_touch = "right"
-        #     if 0.05 > self.ball.v_y >= 0:
-        #         self.ball.v_y = 0.2
-        #     if -0.05 < self.ball.v_y < 0:
-        #         self.ball.v_y = -0.2
-        #     self.ball.v_x *= -1
-        #     self.ball.normalize()
-        #     self.ball.x = 97.5
-        #     if len(self.spectators) > 0:
-        #         self.ball.sending_data = True
-        #         await self.ball.send_data(self.spectators[0])
+        # self.ball.paddles_collide_check(self.right_paddle)
+
+        # Play again wall
+        if self.ball.x > 97.5:
+            self.ball.last_touch = "right"
+            if 0.05 > self.ball.v_y >= 0:
+                self.ball.v_y = 0.2
+            if -0.05 < self.ball.v_y < 0:
+                self.ball.v_y = -0.2
+            self.ball.v_x *= -1
+            self.ball.normalize()
+            self.ball.x = 97.5
+            if len(self.spectators) > 0:
+                self.ball.sending_data = True
+                await self.ball.send_data(self.spectators[0])
 
         if len(self.spectators) > 0:
             # print("send to spec : ", self.spectators)
@@ -60,7 +62,7 @@ class AIRoom(Room):
 
         self.old_pos = [new_pos[0], new_pos[1]]
         await self.ball.move(self.delta_time)
-        await asyncio.sleep(1 / 60)
+        await asyncio.sleep(1 / 600)
 
     async def reset(self):
         await super().reset()
