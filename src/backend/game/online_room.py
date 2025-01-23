@@ -2,6 +2,7 @@ import json
 
 from asgiref.sync import sync_to_async
 from django.utils.timezone import now
+from user.models import UserProfile
 
 from blockchain.utils import blockchain_score_storage
 from game.models import Game
@@ -56,6 +57,12 @@ class OnlineRoom(Room):
         print("save the game")
         await sync_to_async(game.save)(force_update=True)
         print("game saved")
+        try:
+            await sync_to_async(winner.consumer.user_profile.update_elo)(opponent_profile=looser.consumer.user_profile, is_winner=True)
+            await sync_to_async(looser.consumer.user_profile.update_elo)(opponent_profile=winner.consumer.user_profile, is_winner=False)
+            print("ELO ratings updated")
+        except Exception as e:
+            print(f"Error while updating ELO ratings: {e}")
         # try:
         #     await blockchain_score_storage(game)
         # except Exception as e:

@@ -25,7 +25,7 @@
                 <td>{{ entry.total_points }}</td>
                 <td>{{ entry.total_wins }}</td>
                 <td>{{ entry.total_losses }}</td>
-                <td>elo</td>
+                <td>{{ entry.player.user.userprofile.elo_rating }}</td>
             </tr>
             {% endfor %}
         </tbody>
