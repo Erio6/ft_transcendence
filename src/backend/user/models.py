@@ -25,7 +25,7 @@ class UserProfile(models.Model):
         self.elo_rating += k_factor * (outcome - expected_score)
         self.save()
         if not is_draw:
-            opponent_outcome = 1.0 if not is_winner else 0.0
+            opponent_outcome = 0.5 if is_draw else (0.0 if is_winner else 1.0)
             opponent_expected_score = 1 / (1 + 10 ** ((self.elo_rating - opponent_profile.elo_rating) / 400))
             opponent_profile.elo_rating += k_factor * (opponent_outcome - opponent_expected_score)
             opponent_profile.save()
