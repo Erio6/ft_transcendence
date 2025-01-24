@@ -39,10 +39,10 @@ def dashboard(request):
             game = history.game_object
             if game:
                 history_data.append({
-                    'player_one': getattr(game, 'player_one', None),
-                    'player_two': getattr(game, 'player_two', None),
-                    'player_one_score': getattr(game, 'player_one_score', None),
-                    'player_two_score': getattr(game, 'player_two_score', None),
+                    'player_one': game.player_one,
+                    'player_two': game.player_two,
+                    'player_one_score': game.player_one_score,
+                    'player_two_score': game.player_two_score,
                     'winner': game.winner,
                     'date_played': history.date_played,
                 })
