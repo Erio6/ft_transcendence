@@ -58,7 +58,7 @@ function generateObject(scene, x, y, z, score, group = null, existingMesh = null
         existingMesh.geometry = geometry;
         existingMesh.position.set(-offsetX + x, -offsetY + y, z);
     } else {
-        const material = new MeshStandardMaterial({color: "blue"});
+        const material = new MeshStandardMaterial({color: 0x422e0f});
         const materials = [material, material];
         const model = new Mesh(geometry, materials);
         // console.log(model + " | " + x + " | " + y + " | " + z);

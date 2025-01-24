@@ -121,12 +121,15 @@ class World {
                 if (active_paddle.location === "right")
                     mult = 1;
                 console.log(active_paddle.score)
-                createFont(scene, 30 * mult, 30, -5, Number(active_paddle.score) >= 10 ? active_paddle.score.toString() : "0" + active_paddle.score, fontGroup, fontGroup.children[0]);
-                createFont(scene, 30 * -mult, 30, -5, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
+                createFont(scene, 30 * mult, 30, 0, Number(active_paddle.score) >= 10 ? active_paddle.score.toString() : "0" + active_paddle.score, fontGroup, fontGroup.children[0]);
+                createFont(scene, 30 * -mult, 30, 0, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
                 scene.add(fontGroup);
             } else if (json['type'] === "start_game") {
                 active_paddle.active = true;
                 active_paddle.registerInput();
+            } else if (json['type'] === 'redirect') {
+                console.log(window.location.host + json['url']);
+                window.location.href = json['url'];
             }
         }
 

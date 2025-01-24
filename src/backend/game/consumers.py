@@ -85,8 +85,8 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if self.room_name not in group_rooms:
             print("create Room, room name", self.room_name)
-            if self.game.type_of_game == "multiplayer":
-                group_rooms[self.room_name] = OnlineRoom(self.room_name)
+            if self.game.type_of_game == "multiplayer" or self.game.type_of_game == "tournament":
+                group_rooms[self.room_name] = OnlineRoom(self.room_name, self.game.type_of_game == "tournament")
                 await group_rooms[self.room_name].register_consumer(self)
             elif self.game.type_of_game == "solo_player":
                 newRoom = LocalRoom(self.room_name)
@@ -94,8 +94,8 @@ class GameConsumer(AsyncWebsocketConsumer):
                 await newRoom.register_right(self, "Player2")
                 await newRoom.start_game()
                 group_rooms[self.room_name] = newRoom
-            elif self.game.type_of_game == "solo_IA_easy":
-                group_rooms[self.room_name] = AIGameRoom(self.room_name)
+            elif self.game.type_of_game == "solo_IA_easy" or self.game.type_of_game == "solo_IA_medium":
+                group_rooms[self.room_name] = AIGameRoom(self.room_name, self.game.type_of_game)
                 await group_rooms[self.room_name].register_consumer(self)
             elif self.game.type_of_game == "solo_IA_hard":
                 group_rooms[self.room_name] = AIPerfectRoom(self.room_name)
