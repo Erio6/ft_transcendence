@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import UserProfile
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
@@ -8,5 +9,6 @@ class Match(models.Model):
     player_two = models.ForeignKey(UserProfile, related_name='player_two_match', null=True, blank=True, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=[('waiting', 'Waiting'), ('matched', 'Matched')], default='waiting')
     created_at = models.DateTimeField(auto_now_add=True)
+    connected_players = ArrayField(models.CharField(max_length=100), default=list)
 
 
