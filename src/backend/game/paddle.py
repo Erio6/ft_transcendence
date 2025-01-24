@@ -32,6 +32,8 @@ class Paddle:
         )
 
     async def send_data_chan(self, consumer):
+        if not consumer:
+            return
         await consumer.send(json.dumps({
             'type': 'paddle', 'loc': self.loc, 'size': self.length, 'y': self.y,
         }))
@@ -72,9 +74,9 @@ class Paddle:
                 await self.send_data_chan(consumer)
 
     def force_move(self, value):
-        if self.y >= 100 - self.length / 2:
+        if self.y >= 100 - self.length / 2 and value > 0:
             return False
-        elif self.y <= self.length / 2:
+        elif self.y <= self.length / 2 and value < 0:
             return False
 
         self.y += value
