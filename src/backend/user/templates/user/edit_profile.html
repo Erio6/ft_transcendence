@@ -6,7 +6,7 @@
 <h2>My Profile</h2>
 <div class="my-profile">
     <div class="hi-profile">
-        <h2>Hi, {{ profile.display_name }}</h2>
+        <h2>Hi, {{ profile.user.username }}</h2>
         <p> Welcome to your profile page! </p>
     </div>
     <div class="my-profile-pic">
@@ -25,7 +25,7 @@
         <form method="POST" action="{% url 'user:edit_profile' profile.user.username %}">
             {% csrf_token %}
 
-            {% for field in form %}
+            {% for field in form2 %}
                 <div class="form-group">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
@@ -38,9 +38,9 @@
                 </div>
             {% endfor %}
 
-            {% for field in form2 %}
+            {% for field in form %}
                 <div class="form-group">
-                    <label for="{{ field.id_for_label }}"></label>{{ field.label }}</label>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                     {{ field }}
                     {% if field.errors %}
                         <div class="error-message">{{ field.errors }}</div>

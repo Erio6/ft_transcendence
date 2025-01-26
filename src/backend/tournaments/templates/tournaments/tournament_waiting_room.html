@@ -1,0 +1,43 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Tournament details{% endblock %}
+{% load static %}
+{% block content %}
+    <h1> {{ tournament.name }} </h1>
+    <p class="join_code">Code to join the game : <strong> {{ tournament.tournament_code_join }}</strong></p>
+    <p><strong>Tournament created by :</strong> {{ tournament.created_by.user.username }}</p>
+    <p><strong>Status :</strong> {{ tournament.status }}</p>
+
+    <h2>Players in the game :<span id="connected-count">0</span></h2>
+    <ul id="players_list">
+        {% for player in players %}
+            <li>{{ player.user.username }}</li>
+        {% endfor %}
+    </ul>
+    {% if current_user == tournament.created_by.user %}
+        <button id="start-button" onclick="location.href= '{% url "tournaments:start_tournament" tournament.id %}'" style="display:none;">Start the tournament</button>
+    {% endif %}
+    {% if current_user == tournament.created_by.user %}
+        <button onclick="confirmCancel()">Cancel</button>
+    {% endif %}
+    {% if current_user != tournament.created_by.user %}
+        <button onclick="confirmLeave()">Leave Tournament</button>
+    {% endif %}
+    <script> const tournamentID = "{{ tournament.id }}"</script>
+    <script>
+    function confirmCancel() {
+        if (confirm("Are you sure you want to cancel this tournament?")) {
+            window.location.href = '{% url "tournaments:cancel_tournament" tournament.id %}';
+        }
+    }
+
+    function confirmLeave() {
+        if (confirm("Are you sure you want to leave this tournament?")) {
+            window.location.href = '{% url "tournaments:leave_tournament" tournament.id %}';
+        }
+    }
+</script>
+    <script src="{% static 'js/waiting_room.js' %}"></script>
+
+{% endblock %}
+
+{#location.href='{% url 'tournaments:start' tournament.id %}'#}

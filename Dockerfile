@@ -5,13 +5,8 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-
 # Install system dependencies
 RUN apt-get update && apt-get install -y netcat-traditional
-
-# Create necessary directories
-RUN mkdir -p /app/staticfiles
-RUN mkdir -p /app/media
 
 # Copy requirements first
 COPY requirements.txt requirements.txt

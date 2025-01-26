@@ -4,7 +4,6 @@
     grid-template-areas: 'graph graph history'
                          'graph graph history'
                          'leaderboard win-loss history'
-                         'leaderboard win-loss history'
                          'leaderboard update-profile history';
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
@@ -23,7 +22,6 @@
 .history-container {
     grid-area: history;
     border-radius: 35px;
-    padding: 25px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
     display: flex;
@@ -57,9 +55,20 @@
     flex-direction: column;
 }
 
+.update-profile-container a {
+    display:flex;
+    justify-content:center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 .dashboard-container h2 {
     margin-bottom: 10px;
-    padding: 25px;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.dashboard-container p {
+    padding:10px;
 }
 
 .wins-losses {
@@ -70,10 +79,8 @@
 
 .wins-losses .total{
     font-size: 60px;
-    padding: 10px;
-}
-
-.wins-losses .title {
-    flex-direction: column-reverse;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 

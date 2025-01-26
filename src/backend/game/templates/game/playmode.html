@@ -2,9 +2,29 @@
 {% block title %}Quick Play{% endblock %}
 
 {% block content %}
-    <h1> Choose your destiny </h1>
-    <a href="{% url 'game:solo' %}">Solo Game</a>
-    <a href="">Tournament</a>
-    <a href="{% url 'game:multi' %}">Multiplayer</a>
-    <a href="{% url 'game:online' %}">Online</a>
+    <div class="grid-container">
+        <a href="{% url 'game:multi' %}" class="online-game game-container">
+            <div class="online-game-container">
+                <h1>Online game</h1>
+                <p>Play one game of Pong against an opponent and get elo points if you win.</p>
+            </div>
+        </a>
+        <a href="{% url 'game:solo' %}" class="small-game solo-game game-container">
+            <h1>Solo Game</h1>
+            <p>Play a local game against a player on the same device or play against one of the three AI available.</p>
+        </a>
+        <a href="{% url 'tournaments:tournaments' %}" class="small-game tournament-game game-container">
+            <h1>Tournament</h1>
+            <p>Create or join a tournament to fight against at least 4 opponents in a bracket-based tournament.</p>
+        </a>
+        <a href="{% url 'game:online' %}" class="small-game spectate-game game-container">
+            <h1>Spectate Game</h1>
+            <p>Spectate any online game and see how bad Lucas is.</p>
+        </a>
+    </div>
+    {#    <h1> Choose your destiny </h1>#}
+    {#    <a href="{% url 'game:solo' %}">Solo Game</a>#}
+    {#    <a href="">Tournament</a>#}
+    {#    <a href="{% url 'game:multi' %}">Multiplayer</a>#}
+    {#    <a href="{% url 'game:online' %}">Online</a>#}
 {% endblock %}

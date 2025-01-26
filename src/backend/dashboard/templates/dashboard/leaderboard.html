@@ -10,10 +10,9 @@
                 <th>Rank</th>
                 <th></th>
                 <th>Username</th>
-                <th>Total Points</th>
+                <th>Elo</th>
                 <th>Total Wins</th>
                 <th>Total Losses</th>
-                <th>Elo</th>
             </tr>
         </thead>
         <tbody>
@@ -22,10 +21,9 @@
                 <td>{{ entry.rank }}.</td>
                 <td> <img src="{{ entry.player.avatar.url }}" alt=""></td>
                 <td>{{ entry.player.user.username }}</td>
-                <td>{{ entry.total_points }}</td>
+                <td>{{ entry.elo }}</td>
                 <td>{{ entry.total_wins }}</td>
                 <td>{{ entry.total_losses }}</td>
-                <td>elo</td>
             </tr>
             {% endfor %}
         </tbody>

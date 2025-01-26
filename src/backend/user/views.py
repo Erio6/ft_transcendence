@@ -25,7 +25,16 @@ def edit_profile_view(request,username):
             if avatar_form.is_valid():
                 avatar_form.save()
                 messages.success(request, f'Your profil picture has been updated!')
-                return redirect('user:edit_profile', username=username)
+                return redirect('user:edit_profile', username=request.user.username)
+            else:
+                form = ProfileUpdateForm(instance=profile)
+                form2 = UserUpdateForm(instance=request.user)
+                context = {
+                    'form': form,
+                    'form2': form2,
+                    'avatar_form': avatar_form,
+                    'profile': profile
+                }
 
         elif form_type == 'profile_info':
             form = ProfileUpdateForm(request.POST,
@@ -36,7 +45,15 @@ def edit_profile_view(request,username):
                 form.save()
                 form2.save()
                 messages.success(request, f'Your account has been updated!')
-                return redirect('user:edit_profile', username=username)
+                return redirect('user:edit_profile', username=request.user.username)
+            else:
+                avatar_form = AvatarUpdateForm(instance=profile)
+                context = {
+                    'form': form,
+                    'form2': form2,
+                    'avatar_form': avatar_form,
+                    'profile': profile
+                }
     else:
         form = ProfileUpdateForm(instance=profile)
         avatar_form = AvatarUpdateForm(instance=profile)

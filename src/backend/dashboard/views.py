@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from .models import Leaderboard, GameHistory
+from django.db.models import Q
+from .models import Leaderboard, GameHistory, SoloGame , Game
 from user.models import UserProfile
+from django.contrib.contenttypes.models import ContentType
 
 # Create your views here.
 
@@ -20,13 +22,36 @@ def leaderboard(request):
 def dashboard(request):
     profile = None
     leaderboard = Leaderboard.objects.all().order_by('rank')
+    game_histories = []
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
-        user_entry = Leaderboard.objects.filter(player__user=request.user).first()
+        user_entry = Leaderboard.objects.filter(player=profile).first()
+        game_type = ContentType.objects.get_for_model(Game)
+        game_histories = GameHistory.objects.filter(
+            game_type=game_type,
+            game_id__in=Game.objects.filter(
+                Q(player_one=profile) | Q(player_two=profile)
+            ).values_list('id', flat=True)
+        ).order_by('-date_played')[:4]
+
+        history_data = []
+        for history in game_histories:
+            game = history.game_object
+            if game:
+                history_data.append({
+                    'player_one': getattr(game, 'player_one', None),
+                    'player_two': getattr(game, 'player_two', None),
+                    'player_one_score': getattr(game, 'player_one_score', None),
+                    'player_two_score': getattr(game, 'player_two_score', None),
+                    'winner': game.winner,
+                    'date_played': history.date_played,
+                })
+
         context = {
             'profile': profile,
             'leaderboard': leaderboard,
             'user_entry': user_entry,
+            'game_histories': history_data,
         }
 
     return render(request, 'dashboard/dashboard.html', context)

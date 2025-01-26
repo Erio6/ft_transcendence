@@ -7,12 +7,12 @@ class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['username','email']
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['display_name', 'country']
+        fields = ['country']
 
 class AvatarUpdateForm(forms.ModelForm):
     avatar = forms.ImageField(
