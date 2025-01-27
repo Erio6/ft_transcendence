@@ -17,32 +17,94 @@
         </p>
     </div>
     <script>
-        const nodes = {{ nodes|safe }};
-        const links = {{ links|safe }};
-
-        renderTournamentTree(nodes, links);
-
+        let redirectTimeout;
+        let currentGameUrl = "{{ current_game_url }}";
+        let opponentName = "{{ opponent_name }}";
         const redirectMessage = document.getElementById("nextGameInfo");
-        const currentGameUrl = "{{ current_game_url }}";
-        const opponentName = "{{ opponent_name }}";
 
-        console.log(currentGameUrl);
-        console.log(opponentName);
+        function checkRedirect(data) {
+            if (data.current_game_url) {
+                currentGameUrl = data.current_game_url;
+                opponentName = data.opponent_name;
 
+                let seconds = 5;
+                redirectMessage.style.display = 'block';
+                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds...`;
+
+                redirectTimeout = setInterval(() => {
+                    seconds--;
+                    redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds...`;
+                    if (seconds <= 0) {
+                        clearInterval(redirectTimeout);
+                        window.location.href = currentGameUrl;
+                    }
+                }, 1000);
+            } else {
+                redirectMessage.style.display = 'none';
+                clearInterval(redirectTimeout);
+            }
+        }
+
+        function refreshTournamentData() {
+            fetch("{% url 'tournaments:tournament_tree_data' tournament.id %}")
+                .then(response => response.json())
+                .then(data => {
+                    renderTournamentTree(data.nodes, data.links);
+                    if (!data.is_completed) {
+                        checkRedirect(data);
+                    } else {
+                        redirectMessage.style.display = 'none';
+                        clearInterval(redirectTimeout);
+                        alert("Tournament completed! Winner: " + data.nodes.find(n => n.round === data.nodes.reduce((max, n) => Math.max(max, n.round), 0)).winner);
+                    }
+                });
+        }
+
+        const wsPath = `wss://${window.location.host}/ws/tournament/{{ tournament.id }}/`;
+        const socket = new WebSocket(wsPath);
+
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if (data.type === 'tournament_update' && data.action === 'game_completed') {
+                refreshTournamentData();
+            }
+        };
+
+        // Initial setup
+        refreshTournamentData();
         if (currentGameUrl) {
-            let secondsRemaining = 5;
-            const interval = setInterval(() => {
-                secondsRemaining -= 1;
-                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${secondsRemaining} seconds ...`;
-                if (secondsRemaining <= 0) {
-                    clearInterval(interval);
-                }
-            }, 1000);
-
-            setTimeout(() => {
-                window.location.href = currentGameUrl
-            }, 5000);
+            checkRedirect({
+                current_game_url: currentGameUrl,
+                opponent_name: opponentName
+            });
         }
     </script>
 
 {% endblock %}
+
+{#const nodes = {{ nodes|safe }};#}
+{#        const links = {{ links|safe }};#}
+{##}
+{#        renderTournamentTree(nodes, links);#}
+{##}
+{#        const redirectMessage = document.getElementById("nextGameInfo");#}
+{#        const currentGameUrl = "{{ current_game_url }}";#}
+{#        const opponentName = "{{ opponent_name }}";#}
+{##}
+{#        console.log(currentGameUrl);#}
+{#        console.log(opponentName);#}
+{##}
+{#        if (currentGameUrl) {#}
+{#            let secondsRemaining = 5;#}
+{#            const interval = setInterval(() => {#}
+{#                secondsRemaining -= 1;#}
+{#                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${secondsRemaining} seconds ...`;#}
+{#                if (secondsRemaining <= 0) {#}
+{#                    clearInterval(interval);#}
+{#                }#}
+{#            }, 1000);#}
+{##}
+{#            setTimeout(() => {#}
+{#                window.location.href = currentGameUrl#}
+{#            }, 5000);#}
+{#        }#}
