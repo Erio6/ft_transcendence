@@ -60,6 +60,13 @@ class OnlineRoom(Room):
         game.player_two_score = player1.score
         game.end_time = now()
         game.is_completed = True
+
+        # game.tx_hash = await blockchain_score_storage(game.id)
+        # if game.tx_hash:
+        #     print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+        # else:
+        #     print("Failed to record game on blockchain.")
+
         print("save the game")
         await sync_to_async(game.save)(force_update=True)
         print("game saved")
@@ -74,10 +81,7 @@ class OnlineRoom(Room):
             await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
         if self.right_paddle:
             await self.right_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
-        # try:
-        #     await blockchain_score_storage(game)
-        # except Exception as e:
-        #     print(f"Erreur lors de l'enregistrement sur la blockchain : {e}")
+
 
     async def handle_paddle_msg(self, consumer, message):
         if self.left_paddle and consumer == self.left_paddle.consumer:

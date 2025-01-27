@@ -5,7 +5,6 @@ import time
 from asgiref.sync import sync_to_async
 from django.utils.timezone import now
 
-from blockchain.utils import blockchain_score_storage
 from game.models import Game
 from game.paddle import Paddle
 from game.room import Room

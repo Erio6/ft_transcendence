@@ -216,8 +216,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Blockchain settings
 # note: do not forget to change contract address when new deploy
 # note : do not forget to change the provider URI when deploying on a new network
-#WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
-WEB3_PROVIDER_URI = 'http://127.0.0.1:8545'
+WEB3_PROVIDER_URI = 'https://eth-sepolia.g.alchemy.com/v2/vJ9BDo8uiTvIVlOhxJhcfXahMs4oSBMJ'
+#WEB3_PROVIDER_URI = 'http://127.0.0.1:8545'
 CONTRACT_ADDRESS = '0x68a14A854C7397811b4c5FB5D83889a7874C817D'
 ABI_FILE_PATH = os.path.join(BASE_DIR, 'blockchain', 'ScoreContract.json')
 ETHERSCAN_BASE_URL = 'https://sepolia.etherscan.io/tx'
