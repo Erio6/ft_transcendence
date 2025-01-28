@@ -27,7 +27,7 @@
                 currentGameUrl = data.current_game_url;
                 opponentName = data.opponent_name;
 
-                let seconds = 5;
+                let seconds = 30;
                 redirectMessage.style.display = 'block';
                 redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds...`;
 
@@ -49,6 +49,7 @@
             fetch("{% url 'tournaments:tournament_tree_data' tournament.id %}")
                 .then(response => response.json())
                 .then(data => {
+                    console.log("Received nodes:",data.nodes);
                     renderTournamentTree(data.nodes, data.links);
                     if (!data.is_completed) {
                         checkRedirect(data);
@@ -57,7 +58,8 @@
                         clearInterval(redirectTimeout);
                         alert("Tournament completed! Winner: " + data.nodes.find(n => n.round === data.nodes.reduce((max, n) => Math.max(max, n.round), 0)).winner);
                     }
-                });
+                })
+                .catch(error => console.error("Error fetching tournament data:", error));
         }
 
         const wsPath = `wss://${window.location.host}/ws/tournament/{{ tournament.id }}/`;

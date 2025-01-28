@@ -1,7 +1,10 @@
 function renderTournamentTree(nodes, links) {
-    console.log(nodes);
-    console.log(links);
+    console.log("Rendering nodes:", nodes);
+    console.log("Rendering links:",links);
 
+    if (window.diagram) {
+        window.diagram.model = new go.TreeModel([]);
+    }
     const filteredNodes = nodes.filter(node => {
         const keepNode = node.round !== 1 || node.player_one || node.player_two;
         if (!keepNode) {
@@ -79,4 +82,6 @@ function renderTournamentTree(nodes, links) {
     diagram.model = new go.TreeModel(filteredNodes);
 
     diagram.model.nodeCategoryProperty = "category";
+
+    window.diagram = diagram;
 }

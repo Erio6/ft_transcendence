@@ -216,11 +216,11 @@ def tournament_tree_data(request, tournament_id):
         )
         if is_current_user_in_game and game.game and not game.game.is_completed:
             current_game_url = reverse('game:real_game', kwargs={'game_id': game.game.id})
-            if game.player_one and game.player_one.player == current_user:
-                opponent_name = game.player_two.player.display_name if game.player_two else "Bye"
-            else:
-                opponent_name = game.player_one.player.display_name if game.player_one else "Bye"
-            break
+        if game.player_one and game.player_one.player == current_user:
+            opponent_name = game.player_two.player.display_name if game.player_two else "Bye"
+        elif game.player_two and game.player_two.player == current_user:
+            opponent_name = game.player_one.player.display_name if game.player_one else "Bye"
+
 
         match_node = {
             "key": f"match-{game.id}",
@@ -236,6 +236,8 @@ def tournament_tree_data(request, tournament_id):
         }
         nodes.append(match_node)
 
+    print(nodes)
+    print(current_game_url + " " + opponent_name)
     links = generate_links(games, tournament)
     return JsonResponse({
         'nodes': nodes,
