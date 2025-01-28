@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+import json
 
 from tournaments.models import Tournament, TournamentPlayer
 
@@ -121,3 +122,12 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
 
     async def player_join(self, event):
         await self.send_update(event['content'])
+
+    async def tournament_data_update(self, event):
+        await self.send({
+            'type': 'tournament_update',
+            'action': event['action'],
+            'game_id': event['game_id'],
+            'winner': event['winner'],
+            'is_final': event.get('is_final', False)
+        })

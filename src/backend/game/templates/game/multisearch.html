@@ -2,7 +2,8 @@
 {% block title %}Multiplayer{% endblock %}
 
 {% block content %}
-    <h1> Find your opponent </h1>
-    <a href="{% url 'matchMaking:matchmaking' %}">New Game</a>
-    <a href="">Local Multiplayer</a>
+    <div id="multiplayer_search">
+        <h1 class="title_multi_search"> Find your opponent </h1>
+        <a href="{% url 'matchMaking:matchmaking' %}" class="button_multi_search">New Game</a>
+    </div>
 {% endblock %}

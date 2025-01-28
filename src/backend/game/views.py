@@ -55,31 +55,28 @@ def multiGame(request):
     return render(request, 'game/multisearch.html',{"profile": profile})
 
 
-def game_creation(request):
-    if request.method == 'POST':
-        player_one_id = request.POST.get('player_one')
-        player_two_id = request.POST.get('player_two')
-
-        player_one = UserProfile.objects.get(id=player_one_id)
-        player_two = UserProfile.objects.get(id=player_two_id)
-        new_game = Game(player_one=player_one, player_two=player_two)
-        new_game.save()
-
-        return redirect(f'multi_scores/{new_game.id}')
-
-    users = UserProfile.objects.all()
-    return render(request, 'game/multi_game.html', {"users": users})
-
-
-def multi_scores(request, game_id):
-    profile = None
-    if request.user.is_authenticated:
-        profile = UserProfile.objects.get(user=request.user)
-    try:
-        game = Game.objects.get(id=game_id)
-    except Game.DoesNotExist:
-        return redirect(error, 'Game does not exist')
-    return render(request, 'game/multiscores.html', {"game": game, "profile": profile})
+# def game_creation(request):
+#     if request.method == 'POST':
+#         player_one_id = request.POST.get('player_one')
+#         player_two_id = request.POST.get('player_two')
+#
+#         player_one = UserProfile.objects.get(id=player_one_id)
+#         player_two = UserProfile.objects.get(id=player_two_id)
+#         new_game = Game(player_one=player_one, player_two=player_two)
+#         new_game.save()
+#
+#         return redirect(f'multi_scores/{new_game.id}')
+#
+#     users = UserProfile.objects.all()
+#     return render(request, 'game/multi_game.html', {"users": users})
+#
+#
+# def multi_scores(request, game_id):
+#     try:
+#         game = Game.objects.get(id=game_id)
+#     except Game.DoesNotExist:
+#         return redirect(error, 'Game does not exist')
+#     return render(request, 'game/multiscores.html', {"game": game})
 
 
 def online_game_creation(request):
