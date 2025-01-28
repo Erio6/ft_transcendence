@@ -1,4 +1,5 @@
-FROM nginx:alpine
+# Use a pre-built Nginx + ModSecurity image
+FROM owasp/modsecurity-crs:nginx-alpine
 
 # Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf

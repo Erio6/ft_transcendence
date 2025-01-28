@@ -1,0 +1,101 @@
+
+.login-container {
+    max-width: 500px;
+    width: 90%;
+    margin: 50px auto;
+    background-color: var(--menubar-color);
+    border-radius: 35px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    color: var(--font-color);
+    margin-bottom: 20px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Text styles */
+.login-container p {
+    color: var(--font-color);
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* QR code container */
+.qr-container {
+    background: white; /* Semi-transparent background */
+    padding: 20px;
+    margin: 20px auto;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px; /* Optional: adds rounded corners */
+}
+
+.qr-container img {
+    display: block;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    background: transparent; /* Make sure the image background is transparent */
+    mix-blend-mode: multiply;
+    border-radius: 0; /* This can help blend the white background */
+}
+
+/* Secret key display */
+.secret-key {
+    font-family: monospace;
+    color: var(--font-color);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+/* Form elements */
+.login-form p {
+    width: 80%;
+    margin: 0 auto 20px;
+    color: var(--font-color);
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 35px;
+    background: transparent;
+    border: 1px solid var(--font-color);
+    color: var(--font-color);
+    margin: 5px 0;
+}
+
+/* Button styles */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.login-form button {
+    padding: 10px 20px;
+    border-radius: 35px;
+    background: #2176ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+.login-form button:hover {
+    background: #1a5cc4;
+}
