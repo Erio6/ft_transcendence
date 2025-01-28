@@ -1,0 +1,20 @@
+.title_multi_search {
+    font-weight: bold;
+    font-size: 50px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.button_multi_search {
+    background-color: #2176FF;
+    border-radius: 35px;
+    text-decoration: none;
+    padding: 15px;
+    color: var(--font-color);
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
