@@ -9,6 +9,8 @@ from game.models import Game
 from dashboard.models import GameHistory
 from .serializers import GameSerializer, GameHistorySerializer, BlockchainStatusSerializer
 from django.conf import settings
+from user.models import UserProfile
+
 
 # Create your views here.
 
@@ -36,11 +38,26 @@ class GameHistoryView(APIView):
         serializer = GameHistorySerializer(game, many=True)
         return Response(serializer.data)
 
+class IsParticipant(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            return False
+
+        is_participant = user_profile == obj.winner or user_profile == obj.looser
+        return is_participant
+
 class CheckTransactionStatus(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsParticipant]
+
+    def get_object(self, game_id):
+        game = get_object_or_404(Game, pk=game_id)
+        self.check_object_permissions(self.request, game)
+        return game
 
     def get(self, request, game_id):
-        game = get_object_or_404(Game, pk=game_id)
+        game = self.get_object(game_id)
 
         if not game.tx_hash:
             return Response({'status': 'no_transaction'}, status=status.HTTP_200_OK)

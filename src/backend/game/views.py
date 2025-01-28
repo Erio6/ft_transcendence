@@ -9,7 +9,6 @@ from django.http import HttpResponseForbidden
 
 from .forms import GameCreationForm
 from .models import Game
-from blockchain.utils import record_game_on_blockchain
 from user.models import UserProfile
 from asgiref.sync import sync_to_async
 

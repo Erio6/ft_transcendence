@@ -60,13 +60,6 @@ class OnlineRoom(Room):
         game.player_two_score = player1.score
         game.end_time = now()
         game.is_completed = True
-
-        # game.tx_hash = await blockchain_score_storage(game.id)
-        # if game.tx_hash:
-        #     print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
-        # else:
-        #     print("Failed to record game on blockchain.")
-
         print("save the game")
         await sync_to_async(game.save)(force_update=True)
         print("game saved")
@@ -76,6 +69,11 @@ class OnlineRoom(Room):
             new_url = "/tournament/tree/" + tournament_game.tournament + "/"
         else:
             new_url = "/game/end/" + self.id + "/"
+        game.tx_hash = await blockchain_score_storage(game.id)
+        if game.tx_hash:
+            print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+        else:
+            print("Failed to record game on blockchain.")
         print(new_url)
         if self.left_paddle:
             await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
