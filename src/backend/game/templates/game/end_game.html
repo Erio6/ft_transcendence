@@ -29,7 +29,6 @@
                 <span>Transaction Hash: {{ tx_hash }}</span>
                 <a href="{{ tx_url }}" target="_blank">View on Etherscan</a>
             {% elif tx_hash %}
-                <!-- Afficher le spinner en attendant tx_url -->
                 <div id="loading">
                     <span>Recording transaction on the blockchain...</span>
                 </div>
@@ -56,7 +55,7 @@
             });
         }
 
-        // checker avec les API si la transaction a ete record
+       // checker avec les API si la transaction a ete record
         async function checkTransactionStatus() {
             try {
                 const response = await fetch(`/api/check_transaction_status/${gameId}/`, {
