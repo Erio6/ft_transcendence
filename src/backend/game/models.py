@@ -20,8 +20,8 @@ class Game(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True)
     is_completed = models.BooleanField(default=False)
-    tx_hash = models.CharField(max_length=66, blank=True, null=True)
-    is_recorded_on_blockchain = models.BooleanField(default=False)
+    # tx_hash = models.CharField(max_length=66, blank=True, null=True)
+    # is_recorded_on_blockchain = models.BooleanField(default=False)
     type_of_game = models.CharField(max_length=20, choices=[('multiplayer', 'Multiplayer'), ('solo_IA_easy', 'Solo IA Easy'), ('solo_IA_medium', 'Solo IA Medium'), ('solo_IA_hard', 'Solo IA Hard'), ('solo_player', 'Solo Player'), ('tournament', 'Tournament')], default='multiplayer')
 
     def __str__(self):

@@ -1,7 +1,11 @@
 function cancelMatchmaking() {
+    console.log(home_url);
     socket.close();
-    window.location.href = "djangoProject:home";
+    window.location.href = home_url;
 }
+
+let cancelButton = document.getElementById("cancelButton");
+cancelButton.addEventListener('click', cancelMatchmaking);
 
 
 const socket = new WebSocket('ws://' + window.location.host + '/ws/matchmaking/' + matchID + '/');

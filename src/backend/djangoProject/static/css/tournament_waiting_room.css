@@ -1,0 +1,45 @@
+.tournament_waiting_room_container {
+    display: grid;
+    grid-template-areas: 'code player_list'
+                         'creator player_list'
+                         'status player_list';
+    grid-gap: 20px;
+    grid-auto-rows: minmax(100px, auto);
+    margin-top: 20px;
+}
+
+.code_to_join_container {
+    grid-area: code;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.creator_tournament_container {
+    grid-area: creator;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.tournament_status_container {
+    grid-area: status;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}
+
+.tournament_player_list_container {
+    grid-area: player_list;
+    border-radius: 35px;
+    background: var(--menubar-icone-hover-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+}

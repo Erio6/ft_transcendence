@@ -2,7 +2,11 @@
 {% block title %}Tournaments{% endblock %}
 
 {% block content %}
-    <h1> Create or join a Tournament </h1>
-    <a href="{% url 'tournaments:create_tournament' %}">Create a Tournament</a>
-    <a href="{% url 'tournaments:join_tournament' %}">Join a Tournament</a>
+    <div class="tournament">
+        <h1 class="tournament_selection_title"> Create or join a Tournament </h1>
+        <div class="tournament_buttons">
+            <button class="create_tournament_link" onclick=window.location.href="{% url 'tournaments:create_tournament' %}">Create a Tournament</button>
+            <button class="join_tournament_link" onclick=window.location.href="{% url 'tournaments:join_tournament' %}">Join a Tournament</button>
+        </div>
+    </div>
 {% endblock %}
