@@ -19,9 +19,7 @@ def update_ranks():
 @receiver(post_save, sender=Game)
 def log_multiplayer_game(sender, instance, created, **kwargs):
     # Trigger only when the game is marked as completed
-    print("Before")
     if instance.is_completed and not instance.winner_score == 0 and instance.type_of_game == "multiplayer":
-        print("after")
         from .models import GameHistory
         from .models import Leaderboard
         # Log the game in history
