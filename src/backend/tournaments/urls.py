@@ -12,4 +12,5 @@ urlpatterns = [
     path('leave/<int:tournament_id>/', views.leave_tournament, name='leave_tournament'),
     path('start/<int:tournament_id>/', views.start_tournament, name='start_tournament'),
     path('tree/<int:tournament_id>/', views.tournament_tree_view, name='tournament_tree'),
+    path('tournament_tree_data/<int:tournament_id>/', views.tournament_tree_data, name='tournament_tree_data'),
 ]
