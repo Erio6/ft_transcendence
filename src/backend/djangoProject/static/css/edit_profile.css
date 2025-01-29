@@ -50,12 +50,20 @@
     padding: 20px;
 }
 
+.my-settings .two-factor-authentication {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+}
 
 .hi-profile h2,
 .my-profile-pic h2,
 .my-informations h2,
 .my-settings h2 {
     margin-bottom: 20px;
+    font-size: 30px;
+
 }
 
 .form-group {
@@ -128,3 +136,29 @@
     border-radius: 50%;
     object-position: center;
 }
+
+.my-profile .btn {
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Custom File Input Label */
+.edit-pic {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.edit-pic i {
+    margin-right: 8px;
+    font-size: 3em;
+}
+
+.my-informations .div-button {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+}
+

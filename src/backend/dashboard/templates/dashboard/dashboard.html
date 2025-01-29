@@ -10,6 +10,7 @@
     </div>
     <div class="history-container">
     <h2>My History</h2>
+        <div class="table-wrapper">
         {% if game_histories %}
             {% for history in game_histories %}
             <div class="game-history">
@@ -43,20 +44,22 @@
             <p>No game played yet.</p>
         {% endif %}
         </div>
+        </div>
 
     <div class="leaderboard-container">
     <h2>My Leaderboard</h2>
+        <div class="table-wrapper">
     <table id ="ranking">
         <tbody>
             {% for entry in leaderboard %}
          <tr {% if entry.player.user == request.user %} class="current-user"{% endif %}>
-                <td>{{ entry.rank }}.</td>
-                <td> <img src="{{ entry.player.avatar.url }}" alt=""></td>
-                <td>{{ entry.player.user.username }}</td>
+                <td><span class="rank">{{ entry.rank }}.</span><img src="{{ entry.player.avatar.url }}" alt=""></td>
+                <td> <span class="username">{{ entry.player.user.username }}</span></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+        </div>
     </div>
 
     <div class="win-loss-container">
@@ -65,18 +68,18 @@
         <div class="wins-losses">
             <p class="total">{{ user_entry.total_wins }} </p>
             <p class="title">Win(s) </p>
-            <p class = total>{{ user_entry.total_losses }} </p>
-            <p class="title">Losse(s) </p>
+            <p class ="total">{{ user_entry.total_losses }} </p>
+            <p class="title">Loss(es) </p>
         </div>
         {% else %}
-        <p>No data available for the authenticated user.</p>
+            <p>No data available for the authenticated user.</p>
         {% endif %}
     </div>
     <div class="update-profile-container">
         <h2>My Profile</h2>
-        <a href="{% url 'user:edit_profile' profile.user.username %}">
-    <button class="btn btn-primary">Click here to update your profile</button>
-        </a>
+         <div class="table-wrapper">
+            <a href="{% url 'user:edit_profile' profile.user.username %}" class="btn">Click here to update your profile</a>
+         </div>
     </div>
 </div>
     <div class="diffuse-circle circle-1"></div>

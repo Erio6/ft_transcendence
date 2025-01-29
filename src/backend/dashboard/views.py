@@ -22,6 +22,15 @@ def leaderboard(request):
 def dashboard(request):
     profile = None
     leaderboard = Leaderboard.objects.all().order_by('rank')
+    user_entry = leaderboard.filter(player__user=request.user).first()
+    leaderboard_without_user = leaderboard.exclude(player__user=request.user)
+
+    if user_entry:
+        leaderboard = [user_entry] + list(leaderboard_without_user)
+    else:
+        # Fallback if no user entry found
+        leaderboard = leaderboard_without_user
+
     game_histories = []
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)

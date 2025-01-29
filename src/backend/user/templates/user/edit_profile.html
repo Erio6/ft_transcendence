@@ -15,14 +15,14 @@
             <div class="profile-pic">
                 <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
             </div>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}" class="avatar-form">
             {% csrf_token %}
             <input type="hidden" name="form_type" value="avatar">
             <div class="file-input-wrapper">
                 {{ avatar_form.avatar }}
                 <label for="{{ avatar_form.avatar.id_for_label }}" class="edit-pic">
-                    Edit my picture<i class='bx bx-photo-album'></i>
-                    <button type="submit" class="btn btn-primary" >Validate</button>
+                    <i class='bx bx-photo-album'></i>
+                    <button type="submit" class="btn" >Validate</button>
                 </label>
             </div>
         </form>
@@ -59,6 +59,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
+
                         {% if profile.country %}
                 <div class="country-display">
                     <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
@@ -66,39 +67,44 @@
                 </div>
             {% endif %}
 
-
+      <div class="div-button">
             {% if user == profile.user %}
-                <button type="submit" class="btn btn-secondary">Update Profile</button>
+                <button type="submit" class="btn">Update Profile</button>
             {% endif %}
+        </div>
         </form>
         <br>
+        <div class="div-button">
     <form method="POST" action="{% url 'user:change_password' %}">
         {% csrf_token %}
-        <button type="submit" class="btn btn-primary">Change Password</button>
+        <button type="submit" class="btn">Change Password</button>
     </form>
+        </div>
+
     </div>
 
  <!-- Two-factor authentication management -->
     <div class="my-settings">
  <h2>2FA settings</h2>
-
+<div class="two-factor-authentication">
 {% if user.has_usable_password %}
     {% if user.is_authenticated and user.totpdevice_set.exists %}
         <!-- If 2FA is enabled, show the option to disable it -->
         <p>Your two-factor authentication is enabled.</p>
-        <a href="{% url 'two_factor:disable' %}" class="btn btn-danger">Disable Two-Factor Authentication</a>
+        <a href="{% url 'two_factor:disable' %}" class="btn ">Disable Two-Factor Authentication</a>
 
         <!-- Button to view backup tokens -->
-        <p><a href="/account/two_factor/backup/tokens/" class="btn btn-warning">View Backup Tokens</a></p>
+        <p><a href="/account/two_factor/backup/tokens/" class="btn ">View Backup Tokens</a></p>
 
     {% else %}
         <!-- If 2FA is not enabled, show the option to enable it -->
         <p>Your account does not have two-factor authentication enabled.</p>
-        <a href="{% url 'two_factor:setup' %}" class="btn btn-primary">Enable Two-Factor Authentication</a>
+        <a href="{% url 'two_factor:setup' %}" class="btn ">Enable Two-Factor Authentication</a>
     {% endif %}
 {% else %}
     <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
 {% endif %}
+    </div>
 </div>
 </div>
  <div class="diffuse-circle circle-1"></div>

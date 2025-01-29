@@ -8,18 +8,16 @@
         <thead class="ladder-titles">
             <tr>
                 <th>Rank</th>
-                <th></th>
                 <th>Username</th>
                 <th>Elo</th>
-                <th>Total Wins</th>
-                <th>Total Losses</th>
+                <th>Total Win(s)</th>
+                <th>Total Loss(es)</th>
             </tr>
         </thead>
         <tbody>
             {% for entry in leaderboard %}
          <tr {% if entry.player.user == request.user %} class="current-user"{% endif %}>
-                <td>{{ entry.rank }}.</td>
-                <td> <img src="{{ entry.player.avatar.url }}" alt=""></td>
+                <td><span class="rank">{{ entry.rank }}. </span> <img src="{{ entry.player.avatar.url }}" alt=""></td>
                 <td>{{ entry.player.user.username }}</td>
                 <td>{{ entry.elo }}</td>
                 <td>{{ entry.total_wins }}</td>

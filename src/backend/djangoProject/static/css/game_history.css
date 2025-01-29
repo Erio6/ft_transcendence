@@ -17,6 +17,10 @@
     border-bottom: 1px solid #ddd;
 }
 
+.game-history-section .game-history:last-child {
+    border-bottom: none; /* Hides the last border line */
+}
+
 .players {
     display: flex;
     justify-content: space-between;
