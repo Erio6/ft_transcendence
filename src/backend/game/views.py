@@ -4,18 +4,26 @@ from xxlimited_35 import error
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
+from django.http import HttpResponseForbidden
 
 from .forms import GameCreationForm
 from .models import Game
 from user.models import UserProfile
+from asgiref.sync import sync_to_async
 
 
 def quickPlay(request):
-    return render(request, 'game/playmode.html')
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'game/playmode.html', {"profile": profile})
 
 
 @login_required
 def soloGame(request):
+
+    profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         print(request.POST)
         form = GameCreationForm(request.POST)
@@ -36,53 +44,87 @@ def soloGame(request):
             print(form.errors)
     else:
         form = GameCreationForm()
-    return render(request, 'game/sologame.html', {'form': form})
+    return render(request, 'game/sologame.html', {'form': form, 'profile': profile})
 
 
 def multiGame(request):
-    return render(request, 'game/multisearch.html')
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'game/multisearch.html',{"profile": profile})
 
 
-def game_creation(request):
-    if request.method == 'POST':
-        player_one_id = request.POST.get('player_one')
-        player_two_id = request.POST.get('player_two')
-
-        player_one = UserProfile.objects.get(id=player_one_id)
-        player_two = UserProfile.objects.get(id=player_two_id)
-        new_game = Game(player_one=player_one, player_two=player_two)
-        new_game.save()
-
-        return redirect(f'multi_scores/{new_game.id}')
-
-    users = UserProfile.objects.all()
-    return render(request, 'game/multi_game.html', {"users": users})
-
-
-def multi_scores(request, game_id):
-    try:
-        game = Game.objects.get(id=game_id)
-    except Game.DoesNotExist:
-        return redirect(error, 'Game does not exist')
-    return render(request, 'game/multiscores.html', {"game": game})
+# def game_creation(request):
+#     if request.method == 'POST':
+#         player_one_id = request.POST.get('player_one')
+#         player_two_id = request.POST.get('player_two')
+#
+#         player_one = UserProfile.objects.get(id=player_one_id)
+#         player_two = UserProfile.objects.get(id=player_two_id)
+#         new_game = Game(player_one=player_one, player_two=player_two)
+#         new_game.save()
+#
+#         return redirect(f'multi_scores/{new_game.id}')
+#
+#     users = UserProfile.objects.all()
+#     return render(request, 'game/multi_game.html', {"users": users})
+#
+#
+# def multi_scores(request, game_id):
+#     try:
+#         game = Game.objects.get(id=game_id)
+#     except Game.DoesNotExist:
+#         return redirect(error, 'Game does not exist')
+#     return render(request, 'game/multiscores.html', {"game": game})
 
 
 def online_game_creation(request):
     # print(request.user.id, UserProfile.objects.get(id=request.user.id))
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
     games = Game.objects.filter(is_completed=False).all()
-    return render(request, 'game/online.html', {"games": games})
+    return render(request, 'game/online.html', {"games": games, "profile": profile})
 
 
 def game_3d(request, game_id):
     if not request.user.is_authenticated:
         return redirect("authentication:login")
 
-    user_profile = UserProfile.objects.get(user=request.user)
+    profile = UserProfile.objects.get(user=request.user)
     if not Game.objects.filter(id=game_id).exists() and game_id != 69:
         print("Game does not exist", game_id)
         return redirect('/')
     print("load threejs.html")
-    return render(request, 'game/threejs.html')
+    return render(request, 'game/threejs.html', {"profile": profile})
+
+
+@login_required
+async def end_game(request, game_id):
+
+    game = await sync_to_async(get_object_or_404)(Game, id=game_id)
+    winner_user = await sync_to_async(lambda: game.winner.user)()
+    looser_user = await sync_to_async(lambda: game.looser.user)()
+    current_user_id = await sync_to_async(lambda: request.user.id)()
+    profile = await sync_to_async(lambda: UserProfile.objects.get(user=request.user))()
+
+    if current_user_id != winner_user.id and current_user_id != looser_user.id:
+        content = await sync_to_async(render_to_string)('game/unauthorized.html')
+        return HttpResponseForbidden(content)
+
+    context = {
+        'game': game,
+        'winner': game.winner,
+        'looser': game.looser,
+        'winner_score': game.winner_score,
+        'looser_score': game.looser_score,
+        'tx_hash': game.tx_hash,
+        'profile': profile,
+    }
+
+    # Render the template asynchronously
+    return await sync_to_async(render)(request, 'game/end_game.html', context)
+
 
 # def test_pong_game(request):
 #     if request.method == "POST":

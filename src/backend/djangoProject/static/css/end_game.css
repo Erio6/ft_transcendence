@@ -1,0 +1,48 @@
+
+.container-end-game {
+    display: flex;
+    flex-direction: column;
+    height: 75vh;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    align-items: center;
+    justify-content: center;
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.blockchain-tx {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Optional: Style for celebration */
+#celebration h2 {
+    color: green;
+    animation: fadeIn 2s ease-in-out;
+}
+
+#loser h2 {
+    color: red;
+    animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

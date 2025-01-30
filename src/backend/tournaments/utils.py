@@ -69,24 +69,7 @@ def generate_links(games, tournament):
                 links.append({"from": f"match-{game.id}", "to": f"match-{next_game.id}"})
 
     return links
-    # links = []
-    # for game in games:
-    #     if game.player_one:
-    #         links.append(
-    #             {"from": f"player-{game.player_one.id}",
-    #              "to": f"match-{game.id}"})
-    #     if game.player_two:
-    #         links.append(
-    #             {"from": f"player-{game.player_two.id}",
-    #              "to": f"match-{game.id}"})
-    #
-    #     if game.winner:
-    #         next_match = TournamentGame.objects.filter(tournament=tournament, round_number=game.round_number + 1).first()
-    #         if next_match:
-    #             links.append(
-    #                 {"from": f"match-{game.id}",
-    #                  "to": f"match-{next_match.id}"})
-    # return links
+
 
 def assign_parent_child_relationships(games):
     # Group games by round
@@ -153,3 +136,23 @@ def assign_parent_child_relationships(games):
     # for i, game in enumerate(current_round_games):
     #     if i // 2 < len(next_round_slots):
     #         next_round_slots[i // 2] = game
+
+
+# links = []
+# for game in games:
+#     if game.player_one:
+#         links.append(
+#             {"from": f"player-{game.player_one.id}",
+#              "to": f"match-{game.id}"})
+#     if game.player_two:
+#         links.append(
+#             {"from": f"player-{game.player_two.id}",
+#              "to": f"match-{game.id}"})
+#
+#     if game.winner:
+#         next_match = TournamentGame.objects.filter(tournament=tournament, round_number=game.round_number + 1).first()
+#         if next_match:
+#             links.append(
+#                 {"from": f"match-{game.id}",
+#                  "to": f"match-{next_match.id}"})
+# return links

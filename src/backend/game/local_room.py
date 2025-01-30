@@ -5,7 +5,6 @@ import time
 from asgiref.sync import sync_to_async
 from django.utils.timezone import now
 
-from blockchain.utils import blockchain_score_storage
 from game.models import Game
 from game.paddle import Paddle
 from game.room import Room
@@ -31,24 +30,6 @@ class LocalRoom(Room):
         await self.ball.send_score(self.left_paddle.consumer)
 
         await self.ball.move(self.delta_time)
-
-    async def end_game(self):
-        self.running = False
-        game = await sync_to_async(Game.objects.get)(pk=self.id)
-        player_one = await sync_to_async(lambda: game.player_one)()
-        winner = self.left_paddle if self.right_paddle.score >= 10 else self.right_paddle
-        looser = self.right_paddle if winner == self.left_paddle else self.left_paddle
-        player1 = self.left_paddle if self.left_paddle.consumer.user_profile == player_one else self.right_paddle
-        player2 = self.left_paddle if player1 == self.right_paddle else self.right_paddle
-        game.winner = winner.consumer.user_profile
-        game.looser = looser.consumer.user_profile
-        game.winner_score = looser.score
-        game.looser_score = winner.score
-        game.player_one_score = player1.score
-        game.player_two_score = player2.score
-        game.end_time = now()
-        game.is_completed = True
-        await sync_to_async(game.save)(force_update=True)
 
     async def handle_paddle_msg(self, consumer, message):
         if consumer == self.left_paddle.consumer:
@@ -92,6 +73,16 @@ class LocalRoom(Room):
         self.last_time = time.time()
         await self.ball.init_ball(self.left_paddle.consumer)
         self.running = True
+
+    async def end_game(self):
+        self.running = False
+        game = await sync_to_async(Game.objects.get)(pk=self.id)
+        player_one = await sync_to_async(lambda: game.player_one)()
+        game.player_one_score = self.left_paddle.score
+        game.player_two_score = self.right_paddle.score
+        game.end_time = now()
+        game.is_completed = True
+        await sync_to_async(game.save)(force_update=True)
 
     async def remove_consumer(self, consumer):
         if consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:

@@ -19,9 +19,7 @@ def update_ranks():
 @receiver(post_save, sender=Game)
 def log_multiplayer_game(sender, instance, created, **kwargs):
     # Trigger only when the game is marked as completed
-    print("Before")
     if instance.is_completed and not instance.winner_score == 0 and instance.type_of_game == "multiplayer":
-        print("after")
         from .models import GameHistory
         from .models import Leaderboard
         # Log the game in history
@@ -33,32 +31,25 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
         leaderboard_one, created = Leaderboard.objects.get_or_create(player=instance.player_one)
         leaderboard_two, created = Leaderboard.objects.get_or_create(player=instance.player_two)
 
-        # Update the leaderboard
-        Leaderboard.update_player_stats(instance.player_one, instance.player_one_score,
-                                        win=(instance.winner == instance.player_one))
+        leaderboard_one.update_player_stats(
+            opponent_leaderboard=leaderboard_two,
+            is_winner=(instance.winner == instance.player_one),
+        )
 
-        # Update for player two
-        Leaderboard.update_player_stats(instance.player_two, instance.player_two_score,
-                                        win=(instance.winner == instance.player_two))
+        leaderboard_two.update_player_stats(
+            opponent_leaderboard=leaderboard_one ,
+            is_winner=(instance.winner == instance.player_two),
+        )
 
+        leaderboard_one.update_elo(
+            opponent_leaderboard=leaderboard_two,
+            is_winner=(instance.winner == instance.player_one),
+        )
 
-        is_draw = (instance.winner_score == instance.player_two_score)
-
-        try:
-            leaderboard_one.update_elo(
-                opponent_leaderboard=leaderboard_two,
-                is_winner=(instance.winner == instance.player_one),
-                is_draw=is_draw
-            )
-
-            leaderboard_two.update_elo(
-                opponent_leaderboard=leaderboard_one,
-                is_winner=(instance.winner == instance.player_two),
-                is_draw=is_draw
-            )
-        except Exception as e:
-            print(f"Error updating ELO ratings: {e}")
-
+        leaderboard_two.update_elo(
+            opponent_leaderboard=leaderboard_one,
+            is_winner=(instance.winner == instance.player_two),
+        )
         update_ranks()
 
 # @receiver(post_save, sender=SoloGame)

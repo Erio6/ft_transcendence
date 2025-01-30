@@ -22,6 +22,15 @@ def leaderboard(request):
 def dashboard(request):
     profile = None
     leaderboard = Leaderboard.objects.all().order_by('rank')
+    user_entry = leaderboard.filter(player__user=request.user).first()
+    leaderboard_without_user = leaderboard.exclude(player__user=request.user)
+
+    if user_entry:
+        leaderboard = [user_entry] + list(leaderboard_without_user)
+    else:
+        # Fallback if no user entry found
+        leaderboard = leaderboard_without_user
+
     game_histories = []
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
@@ -39,10 +48,10 @@ def dashboard(request):
             game = history.game_object
             if game:
                 history_data.append({
-                    'player_one': getattr(game, 'player_one', None),
-                    'player_two': getattr(game, 'player_two', None),
-                    'player_one_score': getattr(game, 'player_one_score', None),
-                    'player_two_score': getattr(game, 'player_two_score', None),
+                    'player_one': game.player_one,
+                    'player_two': game.player_two,
+                    'player_one_score': game.player_one_score,
+                    'player_two_score': game.player_two_score,
                     'winner': game.winner,
                     'date_played': history.date_played,
                 })

@@ -25,5 +25,6 @@ def waiting_view(request):
 
     context = {
         "match_id": match.id,
+        "user_profile": user_profile,
     }
     return render(request, 'matchMaking/waiting.html', context)

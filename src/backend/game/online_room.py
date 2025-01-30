@@ -1,7 +1,11 @@
+import asyncio
 import json
 
 from asgiref.sync import sync_to_async
+from django.shortcuts import redirect
 from django.utils.timezone import now
+
+from tournaments.models import Tournament
 from user.models import UserProfile
 
 from blockchain.utils import blockchain_score_storage
@@ -11,8 +15,9 @@ from game.room import Room
 
 
 class OnlineRoom(Room):
-    def __init__(self, room_id):
+    def __init__(self, room_id, is_tournament):
         super().__init__(room_id)
+        self.is_tournament = is_tournament
 
     async def update(self):
         if not await super().update():
@@ -44,33 +49,47 @@ class OnlineRoom(Room):
         player_one = await sync_to_async(lambda: game.player_one)()
         winner = self.left_paddle if self.right_paddle.score >= 10 else self.right_paddle
         looser = self.right_paddle if winner == self.left_paddle else self.left_paddle
+        # await sync_to_async(print)(self.left_paddle.consumer.user_profile, player_one)
         player1 = self.left_paddle if self.left_paddle.consumer.user_profile == player_one else self.right_paddle
         player2 = self.left_paddle if player1 == self.right_paddle else self.right_paddle
         game.winner = winner.consumer.user_profile
         game.looser = looser.consumer.user_profile
         game.winner_score = looser.score
         game.looser_score = winner.score
-        game.player_one_score = player1.score
-        game.player_two_score = player2.score
+        game.player_one_score = player2.score
+        game.player_two_score = player1.score
         game.end_time = now()
         game.is_completed = True
         print("save the game")
         await sync_to_async(game.save)(force_update=True)
         print("game saved")
-        # try:
-        #     await blockchain_score_storage(game)
-        # except Exception as e:
-        #     print(f"Erreur lors de l'enregistrement sur la blockchain : {e}")
+        await asyncio.sleep(0.5)
+        if self.is_tournament:
+            tournament_game = await sync_to_async(Tournament.objects.get)(game=self.id)
+            new_url = "/tournament/tree/" + tournament_game.tournament + "/"
+        else:
+            new_url = "/game/end/" + self.id + "/"
+        # game.tx_hash = await blockchain_score_storage(game.id)
+        # if game.tx_hash:
+        #     print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+        # else:
+        #     print("Failed to record game on blockchain.")
+        print(new_url)
+        if self.left_paddle:
+            await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
+        if self.right_paddle:
+            await self.right_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
+
 
     async def handle_paddle_msg(self, consumer, message):
-        if consumer == self.left_paddle.consumer:
+        if self.left_paddle and consumer == self.left_paddle.consumer:
             if message['data'] == 1:
                 self.left_paddle.movingDown = 1 if message['value'] else 0
             else:
                 self.left_paddle.movingUp = 1 if message['value'] else 0
             if self.left_paddle.movingDown == 0 and self.left_paddle.movingUp == 0:
                 await self.left_paddle.send_data()
-        elif consumer == self.right_paddle.consumer:
+        elif self.right_paddle and consumer == self.right_paddle.consumer:
             if message['data'] == 1:
                 self.right_paddle.movingDown = 1 if message['value'] else 0
             else:
@@ -105,14 +124,15 @@ class OnlineRoom(Room):
                 await self.ball.init_ball_chan(consumer)
 
     async def remove_consumer(self, consumer):
-        if consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:
+        if (self.left_paddle and consumer == self.left_paddle.consumer) or (
+                self.right_paddle and consumer == self.right_paddle.consumer):
             self.running = False
         if consumer in self.spectators:
             self.spectators.remove(consumer)
-        elif consumer == self.left_paddle.consumer:
+        elif self.left_paddle and consumer == self.left_paddle.consumer:
             del self.left_paddle
             self.left_paddle = None
             print("delete left", self.left_paddle)
-        elif consumer == self.right_paddle.consumer:
+        elif self.right_paddle and consumer == self.right_paddle.consumer:
             del self.right_paddle
             self.right_paddle = None

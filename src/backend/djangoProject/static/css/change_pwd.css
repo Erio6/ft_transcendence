@@ -1,0 +1,32 @@
+
+.container-pwd {
+    max-width: 500px;
+    width: 90%;
+    margin: 50px auto;
+    background-color: var(--menubar-color);
+    border-radius: 35px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+p {
+    margin: 10px;
+}
+
+.errorlist {
+    color: red;
+    list-style: none; /* Remove bullet points if you like */
+    margin: 10px 0;
+    padding: 0;
+}
+
+.errorlist li {
+    margin: 5px 0;
+}
+
+.helptext {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: 5px;
+    font-style: italic;
+}

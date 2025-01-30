@@ -69,6 +69,7 @@ def edit_profile_view(request,username):
 
 @login_required
 def change_password(request):
+    profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -78,5 +79,5 @@ def change_password(request):
             return redirect('home')
     else:
         form = PasswordChangeForm(user=request.user)
-    return render(request, 'user/change_pwd.html', {'form': form})
+    return render(request, 'user/change_pwd.html', {'form': form, 'profile': profile})
 # Create your views here.

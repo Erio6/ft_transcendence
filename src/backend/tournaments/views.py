@@ -4,6 +4,7 @@ from django.utils.crypto import get_random_string
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db import transaction
+from django.http import JsonResponse
 from math import ceil, log2
 from .utils import create_games , generate_links, assign_parent_child_relationships
 
@@ -196,6 +197,54 @@ def tournament_tree_view(request, tournament_id):
         'links': json.dumps(links),
         'current_game_url': current_game_url,
         'opponent_name': opponent_name,
+    })
+
+@login_required
+def tournament_tree_data(request, tournament_id):
+    tournament = get_object_or_404(Tournament, id=tournament_id)
+    games = TournamentGame.objects.filter(tournament=tournament).order_by('round_number')
+    current_user = request.user.userprofile
+
+    nodes = []
+    current_game_url = None
+    opponent_name = None
+
+    for game in games:
+        is_current_user_in_game = (
+                (game.player_one and game.player_one.player == current_user) or
+                (game.player_two and game.player_two.player == current_user)
+        )
+        if is_current_user_in_game and game.game and not game.game.is_completed:
+            current_game_url = reverse('game:real_game', kwargs={'game_id': game.game.id})
+        if game.player_one and game.player_one.player == current_user:
+            opponent_name = game.player_two.player.display_name if game.player_two else "Bye"
+        elif game.player_two and game.player_two.player == current_user:
+            opponent_name = game.player_one.player.display_name if game.player_one else "Bye"
+
+
+        match_node = {
+            "key": f"match-{game.id}",
+            "text": f"Match {game.round_number}-{game.id}",
+            "round": game.round_number,
+            "player_one": game.player_one.player.display_name if game.player_one else None,
+            "player_two": game.player_two.player.display_name if game.player_two else None,
+            "score_one": game.game.player_one_score if game.game else "0",
+            "score_two": game.game.player_two_score if game.game else "0",
+            "winner": game.winner.display_name if game.winner else None,
+            "parent": f"match-{game.parent.id}" if game.parent else None,
+            "category": "match",
+        }
+        nodes.append(match_node)
+
+    print(nodes)
+    print(current_game_url + " " + opponent_name)
+    links = generate_links(games, tournament)
+    return JsonResponse({
+        'nodes': nodes,
+        'links': links,
+        'current_game_url': current_game_url,
+        'opponent_name': opponent_name,
+        'is_completed': tournament.status == 'completed'
     })
 
 

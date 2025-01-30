@@ -8,6 +8,7 @@
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
     margin-top: 20px;
+    height: 75vh;
 }
 
 .graph-container {
@@ -17,6 +18,7 @@
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    min-height: 250px;
 }
 
 .history-container {
@@ -26,6 +28,12 @@
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    min-width: 400px;
+    padding: 10px;
+}
+
+.history-container .game-history:last-child {
+    border-bottom: none; /* Hides the last border line */
 }
 
 .leaderboard-container {
@@ -44,6 +52,7 @@
     backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .update-profile-container {
@@ -61,10 +70,12 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 .dashboard-container h2 {
     margin-bottom: 10px;
-    padding-top: 20px;
+    padding-top: 10px;
     padding-left: 20px;
+    font-size: 30px;
 }
 
 .dashboard-container p {
@@ -78,9 +89,49 @@
 }
 
 .wins-losses .total{
-    font-size: 60px;
+    font-size: 50px;
     padding-bottom: 10px;
     padding-left: 10px;
     padding-right: 10px;
 }
 
+.leaderboard-container #ranking {
+    table-layout: fixed;
+    word-wrap: break-word;
+    width: 100%;
+}
+
+.leaderboard-container #ranking td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    margin-left: 30px;
+}
+
+.leaderboard-container .rank {
+    margin-right: 20px;
+}
+
+.username {
+    margin-right: 100px;
+}
+
+.table-wrapper {
+    flex: 1 1 auto; /* Allow this div to expand and fill available space */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    border-radius: 10px;
+}
+
+.update-profile-container .table-wrapper {
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;      /* Centers vertically (optional) */
+    height: 100%;
+}
+
+.update-profile-container .btn {
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}

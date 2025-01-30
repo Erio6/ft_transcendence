@@ -48,3 +48,9 @@ class GameHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = GameHistory
         fields = '__all__'
+
+class BlockchainStatusSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    tx_url = serializers.CharField(required=False)
+    tx_hash = serializers.CharField(required=False)
+    message = serializers.CharField(required=False)

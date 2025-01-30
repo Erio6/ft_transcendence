@@ -14,7 +14,7 @@
 .ladder-titles th {
     position: sticky;
     padding: 15px;
-    text-align: left;
+    text-align: center;
     letter-spacing: 1px;
     border-bottom: 1px solid var(--font-color);
     overflow: auto;
@@ -29,10 +29,12 @@
 
 #ranking td {
     padding: 15px;
+    text-align: center;
+    vertical-align: middle;
 }
 
 #ranking tr.current-user {
-    background: var(--menubar-color);
+    border-radius: 35px;
     backdrop-filter: blur(201px);
 }
 
@@ -42,6 +44,11 @@ img {
     height: 40px;
     object-fit: cover;
     border-radius: 100%;
+    vertical-align: middle;
+}
+
+.rank {
+    margin-right: 15px;
 }
 
 ::-webkit-scrollbar-track {

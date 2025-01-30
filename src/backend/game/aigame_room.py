@@ -12,8 +12,9 @@ from game.room import Room
 
 
 class AIGameRoom(Room):
-    def __init__(self, room_id):
+    def __init__(self, room_id, mode):
         super().__init__(room_id)
+        self.mode = mode
         self.old_pos = [0, 0]
         self.send_left = False
         self.send_right = False
@@ -42,11 +43,16 @@ class AIGameRoom(Room):
         await self.ball.move(self.delta_time)
 
     async def move_ai(self):
-        output = self.net.activate(
-            (self.right_paddle.y / 100, abs(0.02 - self.ball.x / 100), self.ball.y / 100, self.ball.v_x, self.ball.v_y))
-        decision = output.index(max(output))
-        print(decision)
+        if self.mode == "solo_IA_easy":
+            output = self.net.activate((self.right_paddle.y / 100, self.ball.y / 100))
+        elif self.mode == "solo_IA_medium":
+            output = self.net.activate(
+                (self.right_paddle.y / 100, abs(0.02 - self.ball.x / 100), self.ball.y / 100, self.ball.v_x,
+                 self.ball.v_y))
+        else:
+            return
 
+        decision = output.index(max(output))
         value = self.right_paddle.speed * self.delta_time
         if decision == 1:
             self.right_paddle.force_move(-value)
@@ -78,8 +84,12 @@ class AIGameRoom(Room):
             if self.left_paddle.movingDown == 0 and self.left_paddle.movingUp == 0:
                 await self.left_paddle.send_data()
 
-    def register_ai(self, mode):
-        if mode == "solo_IA_easy":
+    def register_ai(self):
+        if self.mode == "solo_IA_easy":
+            config_name = "easy.txt"
+            with open("./AI/best.pickle", "rb") as f:
+                winner = pickle.load(f)
+        elif self.mode == "solo_IA_medium":
             config_name = "medium.txt"
             with open("./AI/medium.pickle", "rb") as f:
                 winner = pickle.load(f)
@@ -98,8 +108,8 @@ class AIGameRoom(Room):
     async def register_consumer(self, consumer):
         if not self.left_paddle:
             self.left_paddle = Paddle("left", consumer, consumer.user_profile.display_name)
-            self.right_paddle = Paddle("right", None, "IA Easy")
-            self.register_ai("solo_IA_easy")
+            self.right_paddle = Paddle("right", None, "IA Easy" if self.mode == "solo_IA_easy" else "IA Medium")
+            self.register_ai()
             await consumer.send(json.dumps({'type': 'client', 'loc': 'left', 'speed': self.left_paddle.speed}))
             await self.left_paddle.init_paddle_chan(self.left_paddle.consumer)
             await self.right_paddle.init_paddle_chan(self.left_paddle.consumer)
