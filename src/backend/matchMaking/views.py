@@ -22,9 +22,10 @@ def waiting_view(request):
         match.save()
     else:
         match = Match.objects.create(player_one=user_profile, status='waiting')
-
+    home = 'game:play'
     context = {
         "match_id": match.id,
         "user_profile": user_profile,
+        "home": home
     }
     return render(request, 'matchMaking/waiting.html', context)

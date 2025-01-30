@@ -1,0 +1,120 @@
+.tournament_waiting_room_container {
+    display: grid;
+    grid-template-areas: 'code player_list'
+                         'creator player_list'
+                         'status player_list';
+    grid-gap: 20px;
+    grid-auto-rows: minmax(100px, auto);
+    margin-top: 20px;
+}
+
+.code_to_join_container {
+    grid-area: code;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 30px;
+}
+
+.creator_tournament_container {
+    grid-area: creator;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 30px;
+}
+
+.tournament_status_container {
+    grid-area: status;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 30px;
+}
+
+.tournament_player_list_container {
+    grid-area: player_list;
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.code_to_join_container p {
+    font-size: 20px;
+    text-align: left;
+    margin: 0;
+    width: 100%;
+}
+
+.code_to_join_container p strong {
+    display: block;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.creator_tournament_container p {
+    font-size: 20px;
+    text-align: left;
+    margin: 0;
+    width: 100%;
+}
+
+.creator_tournament_container p strong {
+    display: block;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.tournament_status_container p {
+    font-size: 20px;
+    text-align: left;
+    margin: 0;
+    width: 100%;
+}
+
+.tournament_status_container p strong {
+    display: block;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.tournament_player_list_container h2 {
+    margin: 0 0 20px 0;
+    font-size: 24px;
+}
+
+#players_list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#players_list li {
+    background: var(--menubar-icone-hover-color);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}

@@ -1,0 +1,132 @@
+.waiting_page {
+    max-width: 500px;
+    width: 90%;
+    margin: 50px auto; /* Center horizontally and add some top margin */
+    background-color: var(--menubar-color); /* your transparent grey */
+    border-radius: 35px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.waiting_title {
+    text-align: center;
+    color: var(--font-color);
+    margin-bottom: 100px;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.text_waiting {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+
+.loader {
+  position: relative;
+  width: 120px;
+  height: 90px;
+  margin: 0 auto;
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  bottom: 30px;
+  left: 50px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background: #2176FF;
+  animation: loading-bounce 0.5s ease-in-out infinite alternate;
+}
+
+.loader:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 7px;
+  width: 45px;
+  border-radius: 4px;
+  box-shadow: 0 5px 0 #f2f2f2, -35px 50px 0 #f2f2f2, -70px 95px 0 #f2f2f2;
+  animation: loading-step 1s ease-in-out infinite;
+}
+
+@keyframes loading-bounce {
+  0% {
+    transform: scale(1, 0.7);
+  }
+
+  40% {
+    transform: scale(0.8, 1.2);
+  }
+
+  60% {
+    transform: scale(1, 1);
+  }
+
+  100% {
+    bottom: 140px;
+  }
+}
+
+@keyframes loading-step {
+  0% {
+    box-shadow: 0 10px 0 rgba(0, 0, 0, 0),
+            0 10px 0 #f2f2f2,
+            -35px 50px 0 #f2f2f2,
+            -70px 90px 0 #f2f2f2;
+  }
+
+  100% {
+    box-shadow: 0 10px 0 #f2f2f2,
+            -35px 50px 0 #f2f2f2,
+            -70px 90px 0 #f2f2f2,
+            -70px 90px 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.cancel_button {
+    font-size: 16px;
+    position: relative;
+    margin: 0 auto;
+    padding: 1em 2.5em 1em 2.5em;
+    border: none;
+    background: #fff;
+    transition: all 0.1s linear;
+    box-shadow: 0 0.4em 1em rgba(0, 0, 0, 0.1);
+}
+
+.cancel_button:active {
+ transform: scale(0.95);
+}
+
+.cancel_button span {
+ color: #464646;
+}
+
+.cancel_button .border {
+ position: absolute;
+ border: 0.15em solid #fff;
+ transition: all 0.3s 0.08s linear;
+ top: 50%;
+ left: 50%;
+ width: 7em;
+ height: 3em;
+ transform: translate(-50%, -50%);
+}
+
+.cancel_button:hover .border {
+ display: block;
+ width: 9.9em;
+ height: 3.7em;
+}
+
+.full-rounded {
+ border-radius: 2em;
+}
