@@ -2,19 +2,19 @@
 {% block title %}Tournament details{% endblock %}
 {% load static %}
 {% block content %}
-    <h1 class="tournament_waitingRoom_title"> {{ tournament.name }} </h1>
+    <h2 class="tournament_waitingRoom_title"> {{ tournament.name }} </h2>
     <div class="tournament_waiting_room_container">
         <div class="code_to_join_container">
-            <p class="join_code">Code to join the game : <strong> {{ tournament.tournament_code_join }}</strong></p>
+            <p class="join_code">Code to join the game :   <strong>{{ tournament.tournament_code_join }}</strong></p>
         </div>
         <div class="creator_tournament_container">
-            <p><strong>Tournament created by :</strong> {{ tournament.created_by.user.username }}</p>
+            <p>Tournament created by : <strong>{{ tournament.created_by.user.username }}</strong></p>
         </div>
         <div class="tournament_status_container">
-            <p><strong>Status :</strong> {{ tournament.status }}</p>
+            <p>Status :<strong>{{ tournament.status }}</strong></p>
         </div>
         <div class="tournament_player_list_container">
-            <h2>Players in the game :<span id="connected-count">0</span></h2>
+            <h2>Players in the game :     <span id="connected-count">0</span></h2>
             <ul id="players_list">
                 {% for player in players %}
                     <li>{{ player.user.username }}</li>
