@@ -32,6 +32,7 @@ Game selection :
 
 
   ---RUNNING WITH DOCKER---
+
   run the docker container->docker compose up
   delete all the files->docker system prune -a -f
 
