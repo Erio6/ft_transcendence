@@ -22,8 +22,10 @@ services:
     depends_on:
       - vault
       - db
+      - redis  # Add redis as a dependency
     environment:
       - VAULT_ADDR=http://vault:8200
+      - DJANGO_SETTINGS_MODULE=djangoProject.settings
     networks:
       - app-network
 
@@ -54,6 +56,13 @@ services:
       - app-network
     volumes:
       - vault_data:/vault/data
+
+  redis:
+    image: redis:6
+    ports:
+      - "6380:6379"
+    networks:
+      - app-network
 
 networks:
   app-network:

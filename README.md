@@ -15,9 +15,9 @@ Notes :
 - to do github front page with our github/linkedin or idk.
 - make the docker and see how we deploy and update?
 
-NOTE FOR ANTHONY: 
+NOTE FOR ANTHONY:
 
-Game selection : 
+Game selection :
 
 - Local
   - Choose your side , the human or the IA level
@@ -29,3 +29,10 @@ Game selection :
     - Insert the tournament code
 - Multi
   - Find a game
+
+
+  ---RUNNING WITH DOCKER---
+  run the docker container->docker compose up
+  delete all the files->docker system prune -a -f
+
+  after modification better delete everyting a rerun the docker container.

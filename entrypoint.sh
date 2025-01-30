@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+export DJANGO_SETTINGS_MODULE=djangoProject.settings
+
 # Function to wait for a service
 wait_for_service() {
     local host=$1
@@ -76,4 +78,4 @@ python manage.py collectstatic --no-input
 
 # Start Django app
 echo "Starting Django app..."
-exec python manage.py runserver 0.0.0.0:8000
+exec daphne -b 0.0.0.0 -p 8000 djangoProject.asgi:application
