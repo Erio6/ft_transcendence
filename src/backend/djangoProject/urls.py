@@ -46,6 +46,8 @@ from django.conf.urls import include
 from django.urls import path
 from django.urls import path, include
 
+app_name = 'djangoProject'
+
 urlpatterns = [
     path('', views.home, name="home"),
     path('our_team', views.our_team, name="our_team"),

@@ -1,19 +1,34 @@
 version: '3.10.12'
 services:
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
+    networks:
+      - app-network
+
   web:
     build: .
-    ports:
-      - "8000:8000"
+    volumes:
+      - static_volume:/app/staticfiles
     env_file:
       - .env
     depends_on:
       - vault
       - db
+      - redis  # Add redis as a dependency
     environment:
       - VAULT_ADDR=http://vault:8200
+      - DJANGO_SETTINGS_MODULE=djangoProject.settings
     networks:
       - app-network
-      
+
   db:
     image: postgres:13
     environment:
@@ -26,7 +41,7 @@ services:
       - app-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      
+
   vault:
     image: hashicorp/vault
     cap_add:
@@ -42,6 +57,13 @@ services:
     volumes:
       - vault_data:/vault/data
 
+  redis:
+    image: redis:6
+    ports:
+      - "6380:6379"
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
@@ -49,3 +71,4 @@ networks:
 volumes:
   postgres_data:
   vault_data:
+  static_volume:

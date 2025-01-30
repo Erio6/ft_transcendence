@@ -8,7 +8,11 @@
 
 {% block two_factor_content %}
 <div class="login-container">
-    <h2 class="login-header">{% if wizard.steps.current == 'token' %}Verify{% else %}Login{% endif %}</h2>
+    <h2 class="login-header">
+        {% if wizard.steps.current == 'token' %}Verify
+        {% elif wizard.steps.current == 'backup' %}Backup Token
+        {% else %}Login{% endif %}
+    </h2>
 
     <form action="" method="post" class="login-form">
         {% csrf_token %}
@@ -16,8 +20,16 @@
         {{ form.as_p }}
 
         <button type="submit" class="login-btn">
-            {% if wizard.steps.current == 'token' %}Verify{% else %}Login{% endif %}
+            {% if wizard.steps.current == 'token' %}Verify
+            {% elif wizard.steps.current == 'backup' %}Verify Backup Token
+            {% else %}Login{% endif %}
         </button>
+
+        {% if wizard.steps.current == 'backup' %}
+            <button name="wizard_goto_step" type="submit" value="token" class="login-btn" style="margin-top: 10px;">
+                Back to 2FA
+            </button>
+        {% endif %}
     </form>
 
     {% if wizard.steps.current == 'token' %}

@@ -1,12 +1,14 @@
 #!/bin/bash
 set -e
 
+export DJANGO_SETTINGS_MODULE=djangoProject.settings
+
 # Function to wait for a service
 wait_for_service() {
     local host=$1
     local port=$2
     local service=$3
-    
+
     echo "Waiting for $service..."
     while ! nc -z $host $port; do
         echo "$service not available yet - sleeping"
@@ -18,18 +20,18 @@ wait_for_service() {
 # Function to initialize Vault
 initialize_vault() {
     echo "Initializing Vault..."
-    
+
     # Wait for Vault to be unsealed and ready
     until curl -fs "${VAULT_ADDR}/v1/sys/health" > /dev/null 2>&1; do
         echo "Waiting for Vault to be ready..."
         sleep 2
     done
-    
+
     # Enable KV secrets engine version 2
     curl --retry 5 --retry-delay 2 -fs -X POST "${VAULT_ADDR}/v1/sys/mounts/secret" \
         -H "X-Vault-Token: ${VAULT_TOKEN}" \
         -d '{"type": "kv", "options": {"version": "2"}}' || echo "KV secrets engine likely already enabled"
-    
+
     # Store database credentials
     echo "Storing database credentials in Vault..."
     curl --retry 5 --retry-delay 2 -fs -X POST "${VAULT_ADDR}/v1/secret/data/database/credentials" \
@@ -47,7 +49,7 @@ initialize_vault() {
             echo "Failed to store credentials in Vault"
             exit 1
         }
-        
+
     # Verify credentials were stored
     echo "Verifying credentials storage..."
     curl --retry 5 --retry-delay 2 -fs "${VAULT_ADDR}/v1/secret/data/database/credentials" \
@@ -72,6 +74,8 @@ python manage.py flush --no-input
 echo "Running migrations..."
 python manage.py migrate
 
+python manage.py collectstatic --no-input
+
 # Start Django app
 echo "Starting Django app..."
-exec python manage.py runserver 0.0.0.0:8000
+exec daphne -b 0.0.0.0 -p 8000 djangoProject.asgi:application

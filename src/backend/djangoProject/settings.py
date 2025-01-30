@@ -28,7 +28,9 @@ SECRET_KEY = 'django-insecure-vfvsk%cx11j^o)to!8om3mt^tf72j81h3dlp&d_%)8-8e=-q-g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+CSRF_TRUSTED_ORIGINS = ["http://10.11.3.5:8080"]
 
 # Application definition
 
@@ -71,10 +73,11 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('127.0.0.1', 6379)],
+            'hosts': [('redis', 6379)],
         }
     }
 }
+
 
 LOGIN_URL = 'authentication:login'
 
@@ -117,7 +120,22 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+#if you want to use docker uncommnet DATABASE and db_credentials
+
 # db_credentials = get_db_credentials()
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": db_credentials['db_name'],
+#         "USER": db_credentials['username'],
+#         "PASSWORD": db_credentials['password'],
+#         "HOST": db_credentials['host'],
+#         "PORT": db_credentials['port'],
+#     }
+# }
+
 
 DATABASES = {
     "default": {
@@ -129,7 +147,6 @@ DATABASES = {
         "PORT": "5432",
     }
 }
-
 
 # JWT
 
@@ -198,6 +215,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "djangoProject/static")]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

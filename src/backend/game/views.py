@@ -47,11 +47,11 @@ def soloGame(request):
     return render(request, 'game/sologame.html', {'form': form, 'profile': profile})
 
 
-def multiGame(request):
-    profile = None
-    if request.user.is_authenticated:
-        profile = UserProfile.objects.get(user=request.user)
-    return render(request, 'game/multisearch.html',{"profile": profile})
+# def multiGame(request):
+#     profile = None
+#     if request.user.is_authenticated:
+#         profile = UserProfile.objects.get(user=request.user)
+#     return render(request, 'game/multisearch.html',{"profile": profile})
 
 
 # def game_creation(request):
