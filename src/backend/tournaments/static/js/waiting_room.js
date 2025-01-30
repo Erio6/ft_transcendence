@@ -60,3 +60,10 @@ ws.onopen = function () {
 ws.onclose = function () {
     console.log('Connection closed');
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    let startButton = document.getElementById('start-button');
+    if(startButton) {
+        startButton.style.display = "inline-block";
+    }
+}
