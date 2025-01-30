@@ -11,8 +11,8 @@
                     <span>{{ history.player_one.user.username }} (Rank: {{ history.player_one.leaderboard_rank }})</span>
                 </div>
                 <div class="scores">
-                <span>{{ history.player_two_score }} - {{ history.player_one_score }}</span>
-            </div>
+                    <span>{{ history.player_two_score }} - {{ history.player_one_score }}</span>
+                </div>
                 <div class="player2">
                     <img src="{{ history.player_two.avatar.url }}" alt="Avatar">
                     <span>{{ history.player_two.user.username }} (Rank: {{ history.player_two.leaderboard_rank }})</span>
@@ -23,10 +23,21 @@
                     <span>
                         <i class='bx bx-trophy'></i>
                     </span>
-                     <strong>{{ history.winner.user.username }}</strong>
+                    <strong>{{ history.winner.user.username }}</strong>
                 </div>
                 <div class="date">
                     Played on: {{ history.date_played|date:"M d, Y H:i" }}
+                <div class="blockchain-tx" data-game-id="{{ history.game_id }}">
+                    {% if history.tx_url %}
+                        <a href="{{ history.tx_url }}" target="_blank">View on Etherscan</a>
+                    {% elif history.tx_hash %}
+                        <div class="loading">
+                            <span>Recording transaction on the blockchain...</span>
+                        </div>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,6 +45,74 @@
     {% else %}
         <p>No games played yet.</p>
     {% endif %}
-</div>
-<div class="diffuse-circle circle-1"></div>
+    </div>
+    <div class="diffuse-circle circle-1"></div>
+<script>
+    // Fonction pour vérifier le statut de transaction pour un jeu spécifique
+    async function checkTransactionStatus(gameId, txContainer) {
+        const pollingIntervals = {};
+        try {
+            const response = await fetch(`/api/check_transaction_status/${gameId}/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+            const data = await response.json();
+
+            console.log(`Fetch response status for game ${gameId}:`, data.status);
+
+            if (data.status === 'completed') {
+                txContainer.innerHTML = `
+                    <a href="${data.tx_url}" target="_blank">View on Etherscan</a>
+                `;
+                if (pollingIntervals[gameId]) {
+                        clearInterval(pollingIntervals[gameId]);
+                        delete pollingIntervals[gameId];
+                    }
+            } else if (data.status === 'pending') {
+                txContainer.innerHTML = `
+                <span>Recording transaction on the blockchain...</span>
+                `;
+            } else if (data.status === 'error') {
+                txContainer.innerHTML = `
+                    <span>Error: ${data.message}</span>
+                `;
+                if (pollingIntervals[gameId]) {
+                    clearInterval(pollingIntervals[gameId]);
+                    delete pollingIntervals[gameId];
+                }
+            }
+        } catch (error) {
+            console.error('Error checking transaction status:', error);
+            txContainer.innerHTML = `
+                <span>Error checking transaction status.</span>
+            `;
+            if (pollingIntervals[gameId]) {
+                clearInterval(pollingIntervals[gameId]);
+                delete pollingIntervals[gameId];
+            }
+        }
+    }
+
+    function initiatePolling() {
+        const txContainers = document.querySelectorAll('.blockchain-tx[data-game-id]');
+        txContainers.forEach(txContainer => {
+            const gameId = txContainer.getAttribute('data-game-id');
+
+            checkTransactionStatus(gameId, txContainer);
+
+            const pollingInterval = setInterval(async () => {
+                await checkTransactionStatus(gameId, txContainer);
+            }, 3000);
+            pollingIntervals[gameId] = pollingInterval;
+        });
+    }
+
+    // Initier le polling après le chargement du DOM
+    document.addEventListener('DOMContentLoaded', () => {
+        initiatePolling();
+    });
+</script>
 {% endblock %}

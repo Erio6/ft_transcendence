@@ -9,16 +9,22 @@ def home(request):
 
     # Build a list of game details
     history_data = []
+    seen_game_ids = set()
     for history in game_histories:
+        if history.game_id in seen_game_ids:
+            continue  # Skip duplicate game_id
+        seen_game_ids.add(history.game_id)
         game = history.game_object  # Dynamically fetch the related game object
         if game:
             history_data.append({
+                'game_id': history.game_id,
                 'player_one': game.player_one,
                 'player_two': game.player_two,
                 'player_one_score': game.player_one_score,
                 'player_two_score': game.player_two_score,
                 'winner': game.winner,
                 'date_played': history.date_played,
+                'tx_hash': game.tx_hash,
             })
     profile = None
     if request.user.is_authenticated:

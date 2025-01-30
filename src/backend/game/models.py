@@ -30,6 +30,15 @@ class Game(models.Model):
         else:
             return f'{self.player_one.display_name} is waiting an opponent in {self.id}'
 
+    @property
+    def tx_url(self):
+        if self.tx_hash:
+            if self.tx_hash.startswith('0x'):
+                return f"https://sepolia.etherscan.io/tx/{self.tx_hash}"
+            else:
+                return f"https://sepolia.etherscan.io/tx/0x{self.tx_hash}"
+        return None
+
 
 class SoloGame(models.Model):
     player_solo = models.ForeignKey(UserProfile, related_name='player_one_games_solo', on_delete=models.CASCADE)

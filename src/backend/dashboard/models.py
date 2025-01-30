@@ -19,9 +19,11 @@ class GameHistory(models.Model):
     game_object = GenericForeignKey('game_type', 'game_id')
     date_played = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('game_type', 'game_id')
+
     def __str__(self):
         return f'GameHistory: {self.game_object}'
-
 
 class Leaderboard(models.Model):
     player = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='leaderboard')
@@ -54,27 +56,3 @@ class Leaderboard(models.Model):
 
     def __str__(self):
         return f'Leaderboard: {self.player}'
-
-    # @staticmethod
-    # def update_leaderboard(): # TO USE ONLY IF THERE IS AN ISSUES IN REGISTERING THE SCORE, THIS FUNCTION WILL REBUILD THE LEADERBOARD ENTIRELY
-    #
-    #     Leaderboard.objects.all().delete()
-    #
-    #     multiplayer_games = list(chain(Game.objects.all(), TournamentGame.objects.all()))
-    #     for game in multiplayer_games:
-    #         # Update Player One
-    #         Leaderboard.update_player_stats(
-    #             player=game.player_one, points=game.player_one_score, win=(game.winner == game.player_one)
-    #         )
-    #         # Update Player Two
-    #         Leaderboard.update_player_stats(
-    #             player=game.player_two, points=game.player_two_score, win=(game.winner == game.player_two)
-    #         )
-    #
-    #     # Process all solo games
-    #     solo_games = SoloGame.objects.all()
-    #     for game in solo_games:
-    #         # Update Solo Player
-    #         Leaderboard.update_player_stats(
-    #             player=game.player_solo, points=game.player_solo_score, win=(game.winner == game.player_solo)
-    #         )

@@ -17,20 +17,6 @@ h2 {
     margin-bottom: 20px;
 }
 
-.blockchain-tx {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.hidden {
-    display: none;
-}
-
-.error-message {
-    color: red;
-    margin-top: 10px;
-}
-
 /* Optional: Style for celebration */
 #celebration h2 {
     color: green;

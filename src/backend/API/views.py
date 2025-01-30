@@ -69,9 +69,7 @@ class CheckTransactionStatus(APIView):
             return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         if receipt and receipt.status == 1:
-            tx_url = f"https://sepolia.etherscan.io/tx/0x{game.tx_hash}"
+            tx_url = game.tx_url
             return Response({'status': 'completed', 'tx_url': tx_url, 'tx_hash': game.tx_hash},
                             status=status.HTTP_200_OK)
-        else:
-            return Response({'status': 'pending'}, status=status.HTTP_200_OK)
 

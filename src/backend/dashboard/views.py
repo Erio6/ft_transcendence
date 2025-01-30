@@ -28,7 +28,6 @@ def dashboard(request):
     if user_entry:
         leaderboard = [user_entry] + list(leaderboard_without_user)
     else:
-        # Fallback if no user entry found
         leaderboard = leaderboard_without_user
 
     game_histories = []

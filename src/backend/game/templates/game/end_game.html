@@ -22,29 +22,10 @@
     <p><strong>Winner:</strong> {{ winner.user.username }}</p>
     <p><strong>Loser:</strong> {{ looser.user.username }}</p>
     <p><strong>Final Score:</strong> {{ winner_score }} - {{ looser_score }}</p>
-
-    <strong>Blockchain Tx:</strong>
-        <div class="blockchain-tx">
-            {% if tx_url %}
-                <span>Transaction Hash: {{ tx_hash }}</span>
-                <a href="{{ tx_url }}" target="_blank">View on Etherscan</a>
-            {% elif tx_hash %}
-                <div id="loading">
-                    <span>Recording transaction on the blockchain...</span>
-                </div>
-                <div id="tx-error" class="error-message hidden">
-                    <span>An error occurred while recording the transaction.</span>
-                </div>
-        {% else %}
-            <span>No Blockchain Transaction</span>
-        {% endif %}
-        </div>
     <div class="diffuse-circle circle-1"></div>
 </div>
 
-{% if tx_hash and not tx_url %}
     <script>
-
         // Juste les confettis
         const gameId = "{{ game.id }}";
         if (document.getElementById("celebration")) {
@@ -54,56 +35,6 @@
                 origin: { x:0.55,y: 0.6 }
             });
         }
-
-       // checker avec les API si la transaction a ete record
-        async function checkTransactionStatus() {
-            try {
-                const response = await fetch(`/api/check_transaction_status/${gameId}/`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include',
-                });
-                const data = await response.json();
-
-                console.log('Fetch response status:', data.status);
-
-                if (data.status === 'completed') {
-                    const txContainer = document.querySelector('.blockchain-tx');
-                    txContainer.innerHTML = `
-                        <span>Transaction Hash: ${data.tx_hash}</span>
-                        <a href="${data.tx_url}" target="_blank">View on Etherscan</a>
-                    `;
-                } else if (data.status === 'pending') {
-                    document.getElementById('tx-status').innerText = 'Transaction is pending...';
-                    console.log('Transaction is still pending...');
-                } else if (data.status === 'error') {
-                    const spinnerContainer = document.getElementById('loading');
-                    const txError = document.getElementById('tx-error');
-                    spinnerContainer.classList.add('hidden');
-                    txError.classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error checking transaction status:', error);
-                const spinnerContainer = document.getElementById('loading');
-                const txError = document.getElementById('tx-error');
-                spinnerContainer.classList.add('hidden');
-                txError.classList.remove('hidden');
-            }
-        }
-
-        // Polling toutes les 3 secondes
-        const pollingInterval = setInterval(async () => {
-            await checkTransactionStatus();
-            const txContainer = document.querySelector('.blockchain-tx');
-            if (txContainer.querySelector('a') || !document.getElementById('tx-error').classList.contains('hidden')) {
-                clearInterval(pollingInterval);
-            }
-        }, 3000);
-
-        // Vérification initiale
-        checkTransactionStatus();
     </script>
 
 <!--    <script>-->
@@ -111,5 +42,4 @@
 <!--            window.location.href = "{% url 'home' %}"; // Redirige vers la liste des jeux ou la page d'accueil-->
 <!--        }, 10000); // Redirection après 5 secondes-->
 <!--    </script>-->
-{% endif %}
 {% endblock %}
