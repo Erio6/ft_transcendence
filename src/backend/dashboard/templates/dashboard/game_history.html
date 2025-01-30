@@ -47,6 +47,8 @@
     {% endif %}
     </div>
     <div class="diffuse-circle circle-1"></div>
+
+{% if history.tx_hash %}
 <script>
     // Fonction pour vérifier le statut de transaction pour un jeu spécifique
     async function checkTransactionStatus(gameId, txContainer) {
@@ -114,5 +116,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         initiatePolling();
     });
+
 </script>
+    {% endif %}
 {% endblock %}
