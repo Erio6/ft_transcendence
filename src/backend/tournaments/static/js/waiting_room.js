@@ -63,7 +63,7 @@ ws.onclose = function () {
 
 document.addEventListener('DOMContentLoaded', function () {
     let startButton = document.getElementById('start-button');
-    if(startButton) {
+    if (startButton) {
         startButton.style.display = "inline-block";
     }
-}
+});
