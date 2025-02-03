@@ -13,6 +13,7 @@
 @import url("tournament_waiting_room.css");
 @import url("join_tournament.css");
 @import url("tournament_tree.css");
+@import url("solo_game.css");
 /* Googl Font import - Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 /* --- General --- */
@@ -355,4 +356,3 @@ body.light .switch::before {
     height: 350px;
     z-index: 5;
 }
-
