@@ -210,6 +210,7 @@ def tournament_tree_data(request, tournament_id):
     opponent_name = None
 
     for game in games:
+        print(f"TournamentGame ID: {game.id}, Game Linked: {bool(game.game)}")
         is_current_user_in_game = (
                 (game.player_one and game.player_one.player == current_user) or
                 (game.player_two and game.player_two.player == current_user)
