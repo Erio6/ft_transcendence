@@ -21,15 +21,15 @@
                 {% endfor %}
             </ul>
         </div>
+        <div class="tournament_waiting_room_buttons">
         {% if current_user == tournament.created_by.user %}
-            <button id="start-button" onclick="location.href= '{% url "tournaments:start_tournament" tournament.id %}'" style="display:none;">Start the tournament</button>
-        {% endif %}
-        {% if current_user == tournament.created_by.user %}
-            <button onclick="confirmCancel()">Cancel</button>
+            <button class="start_tournament_button" id="start-button" onclick="location.href= '{% url "tournaments:start_tournament" tournament.id %}'" style="display:none;">Start the tournament</button>
+            <button class="cancel_tournament_button" onclick="confirmCancel()">Cancel</button>
         {% endif %}
         {% if current_user != tournament.created_by.user %}
-            <button onclick="confirmLeave()">Leave Tournament</button>
+            <button class="leave_tournament_button" onclick="confirmLeave()">Leave Tournament</button>
         {% endif %}
+        </div>
     </div>
     <script> const tournamentID = "{{ tournament.id }}"</script>
     <script>

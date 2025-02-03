@@ -23,16 +23,16 @@ function renderTournamentTree(nodes, links) {
     });
 
     diagram.nodeTemplateMap.add("match", $(go.Node, "Auto", { selectable: false },
-        $(go.Shape, "Rectangle", { fill:"lightyellow", stroke: null}),
+        $(go.Shape, "RoundedRectangle", { fill: "#FFFFFF", stroke: null, }),
             new go.Binding("fill", "color"),
         $(go.Panel, "Table")
             .addColumnDefinition(0, { separatorStroke: "black"})
-            .addColumnDefinition(1, { separatorStroke: "black", background: "#BABABA"})
+            .addColumnDefinition(1, { separatorStroke: "black", background: "#2176FF"})
             .addRowDefinition(0, { separatorStroke: "black"})
             .addRowDefinition(1, { separatorStroke: "black"})
             .add($(go.TextBlock, {
                     margin: 5,
-                    font: "10pt Segoe UI, sans-serif",
+                    font: "20pt Segoe UI, sans-serif",
                     row: 0,
                     wrap: go.Wrap.None,
                     width: 90,
@@ -47,7 +47,7 @@ function renderTournamentTree(nodes, links) {
                     width: 90,
                     isMultiline: false,
                     textAlign: "left",
-                    font: "10pt Segoe UI, sans-serif",
+                    font: "20pt Segoe UI, sans-serif",
                     stroke: "black",
                 }, new go.Binding("text", "player_two")),
                 $(go.TextBlock, {
@@ -58,7 +58,7 @@ function renderTournamentTree(nodes, links) {
                     width: 25,
                     isMultiline: false,
                     textAlign: "center",
-                    font: "10pt Segoe UI, sans-serif",
+                    font: "20pt Segoe UI, sans-serif",
                     stroke: "black",
                 }, new go.Binding("text", "score_one")),
                 $(go.TextBlock, {
@@ -69,14 +69,14 @@ function renderTournamentTree(nodes, links) {
                     width: 25,
                     isMultiline: false,
                     textAlign: "center",
-                    font: "10pt Segoe UI, sans-serif",
+                    font: "20pt Segoe UI, sans-serif",
                     stroke: "black",
                 }, new go.Binding("text", "score_two"))
             )
     ));
 
     diagram.linkTemplate = $(go.Link, { routing : go.Routing.Orthogonal , selectable: false },
-        $(go.Shape, { stroke: "red", strokeWidth: 2 })
+        $(go.Shape, { stroke: "#FFFFFF", strokeWidth: 2 })
     );
 
     diagram.model = new go.TreeModel(filteredNodes);
