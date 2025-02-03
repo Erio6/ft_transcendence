@@ -62,7 +62,7 @@
                 .catch(error => console.error("Error fetching tournament data:", error));
         }
 
-        const wsPath = `wss://${window.location.host}/ws/tournament/{{ tournament.id }}/`;
+        const wsPath = `ws://${window.location.host}/ws/tournament/{{ tournament.id }}/`;
         const socket = new WebSocket(wsPath);
 
         socket.onmessage = function(e) {

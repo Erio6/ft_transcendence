@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["http://10.11.3.5:8080"]
+CSRF_TRUSTED_ORIGINS = ["http://10.11.3.2:8080"]
 
 # Application definition
 
@@ -73,7 +73,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [('redis', 6379)],
         }
     }
 }
@@ -123,30 +123,30 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
 #if you want to use docker uncommnet DATABASE and db_credentials
 
-# db_credentials = get_db_credentials()
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": db_credentials['db_name'],
-#         "USER": db_credentials['username'],
-#         "PASSWORD": db_credentials['password'],
-#         "HOST": db_credentials['host'],
-#         "PORT": db_credentials['port'],
-#     }
-# }
-
+db_credentials = get_db_credentials()
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "db",
-        "USER": "postgres",
-        "PASSWORD": "1234",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": db_credentials['db_name'],
+        "USER": db_credentials['username'],
+        "PASSWORD": db_credentials['password'],
+        "HOST": db_credentials['host'],
+        "PORT": db_credentials['port'],
     }
 }
+
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "db",
+#         "USER": "postgres",
+#         "PASSWORD": "1234",
+#         "HOST": "127.0.0.1",
+#         "PORT": "5432",
+#     }
+# }
 
 # JWT
 
