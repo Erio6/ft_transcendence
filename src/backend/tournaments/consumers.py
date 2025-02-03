@@ -124,7 +124,7 @@ class TournamentConsumer(AsyncJsonWebsocketConsumer):
         await self.send_update(event['content'])
 
     async def tournament_data_update(self, event):
-        await self.send({
+        await self.send_json({
             'type': 'tournament_update',
             'action': event['action'],
             'game_id': event['game_id'],

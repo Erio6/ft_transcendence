@@ -24,9 +24,9 @@ def handle_game_completion(sender, instance, **kwargs):
 
                 if tournament_game.parent:
                     parent_game = tournament_game.parent
-                    if parent_game.player_one is None:
+                    if parent_game.player_one is None and parent_game != tournament_game:
                         parent_game.player_one = winner_tp
-                    else:
+                    elif parent_game.player_two is None and parent_game != tournament_game:
                         parent_game.player_two = winner_tp
                     parent_game.save()
 

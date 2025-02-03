@@ -7,6 +7,10 @@
     <div class="tournament_tree_container">
         <h1>{{ tournament.name }} - Tournament Tree</h1>
 
+        <div id="tournamentWinner" style="display:none;">
+            <h2>Tournament Winner: <span id="winnerName"></span></h2>
+        </div>
+
         <div id="myDiagramDiv" ></div>
         <div id="nextGameInfo">
             <p>
@@ -33,12 +37,18 @@
                 {% endif %}
             </p>
         </div>
+
+        <div id="navigationButtons" style="display:none;">
+            <button onclick="window.location.href='{% url 'tournaments:tournaments' %}'">Back to Tournaments</button>
+            <button onclick="window.location.href='{% url 'djangoProject:home' %}'">Go Home</button>
+        </div>
     </div>
     <script>
         let redirectTimeout;
         let currentGameUrl = "{{ current_game_url }}";
         let opponentName = "{{ opponent_name }}";
         const redirectMessage = document.getElementById("nextGameInfo");
+        const wrapper = document.querySelector('.wrapper');
 
         function checkRedirect(data) {
             if (data.current_game_url) {
@@ -47,11 +57,35 @@
 
                 let seconds = 5;
                 redirectMessage.style.display = 'block';
+                wrapper.style.display = 'flex';
                 redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;
+
+                redirectMessage.innerHTML += `
+                    <div class="wrapper">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                    </div>
+                `;
 
                 redirectTimeout = setInterval(() => {
                     seconds--;
                     redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;
+
+                    redirectMessage.innerHTML += `
+                        <div class="wrapper">
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="circle"></div>
+                            <div class="shadow"></div>
+                            <div class="shadow"></div>
+                            <div class="shadow"></div>
+                        </div>
+                    `;
+
                     if (seconds <= 0) {
                         clearInterval(redirectTimeout);
                         window.location.href = currentGameUrl;
@@ -59,6 +93,7 @@
                 }, 1000);
             } else {
                 redirectMessage.style.display = 'none';
+                wrapper.style.display = 'none';
                 clearInterval(redirectTimeout);
             }
         }
@@ -74,10 +109,16 @@
                     } else {
                         redirectMessage.style.display = 'none';
                         clearInterval(redirectTimeout);
-                        alert("Tournament completed! Winner: " + data.nodes.find(n => n.round === data.nodes.reduce((max, n) => Math.max(max, n.round), 0)).winner);
+                        document.getElementById("navigationButtons").style.display = 'block';
+                        displayTournamentWinner(data.nodes.find(n => n.round === data.nodes.reduce((max, n) => Math.max(max, n.round), 0)).winner);
                     }
                 })
                 .catch(error => console.error("Error fetching tournament data:", error));
+        }
+
+        function displayTournamentWinner(winnerName) {
+            document.getElementById("winnerName").innerText = winnerName;
+            document.getElementById("tournamentWinner").style.display = 'block';
         }
 
         const wsPath = `ws://${window.location.host}/ws/tournaments/{{ tournament.id }}/`;
