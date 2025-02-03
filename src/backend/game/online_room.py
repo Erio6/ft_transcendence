@@ -70,7 +70,8 @@ class OnlineRoom(Room):
         print("game saved")
         await asyncio.sleep(0.5)
         if self.is_tournament:
-            tournament_game = self.get_tournament_game(self.id)
+            tournament_game = await self.get_tournament_game(self.id)
+            print(type(tournament_game))
             print(tournament_game.tournament.id)
             new_url = "/tournament/tree/" + str(tournament_game.tournament.id) + "/"
         else:
