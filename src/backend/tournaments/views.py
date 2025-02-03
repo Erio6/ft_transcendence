@@ -237,7 +237,10 @@ def tournament_tree_data(request, tournament_id):
         nodes.append(match_node)
 
     print(nodes)
-    print(current_game_url + " " + opponent_name)
+    if current_game_url and opponent_name:
+        print(current_game_url + " " + opponent_name)
+    else:
+        print("No valid game URL or opponent found")
     links = generate_links(games, tournament)
     return JsonResponse({
         'nodes': nodes,
