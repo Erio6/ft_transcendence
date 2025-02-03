@@ -5,7 +5,7 @@ from asgiref.sync import sync_to_async
 from django.shortcuts import redirect
 from django.utils.timezone import now
 
-from tournaments.models import Tournament
+from tournaments.models import Tournament, TournamentGame
 from user.models import UserProfile
 
 from blockchain.utils import blockchain_score_storage
@@ -65,7 +65,7 @@ class OnlineRoom(Room):
         print("game saved")
         await asyncio.sleep(0.5)
         if self.is_tournament:
-            tournament_game = await sync_to_async(Tournament.objects.get)(game=self.id)
+            tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
             new_url = "/tournament/tree/" + tournament_game.tournament + "/"
         else:
             new_url = "/game/end/" + self.id + "/"
