@@ -4,17 +4,35 @@
 {% block content %}
     <script src="https://cdn.jsdelivr.net/npm/gojs@3.0/release/go.js"></script>
     <script src="{% static 'js/tournament_tree.js' %}"></script>
-    <h1>{{ tournament.name }} - Tournament Tree</h1>
+    <div class="tournament_tree_container">
+        <h1>{{ tournament.name }} - Tournament Tree</h1>
 
-    <div id="myDiagramDiv" style="border: solid 1px blue; width:100%; height:600px"></div>
-    <div id="nextGameInfo">
-        <p>
-            {% if opponent_name %}
-                You will be redirected to your game against {{ opponent_name }} in 5 seconds ...
-            {% else %}
-                You will be redirected to your game in 5 seconds ...
-            {% endif %}
-        </p>
+        <div id="myDiagramDiv" ></div>
+        <div id="nextGameInfo">
+            <p>
+                {% if opponent_name %}
+                    You will be redirected to your game against {{ opponent_name }} in 5 seconds
+                    <div class="wrapper">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                    </div>
+                {% else %}
+                    You will be redirected to your game in 5 seconds
+                    <div class="wrapper">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                    </div>
+                {% endif %}
+            </p>
+        </div>
     </div>
     <script>
         let redirectTimeout;
@@ -29,11 +47,11 @@
 
                 let seconds = 30;
                 redirectMessage.style.display = 'block';
-                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds...`;
+                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;
 
                 redirectTimeout = setInterval(() => {
                     seconds--;
-                    redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds...`;
+                    redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;
                     if (seconds <= 0) {
                         clearInterval(redirectTimeout);
                         window.location.href = currentGameUrl;
