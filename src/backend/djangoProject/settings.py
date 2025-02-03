@@ -73,7 +73,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)], # change to 'localhost' if you are not using docker and redis if you are using docker
+            'hosts': [('redis', 6379)], # change to 'localhost' if you are not using docker and redis if you are using docker
         }
     }
 }

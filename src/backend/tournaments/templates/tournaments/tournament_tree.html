@@ -12,18 +12,26 @@
             <p>
                 {% if opponent_name %}
                     You will be redirected to your game against {{ opponent_name }} in 5 seconds
+                    <div class="wrapper">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                    </div>
                 {% else %}
                     You will be redirected to your game in 5 seconds
+                    <div class="wrapper">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                        <div class="shadow"></div>
+                    </div>
                 {% endif %}
             </p>
-        </div>
-        <div class="wrapper">
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="shadow"></div>
-            <div class="shadow"></div>
-            <div class="shadow"></div>
         </div>
     </div>
     <script>
@@ -72,7 +80,7 @@
                 .catch(error => console.error("Error fetching tournament data:", error));
         }
 
-        const wsPath = `wss://${window.location.host}/ws/tournament/{{ tournament.id }}/`;
+        const wsPath = `ws://${window.location.host}/ws/tournament/{{ tournament.id }}/`;
         const socket = new WebSocket(wsPath);
 
         socket.onmessage = function(e) {
