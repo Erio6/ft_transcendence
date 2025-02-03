@@ -35,8 +35,18 @@
     border-radius: 35px;
     background: transparent;
     border: 1px solid var(--font-color);
-    color: black; /* Set text color to black */
+    color: white; /* Set text color to white for the selected option */
     margin: 5px 0;
+    appearance: none; /* Remove default styling */
+    -webkit-appearance: none; /* Remove default styling for Safari */
+    -moz-appearance: none; /* Remove default styling for Firefox */
+    background-color: var(--menubar-color); /* Match the background color */
+}
+
+/* Style for the dropdown options */
+.solo-game-form select option {
+    color: black; /* Set text color to black for the dropdown options */
+    background-color: white; /* Set background color to white for the dropdown options */
 }
 
 /* Style for labels */
