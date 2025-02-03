@@ -66,7 +66,8 @@ class OnlineRoom(Room):
         await asyncio.sleep(0.5)
         if self.is_tournament:
             tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
-            new_url = "/tournament/tree/" + tournament_game.tournament + "/"
+            print(tournament_game.tournament.id)
+            new_url = "/tournament/tree/" + tournament_game.tournament.id + "/"
         else:
             new_url = "/game/end/" + self.id + "/"
         print(new_url)
