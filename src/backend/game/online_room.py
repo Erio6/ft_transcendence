@@ -5,7 +5,7 @@ from asgiref.sync import sync_to_async
 from django.shortcuts import redirect
 from django.utils.timezone import now
 
-from tournaments.models import Tournament
+from tournaments.models import Tournament, TournamentGame
 from user.models import UserProfile
 
 from blockchain.utils import blockchain_score_storage
@@ -65,21 +65,27 @@ class OnlineRoom(Room):
         print("game saved")
         await asyncio.sleep(0.5)
         if self.is_tournament:
-            tournament_game = await sync_to_async(Tournament.objects.get)(game=self.id)
-            new_url = "/tournament/tree/" + tournament_game.tournament + "/"
+            tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
+            tournament_id = await sync_to_async(lambda: tournament_game.tournament.id)()
+            print("tournament", tournament_id)
+            new_url = "/tournament/tree/" + str(tournament_id) + "/"
         else:
             new_url = "/game/end/" + self.id + "/"
         print(new_url)
         if self.left_paddle:
             await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
+            await self.left_paddle.consumer.close()
         if self.right_paddle:
             await self.right_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
+            await self.right_paddle.consumer.close()
+        for consumer in self.spectators:
+            await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
+            await consumer.close()
         # game.tx_hash = await blockchain_score_storage(game.id)
         # if game.tx_hash:
         #      print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
         # else:
         #      print("Failed to record game on blockchain.")
-
 
     async def handle_paddle_msg(self, consumer, message):
         if self.left_paddle and consumer == self.left_paddle.consumer:
