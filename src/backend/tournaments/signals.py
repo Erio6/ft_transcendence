@@ -15,7 +15,7 @@ def handle_game_completion(sender, instance, **kwargs):
         try:
             tournament_game = TournamentGame.objects.get(game=instance)
             tournament = tournament_game.tournament
-            winner = instance.winner.userprofile
+            winner = instance.winner
 
             with transaction.atomic():
                 winner_tp = TournamentPlayer.objects.get(tournament=tournament, player=winner)
