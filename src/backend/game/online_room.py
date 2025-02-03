@@ -2,6 +2,7 @@ import asyncio
 import json
 
 from asgiref.sync import sync_to_async
+from channels.db import database_sync_to_async
 from django.shortcuts import redirect
 from django.utils.timezone import now
 
@@ -43,6 +44,10 @@ class OnlineRoom(Room):
 
         await self.ball.move(self.delta_time)
 
+    @database_sync_to_async
+    def get_tournament_game(self, game_id):
+        return TournamentGame.objects.get(game=game_id)
+
     async def end_game(self):
         self.running = False
         game = await sync_to_async(Game.objects.get)(pk=self.id)
@@ -65,9 +70,9 @@ class OnlineRoom(Room):
         print("game saved")
         await asyncio.sleep(0.5)
         if self.is_tournament:
-            tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
+            tournament_game = self.get_tournament_game(self.id)
             print(tournament_game.tournament.id)
-            new_url = "/tournament/tree/" + tournament_game.tournament.id + "/"
+            new_url = "/tournament/tree/" + str(tournament_game.tournament.id) + "/"
         else:
             new_url = "/game/end/" + self.id + "/"
         print(new_url)
