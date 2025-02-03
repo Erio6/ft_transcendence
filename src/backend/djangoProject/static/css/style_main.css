@@ -343,6 +343,7 @@ body.light .switch::before {
     background: rgba(203, 145, 115, 0.60);
     filter: blur(150px);
     z-index: -1;
+    pointer-events: none;
 }
 
 .circle-2 {

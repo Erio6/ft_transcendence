@@ -63,15 +63,27 @@ class GameConsumer(AsyncWebsocketConsumer):
                     for consumer in group_rooms[self.room_name].get_consumers():
                         if consumer.user_profile == self.user_profile:
                             print("already in the game")
+                            await self.accept()
+                            await self.send(json.dumps({'type': 'redirect', 'url': '/game/error'}))
+                            await self.close()
                             return
                 if self.game.is_completed == True:
                     print("game already completed")
+                    await self.accept()
+                    await self.send(json.dumps({'type': 'redirect', 'url': '/game/error'}))
+                    await self.close()
                     return
                 print("valid id")
             except Game.DoesNotExist:
                 print("invalid id")
+                await self.accept()
+                await self.send(json.dumps({'type': 'redirect', 'url': '/game/error'}))
+                await self.close()
                 return
         else:
+            await self.accept()
+            await self.send(json.dumps({'type': 'redirect', 'url': '/game/error'}))
+            await self.close()
             return
 
         start_loop = False
@@ -101,7 +113,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 group_rooms[self.room_name] = AIPerfectRoom(self.room_name)
                 await group_rooms[self.room_name].register_consumer(self)
         else:
-            if self.game.type_of_game == "multiplayer":
+            if self.game.type_of_game == "multiplayer" or self.game.type_of_game == "tournament":
                 await group_rooms[self.room_name].register_consumer(self)
 
         if start_loop:
