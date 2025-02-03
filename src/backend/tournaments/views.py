@@ -230,7 +230,7 @@ def tournament_tree_data(request, tournament_id):
             "player_two": game.player_two.player.display_name if game.player_two else None,
             "score_one": game.game.player_one_score if game.game else "0",
             "score_two": game.game.player_two_score if game.game else "0",
-            "winner": game.game.winner.display_name if game.game else None,
+            "winner": game.game.winner.display_name if game.game and game.game.winner else None,
             "parent": f"match-{game.parent.id}" if game.parent else None,
             "category": "match",
         }
