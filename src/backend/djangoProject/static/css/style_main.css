@@ -102,6 +102,9 @@ header .image {
     font-size: 35px;
 }
 
+.image .nav-link i{
+    color: var(--font-color);
+}
 /* --- Button --- */
 .btn {
     padding: 15px 30px;
@@ -352,4 +355,6 @@ body.light .switch::before {
     height: 350px;
     z-index: 5;
 }
+
+
 

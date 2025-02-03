@@ -18,18 +18,18 @@
     <title>
         {% block title %} The Famous Pong {% endblock %}
     </title>
-    {% block head %}{% endblock %}
+        {% block head %}{% endblock %}
 </head>
 <body>
 
 <header>
     <div class="header-container">
         <div class="image-text">
-       <span class="image">
-<!--           <i class='bx bxs-skull icon'></i>-->
-           <i class="fa-solid fa-table-tennis-paddle-ball"></i>
-           <!---- <img src="{% static 'media/pong.png' %}" alt="Pong Logo">!--->
-       </span>
+        <span class="image">
+            <a href="{% url 'home' %}" class="nav-link">
+              <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+            </a>
+        </span>
         </div>
         <div class="login-section">
             {% if user.is_authenticated %}
@@ -40,8 +40,8 @@
                     <i class='bx bx-log-out'></i>
                 </a>
             {% else %}
-                <a href="{% url 'authentication:register' %}" alt="register">Register</a>
-                <a href="{% url 'authentication:login' %}"alt="login">Login</a>
+                <a href="{% url 'authentication:register' %}" class="nav-link" alt="register">Register</a>
+                <a href="{% url 'authentication:login' %}" class="nav-link" alt="login">Login</a>
             {% endif %}
         </div>
     </div>
@@ -53,24 +53,24 @@
     <div class="menu-container">
         <div class="menu-bar">
             <li class="nav-links">
-                <a href="{% url 'home' %}">
+                <a href="{% url 'home' %}" class="nav-link">
                     <i class='bx bxs-home-alt-2 icon'></i>
                 </a>
-                <a href="{% url 'dashboard:leaderboard' %}" alt="leaderboard">
+                <a href="{% url 'dashboard:leaderboard' %}" class="nav-link" alt="leaderboard">
                     <i class='bx bxs-trophy icon'></i>
                 </a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard:dashboard' %}" alt="dashboard">
+                    <a href="{% url 'dashboard:dashboard' %}" class="nav-link" alt="dashboard">
                         <i class='bx bxs-face icon'></i>
                     </a>
-                    <a href="{% url 'friends:friends_overview' %}"alt="friends">
+                    <a href="{% url 'friends:friends_overview' %}"class="nav-link" alt="friends">
                         <i class='bx bxs-heart icon'></i>
                     </a>
                 {% endif %}
-                <a href="{% url 'game:play' %}"alt="play">
+                <a href="{% url 'game:play' %}" class="nav-link" alt="play">
                     <i class='bx bxs-rocket icon'></i>
                 </a>
-                <a href="{% url 'our_team' %}"alt="our_team">
+                <a href="{% url 'our_team' %}"class="nav-link" alt="our_team">
                     <i class='bx bxl-github icon'></i>
                 </a>
             </li>
@@ -91,7 +91,7 @@
 
 
 <section class="home">
-    <main>
+    <main id="content">
         {% block content %}
             {% include 'dashboard/game_history.html' %}
         {% endblock %}
@@ -99,6 +99,7 @@
 </section>
 
 <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/spa.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/script.js' %}"></script>
 

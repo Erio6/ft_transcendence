@@ -17,7 +17,7 @@
             <div class="profile-pic">
                 <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
             </div>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}" class="avatar-form">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}" class="avatar-form form-link">
             {% csrf_token %}
             <input type="hidden" name="form_type" value="avatar">
             <div class="file-input-wrapper">
@@ -33,8 +33,9 @@
 
     <div class="my-informations">
         <h2>My Informations</h2>
-        <form method="POST" action="{% url 'user:edit_profile' profile.user.username %}">
+        <form method="POST" class="form-link" action="{% url 'user:edit_profile' profile.user.username %}">
             {% csrf_token %}
+            <input type="hidden" name="form_type" value="profile_info">
 
             {% for field in form2 %}
                 <div class="form-group">
@@ -74,9 +75,10 @@
                 <button type="submit" class="btn">Update Profile</button>
             {% endif %}
         </div>
+            </form>
         <br>
         <div class="div-button">
-            <form method="POST" action="{% url 'user:change_password' %}">
+            <form method="POST" class="form-link" action="{% url 'user:change_password' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn">Change Password</button>
             </form>
@@ -91,15 +93,15 @@
                 {% if user.is_authenticated and user.totpdevice_set.exists %}
                     <!-- If 2FA is enabled, show the option to disable it -->
                     <p>Your two-factor authentication is enabled.</p>
-                    <a href="{% url 'two_factor:disable' %}" class="btn ">Disable Two-Factor Authentication</a>
+                    <a href="{% url 'two_factor:disable' %}" class="btn nav-link">Disable Two-Factor Authentication</a>
 
                     <!-- Button to view backup tokens -->
-                    <p><a href="/account/two_factor/backup/tokens/" class="btn ">View Backup Tokens</a></p>
+                    <p><a href="/account/two_factor/backup/tokens/" class="btn nav-link ">View Backup Tokens</a></p>
 
                 {% else %}
                     <!-- If 2FA is not enabled, show the option to enable it -->
                     <p>Your account does not have two-factor authentication enabled.</p>
-                    <a href="{% url 'two_factor:setup' %}" class="btn ">Enable Two-Factor Authentication</a>
+                    <a href="{% url 'two_factor:setup' %}" class="btn nav-link">Enable Two-Factor Authentication</a>
                 {% endif %}
             {% else %}
                 <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>

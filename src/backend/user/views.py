@@ -24,7 +24,7 @@ def edit_profile_view(request,username):
             avatar_form = AvatarUpdateForm(request.POST, request.FILES, instance=profile)
             if avatar_form.is_valid():
                 avatar_form.save()
-                messages.success(request, f'Your profil picture has been updated!')
+                messages.success(request, f'Your profile picture has been updated!')
                 return redirect('user:edit_profile', username=request.user.username)
             else:
                 form = ProfileUpdateForm(instance=profile)
@@ -54,17 +54,30 @@ def edit_profile_view(request,username):
                     'avatar_form': avatar_form,
                     'profile': profile
                 }
-    else:
-        form = ProfileUpdateForm(instance=profile)
-        avatar_form = AvatarUpdateForm(instance=profile)
-        form2 = UserUpdateForm(instance=request.user)
+        else:
+            form = ProfileUpdateForm(instance=profile)
+            avatar_form = AvatarUpdateForm(instance=profile)
+            form2 = UserUpdateForm(instance=request.user)
 
+            context = {
+                'form': form,
+                'form2': form2,
+                'avatar_form': avatar_form,
+                'profile': profile
+            }
+
+    else:
+        # For GET requests, initialize the forms normally.
+        form = ProfileUpdateForm(instance=profile)
+        form2 = UserUpdateForm(instance=request.user)
+        avatar_form = AvatarUpdateForm(instance=profile)
         context = {
             'form': form,
             'form2': form2,
             'avatar_form': avatar_form,
             'profile': profile
         }
+
     return render(request, 'user/edit_profile.html',context)
 
 @login_required
