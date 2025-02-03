@@ -46,7 +46,8 @@ class World {
                 this.ball = new Ball(json['x'], json['y'], json['v_x'], json['v_y'], json['speed'], json['radius'], 50, 50);
                 loop.updatables.push(this.ball);
                 scene.add(this.ball.model);
-            } else if (json['type'] === 'client') {
+            }
+            else if (json['type'] === 'client') {
                 loc = json['loc'];
                 if (this.ball)
                     scene.remove(this.ball.model);
@@ -58,10 +59,12 @@ class World {
                     scene.remove(default_paddle.model);
                     default_paddle = undefined;
                 }
-            } else if (json['type'] === 'local_client') {
+            }
+            else if (json['type'] === 'local_client') {
                 loc = "right";
                 local = true;
-            } else if (json['type'] === 'init_paddle') {
+            }
+            else if (json['type'] === 'init_paddle') {
                 console.log(json['name']);
                 if (loc === "spectator" && !active_paddle) {
                     let align = Align.Left;
@@ -72,7 +75,8 @@ class World {
                     createFont(scene, active_paddle.x, 55, -5, active_paddle.name, null, null, align, 7);
                     scene.add(active_paddle.model);
                     loop.updatables.push(active_paddle);
-                } else if (loc === json['loc']) {
+                }
+                else if (loc === json['loc']) {
                     let align = Align.Left;
                     if (loc === "right")
                         align = Align.Right;
@@ -80,7 +84,8 @@ class World {
                     createFont(scene, active_paddle.x, 55, -5, active_paddle.name, null, null, align, 7);
                     scene.add(active_paddle.model);
                     loop.updatables.push(active_paddle);
-                } else {
+                }
+                else {
                     let align = Align.Left;
                     console.log("Default paddle loc = " + json['loc']);
                     default_paddle = new Paddle(json['loc'], json['name'], json['speed'], json['width'], json['size'], false, json['x'], 50, 50, webSocket);
@@ -92,19 +97,23 @@ class World {
                     scene.add(default_paddle.model);
                     loop.updatables.push(default_paddle);
                 }
-            } else if (json['type'] === 'paddle') {
+            }
+            else if (json['type'] === 'paddle') {
                 console.log(active_paddle.location)
                 if (active_paddle.location === json['loc']) {
                     active_paddle.y = -json['y'] + 50;
                     console.log("set to " + json['y']);
-                } else {
+                }
+                else {
                     default_paddle.y = -json['y'] + 50;
                     console.log("set to " + json['y']);
                 }
-            } else if (json['type'] === 'ball') {
+            }
+            else if (json['type'] === 'ball') {
                 if ((json['y'] > 2 && json['y'] < 97) || (json['x'] < 10 || json['x'] > 90))
                     this.ball.collide(json['x'], json['y'], json['v_x'], json['v_y'], json['speed']);
-            } else if (json['type'] === 'score') {
+            }
+            else if (json['type'] === 'score') {
                 if (json['value'] >= 10) {
                     default_paddle.active = false;
                     active_paddle.active = false;
@@ -124,10 +133,12 @@ class World {
                 createFont(scene, 30 * mult, 30, 0, Number(active_paddle.score) >= 10 ? active_paddle.score.toString() : "0" + active_paddle.score, fontGroup, fontGroup.children[0]);
                 createFont(scene, 30 * -mult, 30, 0, Number(default_paddle.score) >= 10 ? default_paddle.score.toString() : "0" + default_paddle.score, fontGroup, fontGroup.children[1]);
                 scene.add(fontGroup);
-            } else if (json['type'] === "start_game") {
+            }
+            else if (json['type'] === "start_game") {
                 active_paddle.active = true;
                 active_paddle.registerInput();
-            } else if (json['type'] === 'redirect') {
+            }
+            else if (json['type'] === 'redirect') {
                 console.log(window.location.host + json['url']);
                 window.location.href = json['url'];
             }
@@ -162,22 +173,22 @@ class World {
         // bot.position.set(0, -51, 0);
         // bot.scale.set(50, 1, 1);
 
-        const mat = new LineBasicMaterial({color: 0x0000ff});
-        const points = [];
-        points.push(new Vector3(-50, -50, 0));
-        points.push(new Vector3(50, -50, 0));
-        points.push(new Vector3(50, 50, 0));
-        points.push(new Vector3(-50, 50, 0));
-        points.push(new Vector3(-50, -50, 0));
-        points.push(new Vector3(-50 + 3, -50 + 3))
-        points.push(new Vector3(50 - 3, -50 + 3, 0));
-        points.push(new Vector3(50 - 3, 50 - 3, 0));
-        points.push(new Vector3(-50 + 3, 50 - 3, 0));
-        points.push(new Vector3(-50 + 3, -50 + 3, 0));
+        // const mat = new LineBasicMaterial({color: 0x0000ff});
+        // const points = [];
+        // points.push(new Vector3(-50, -50, 0));
+        // points.push(new Vector3(50, -50, 0));
+        // points.push(new Vector3(50, 50, 0));
+        // points.push(new Vector3(-50, 50, 0));
+        // points.push(new Vector3(-50, -50, 0));
+        // points.push(new Vector3(-50 + 3, -50 + 3))
+        // points.push(new Vector3(50 - 3, -50 + 3, 0));
+        // points.push(new Vector3(50 - 3, 50 - 3, 0));
+        // points.push(new Vector3(-50 + 3, 50 - 3, 0));
+        // points.push(new Vector3(-50 + 3, -50 + 3, 0));
 
-        const geometry = new BufferGeometry().setFromPoints(points);
-        const line = new Line(geometry, mat);
-        scene.add(line);
+        // const geometry = new BufferGeometry().setFromPoints(points);
+        // const line = new Line(geometry, mat);
+        // scene.add(line);
 
         loop.updatables.push(controls);
 

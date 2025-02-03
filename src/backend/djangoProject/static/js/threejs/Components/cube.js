@@ -6,9 +6,7 @@ function createMaterial() {
 
     //const texture = textureLoader.load('/assets/textures/test.png');
 
-    const material = new MeshStandardMaterial({color: "red"});
-
-    return material;
+    return new MeshStandardMaterial({color: "red"});
 }
 
 function createCube() {
