@@ -59,9 +59,10 @@ class Ball:
     async def wall_collide(self):
         if self.y < self.radius / 2:
             self.y = self.radius / 2
+            self.v_y *= -1
+            self.sending_data = True
         if self.y > 100 - self.radius / 2:
             self.y = 100 - self.radius / 2
-        if self.y <= self.radius / 2 or self.y >= 100 - self.radius / 2:
             self.v_y *= -1
             self.sending_data = True
 

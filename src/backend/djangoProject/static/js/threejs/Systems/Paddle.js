@@ -1,4 +1,5 @@
-import {createCube} from "../Components/cube.js";
+import {createCube, createCubeMat} from "../Components/cube.js";
+import {MeshStandardMaterial} from "three";
 
 
 class Paddle {
@@ -20,7 +21,7 @@ class Paddle {
             this.x = 50 - x - this.width;
         this.y = 0;
         this.z = 0;
-        this.model = createCube();
+        this.model = createCubeMat(new MeshStandardMaterial({color: 0x381e0b}));
         this.model.position.set(this.x, this.y, this.z);
         this.model.scale.set(this.width, this.length, 1);
         this.pressUp = false;

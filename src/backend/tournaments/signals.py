@@ -7,14 +7,15 @@ from django.db.models import Max
 from django.utils import timezone
 from game.models import Game
 from tournaments.models import TournamentGame, Tournament, TournamentPlayer
+from user.models import UserProfile
 
 @receiver(post_save, sender=Game)
 def handle_game_completion(sender, instance, **kwargs):
-    if instance.is_completed and instance.type_of_game == 'tournament' and not kwargs.get('created', False):
+    if instance.is_completed and instance.type_of_game == 'tournament' and not instance.winner_score == 0 and not kwargs.get('created', False):
         try:
             tournament_game = TournamentGame.objects.get(game=instance)
             tournament = tournament_game.tournament
-            winner = instance.winner.userprofile
+            winner = instance.winner
 
             with transaction.atomic():
                 winner_tp = TournamentPlayer.objects.get(tournament=tournament, player=winner)

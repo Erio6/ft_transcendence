@@ -183,7 +183,7 @@ def tournament_tree_view(request, tournament_id):
             "player_two": game.player_two.player.display_name if game.player_two else None,
             "score_one" : game.game.player_one_score if game.game else "0",
             "score_two" : game.game.player_two_score if game.game else "0",
-            "winner": game.winner.display_name if game.winner else None,
+            "winner": game.game.winner.display_name if game.game and game.game.winner else None,
             "parent": f"match-{game.parent.id}" if game.parent else None,
             "category": "match",
         }
@@ -210,6 +210,7 @@ def tournament_tree_data(request, tournament_id):
     opponent_name = None
 
     for game in games:
+        print(f"TournamentGame ID: {game.id}, Game Linked: {bool(game.game)}")
         is_current_user_in_game = (
                 (game.player_one and game.player_one.player == current_user) or
                 (game.player_two and game.player_two.player == current_user)
@@ -230,14 +231,17 @@ def tournament_tree_data(request, tournament_id):
             "player_two": game.player_two.player.display_name if game.player_two else None,
             "score_one": game.game.player_one_score if game.game else "0",
             "score_two": game.game.player_two_score if game.game else "0",
-            "winner": game.winner.display_name if game.winner else None,
+            "winner": game.game.winner.display_name if game.game and game.game.winner else None,
             "parent": f"match-{game.parent.id}" if game.parent else None,
             "category": "match",
         }
         nodes.append(match_node)
 
     print(nodes)
-    print(current_game_url + " " + opponent_name)
+    if current_game_url and opponent_name:
+        print(current_game_url + " " + opponent_name)
+    else:
+        print("No valid game URL or opponent found")
     links = generate_links(games, tournament)
     return JsonResponse({
         'nodes': nodes,
