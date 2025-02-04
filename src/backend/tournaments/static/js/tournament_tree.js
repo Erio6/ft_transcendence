@@ -26,16 +26,16 @@ function renderTournamentTree(nodes, links) {
         $(go.Shape, "RoundedRectangle", { fill: "#FFFFFF", stroke: null, }),
             new go.Binding("fill", "color"),
         $(go.Panel, "Table")
-            .addColumnDefinition(0, { separatorStroke: "black"})
-            .addColumnDefinition(1, { separatorStroke: "black", background: "#2176FF"})
-            .addRowDefinition(0, { separatorStroke: "black"})
-            .addRowDefinition(1, { separatorStroke: "black"})
+            .addColumnDefinition(0, { separatorStroke: "black", stretch: go.GraphObject.Horizontal})
+            .addColumnDefinition(1, { separatorStroke: "black", background: "#2176FF", width: 25})
+            .addRowDefinition(0, { separatorStroke: "black", stretch: go.GraphObject.Vertical})
+            .addRowDefinition(1, { separatorStroke: "black", stretch: go.GraphObject.Vertical})
             .add($(go.TextBlock, {
                     margin: 5,
-                    font: "20pt Segoe UI, sans-serif",
+                    font: "16pt Segoe UI, sans-serif",
                     row: 0,
                     wrap: go.Wrap.None,
-                    width: 90,
+                    // width: 90,
                     isMultiline: false,
                     textAlign: "left",
                     stroke: "black",
@@ -44,10 +44,10 @@ function renderTournamentTree(nodes, links) {
                     row: 1,
                     wrap: go.Wrap.None,
                     margin: 5,
-                    width: 90,
+                    // width: 90,
                     isMultiline: false,
                     textAlign: "left",
-                    font: "20pt Segoe UI, sans-serif",
+                    font: "16pt Segoe UI, sans-serif",
                     stroke: "black",
                 }, new go.Binding("text", "player_two")),
                 $(go.TextBlock, {
@@ -55,10 +55,10 @@ function renderTournamentTree(nodes, links) {
                     column: 1,
                     wrap: go.Wrap.None,
                     margin: 2,
-                    width: 25,
+                    // width: 25,
                     isMultiline: false,
                     textAlign: "center",
-                    font: "20pt Segoe UI, sans-serif",
+                    font: "16pt Segoe UI, sans-serif",
                     stroke: "black",
                 }, new go.Binding("text", "score_one")),
                 $(go.TextBlock, {
@@ -66,10 +66,10 @@ function renderTournamentTree(nodes, links) {
                     column: 1,
                     wrap: go.Wrap.None,
                     margin: 2,
-                    width: 25,
+                    // width: 25,
                     isMultiline: false,
                     textAlign: "center",
-                    font: "20pt Segoe UI, sans-serif",
+                    font: "16pt Segoe UI, sans-serif",
                     stroke: "black",
                 }, new go.Binding("text", "score_two"))
             )

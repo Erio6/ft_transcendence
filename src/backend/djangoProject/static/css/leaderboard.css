@@ -4,11 +4,11 @@
     flex-direction: column;
     height: 75vh;
     margin-top: 20px;
-    padding: 20px;
+    padding: 20px 0;
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
-    overflow :scroll;
+    overflow: auto;
 }
 
 .ladder-titles th {
@@ -35,7 +35,7 @@
 
 #ranking tr.current-user {
     border-radius: 35px;
-    backdrop-filter: blur(201px);
+    backdrop-filter: blur(51px);
 }
 
 /*avatar*/

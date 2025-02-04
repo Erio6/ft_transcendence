@@ -5,7 +5,7 @@
     background-color: var(--menubar-color); /* your transparent grey */
     border-radius: 35px;
     padding: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -91,27 +91,31 @@
     }
 }
 
-.cancel_button {
+.cancel-button {
     font-size: 16px;
     position: relative;
     margin: 0 auto;
     padding: 1em 2.5em 1em 2.5em;
     border: none;
     background: #fff;
-    transition: all 0.1s linear;
-    box-shadow: 0 0.4em 1em rgba(0, 0, 0, 0.1);
+    transition: all 0.1s ease-in-out;
+    /*box-shadow: 0 0.4em 1em rgba(0, 0, 0, 0.1);*/
     cursor: pointer;
 }
 
-.cancel_button:active {
+.cancel-button:hover {
+    opacity: 0.8;
+}
+
+.cancel-button:active {
     transform: scale(0.95);
 }
 
-.cancel_button span {
+.cancel-button span {
     color: #464646;
 }
 
-.cancel_button .border {
+.cancel-button .border {
     position: absolute;
     border: 0.15em solid #fff;
     transition: all 0.3s 0.08s linear;
@@ -122,12 +126,12 @@
     transform: translate(-50%, -50%);
 }
 
-.cancel_button:hover .border {
+.cancel-button:hover .border {
     display: block;
     width: 9.9em;
     height: 3.7em;
 }
 
 .full-rounded {
-    border-radius: 2em;
+    border-radius: 35px;
 }

@@ -9,7 +9,7 @@
         <div class="add-friends">
             <div class="search">
                 <h2>Add a Friend</h2>
-                <form method="GET" action="{% url 'friends:friends_overview' %}">
+                <form class="form-link" method="GET" action="{% url 'friends:friends_overview' %}">
                     <input class="input" type="text" name="q" value="{{ query }}" placeholder="Search for users...">
                     <button class="btn" type="submit">Search</button>
                 </form>
@@ -40,7 +40,7 @@
                                             </div>
                                             <p>{{ user.country.name }}</p>
                                         </div>
-                                        <form action="{% url 'friends:send_friend_request' user.user.id %}"
+                                        <form class="form-link" action="{% url 'friends:send_friend_request' user.user.id %}"
                                               method="POST">
                                             {% csrf_token %}
                                             <button class="accept" type="submit">Add Friend
@@ -78,7 +78,7 @@
                                     </div>
                                     <p>{{ request.receiver.country.name }}</p>
                                 </div>
-                                <form action="{% url 'friends:cancel_friend_request' request.id %}"
+                                <form class="form-link" action="{% url 'friends:cancel_friend_request' request.id %}"
                                       method="POST">
                                     {% csrf_token %}
                                     <button class="accept" type="submit">Cancel request
@@ -109,7 +109,7 @@
                                 </div>
                                 <p>{{ friend.user.username }}</p>
                             </div>
-                            <form action="{% url 'friends:remove_friend' friend.id %}"
+                            <form class="form-link" action="{% url 'friends:remove_friend' friend.id %}"
                                   method="POST">
                                 {% csrf_token %}
                                 <button class="accept" type="submit">Remove
@@ -136,7 +136,7 @@
                             </div>
                             <p>{{ request.sender.user.username }}</p>
                         </div>
-                        <form action="{% url 'friends:accept_friend_request' request.id %}" method="POST">
+                        <form class="form-link" action="{% url 'friends:accept_friend_request' request.id %}" method="POST">
                             {% csrf_token %}
                             <button class="accept" type="submit">Accept
                                 <span>
@@ -144,7 +144,7 @@
                                     </span>
                             </button>
                         </form>
-                        <form action="{% url 'friends:decline_friend_request' request.id %}" method="POST">
+                        <form class="form-link" action="{% url 'friends:decline_friend_request' request.id %}" method="POST">
                             {% csrf_token %}
                             <button class="accept" type="submit">Deny
                                 <span>

@@ -35,12 +35,20 @@ def home(request):
         'game_histories': history_data,
         'profile': profile,
     }
+
+    # If the request is AJAX, return only the content fragment.
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'dashboard/game_history.html', context)
+
     return render(request, 'djangoProject/home.html', context)
 
+@login_required
 def our_team(request):
     profile = UserProfile.objects.get(user=request.user)
     context = {
         'user': request.user,
         'profile': profile,
     }
+    # if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    #     return render(request, 'djangoProject/our_team.html', context)
     return render(request, 'djangoProject/our_team.html',context)

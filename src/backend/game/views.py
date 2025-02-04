@@ -77,7 +77,7 @@ def soloGame(request):
 #         return redirect(error, 'Game does not exist')
 #     return render(request, 'game/multiscores.html', {"game": game})
 
-
+@login_required
 def online_game_creation(request):
     # print(request.user.id, UserProfile.objects.get(id=request.user.id))
     profile = None
