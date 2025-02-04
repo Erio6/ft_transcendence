@@ -30,7 +30,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["http://10.11.3.2:8080"]
+CSRF_TRUSTED_ORIGINS = ["https://10.11.2.3:8443"]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
@@ -167,8 +172,6 @@ SIMPLE_JWT = {
 }
 
 
-SESSION_COOKIE_SECURE = False  # Use True for production with HTTPS
-CSRF_COOKIE_SECURE = False     # Use True for production with HTTPS
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 
