@@ -87,6 +87,10 @@
     padding-right: 10px;
 }
 
+.wins-losses .elo {
+    font-size: 100px;
+}
+
 .leaderboard-container #ranking {
     /*table-layout: fixed;*/
     word-wrap: break-word;

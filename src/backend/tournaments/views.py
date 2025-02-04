@@ -7,6 +7,7 @@ from django.db import transaction
 from django.http import JsonResponse
 from math import ceil, log2
 from .utils import create_games , generate_links, assign_parent_child_relationships
+from user.models import UserProfile
 
 from tournaments.models import Tournament, TournamentPlayer, TournamentGame
 
@@ -17,11 +18,13 @@ import json
 # Create your views here.
 
 def tournaments_home(request):
-    return render(request, 'tournaments/tournament_home.html')
+    profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'tournaments/tournament_home.html',{'profile':profile})
 
 
 @login_required
 def create_tournament(request):
+    profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         name = request.POST['name']
         code = get_random_string(4)
@@ -36,10 +39,11 @@ def create_tournament(request):
         print(tournament.id)
         return redirect('tournaments:waiting_room', tournament_id=tournament.id)
 
-    return render(request, 'tournaments/create_tournament.html')
+    return render(request, 'tournaments/create_tournament.html',{'profile':profile})
 
 @login_required
 def join_tournament(request):
+    profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         code = request.POST['code']
 
@@ -53,7 +57,7 @@ def join_tournament(request):
             return render(request, 'tournaments/join_tournament.html',
                           {'error': 'Invalid tournament code or tournament has already started.'})
 
-    return render(request, 'tournaments/join_tournament.html')
+    return render(request, 'tournaments/join_tournament.html',{'profile':profile})
 
 @login_required
 def tournament_waiting_room(request, tournament_id):
@@ -153,6 +157,7 @@ def start_tournament(request, tournament_id):
 
 @login_required
 def tournament_tree_view(request, tournament_id):
+    profile = UserProfile.objects.get(user=request.user)
     tournament = get_object_or_404(Tournament, id=tournament_id)
     games = TournamentGame.objects.filter(tournament=tournament).order_by('round_number')
     current_user = request.user.userprofile
@@ -197,6 +202,7 @@ def tournament_tree_view(request, tournament_id):
         'links': json.dumps(links),
         'current_game_url': current_game_url,
         'opponent_name': opponent_name,
+        'profile': profile,
     })
 
 @login_required
