@@ -8,7 +8,7 @@ let cancelButton = document.getElementById("cancelButton");
 cancelButton.addEventListener('click', cancelMatchmaking);
 
 
-const socket = new WebSocket('ws://' + window.location.host + '/ws/matchmaking/' + matchID + '/');
+const socket = new WebSocket('wss://' + window.location.host + '/ws/matchmaking/' + matchID + '/');
 
 socket.onopen = () => {
     console.log("Connected to matchmaking server: " + matchID);

@@ -40,8 +40,8 @@
                     <i class='bx bx-log-out'></i>
                 </a>
             {% else %}
-                <a href="{% url 'authentication:register' %}" class="nav-link" alt="register">Register</a>
-                <a href="{% url 'authentication:login' %}" class="nav-link" alt="login">Login</a>
+                <a href="{% url 'authentication:register' %}" alt="register">Register</a>
+                <a href="{% url 'authentication:login' %}"  alt="login">Login</a>
             {% endif %}
         </div>
     </div>
@@ -53,24 +53,24 @@
     <div class="menu-container">
         <div class="menu-bar">
             <li class="nav-links">
-                <a href="{% url 'home' %}" class="nav-link">
+                <a href="{% url 'home' %}" class="nav-link" title="Home">
                     <i class='bx bxs-home-alt-2 icon'></i>
                 </a>
-                <a href="{% url 'dashboard:leaderboard' %}" class="nav-link" alt="leaderboard">
-                    <i class='bx bxs-trophy icon'></i>
+                <a href="{% url 'dashboard:leaderboard' %}" class="nav-link" title="Leaderboard">
+                    <i class='bx bxs-trophy icon' ></i>
                 </a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard:dashboard' %}" class="nav-link" alt="dashboard">
+                    <a href="{% url 'dashboard:dashboard' %}" class="nav-link" title="Dashboard">
                         <i class='bx bxs-face icon'></i>
                     </a>
-                    <a href="{% url 'friends:friends_overview' %}"class="nav-link" alt="friends">
+                    <a href="{% url 'friends:friends_overview' %}"class="nav-link" title="Friends">
                         <i class='bx bxs-heart icon'></i>
                     </a>
                 {% endif %}
-                <a href="{% url 'game:play' %}" class="nav-link" alt="play">
+                <a href="{% url 'game:play' %}" class="nav-link" title="Play">
                     <i class='bx bxs-rocket icon'></i>
                 </a>
-                <a href="{% url 'our_team' %}"class="nav-link" alt="our_team">
+                <a href="{% url 'our_team' %}"class="nav-link" title="Our Team">
                     <i class='bx bxl-github icon'></i>
                 </a>
             </li>

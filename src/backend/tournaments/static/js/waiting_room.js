@@ -1,6 +1,6 @@
 const playerList = document.getElementById('players_list');
 console.log(tournamentID);
-const ws = new WebSocket('ws://' + window.location.host + '/ws/tournaments/' + tournamentID + '/');
+const ws = new WebSocket('wss://' + window.location.host + '/ws/tournaments/' + tournamentID + '/');
 
 ws.onmessage = function (event) {
     const data = JSON.parse(event.data);

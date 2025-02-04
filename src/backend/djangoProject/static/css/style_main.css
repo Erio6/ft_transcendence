@@ -87,7 +87,7 @@ body.light {
 
 /* --- Header --- */
 header {
-    z-index: 2;
+    z-index: 999;
     background-color: var(--background-color);
     width: 100%;
     position: fixed;
@@ -130,6 +130,9 @@ header .image {
 }
 /* --- Button --- */
 .btn {
+    height: fit-content;
+    width: fit-content;
+    text-decoration: none;
     font-size: 16px;
     padding: 15px 30px;
     border-radius: 35px;
@@ -142,6 +145,9 @@ header .image {
 }
 
 .primary-btn {
+    height: fit-content;
+    width: fit-content;
+    text-decoration: none;
     font-size: 16px;
     padding: 15px 30px;
     border-radius: 35px;
@@ -193,7 +199,7 @@ header .image {
     height: 100%;
     transition: all 0.3s;
     margin: 0 60px;
-    z-index: 999;
+    z-index: 998;
 }
 
 .sidebar .menu-container {
