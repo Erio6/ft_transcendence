@@ -88,7 +88,12 @@
 }
 
 .wins-losses .elo {
-    font-size: 100px;
+    font-size: 150px;
+}
+
+.wins-losses .title-elo {
+    font-size: 30px;
+    padding-top: 80px;
 }
 
 .leaderboard-container #ranking {
