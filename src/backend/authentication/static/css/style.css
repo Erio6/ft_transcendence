@@ -1,3 +1,4 @@
+/* Container for the registration form */
 .form-container {
     max-width: 500px;
     margin: 50px auto;
@@ -7,25 +8,29 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.form-header {
+/* Header for the registration form */
+.form-container .form-header {
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
     color: #f5f5f5;
 }
 
-.register-form {
+/* Registration form */
+.form-container .register-form {
     display: flex;
     flex-direction: column;
 }
 
-.form-elements {
+/* Form elements */
+.form-container .form-elements {
     margin-bottom: 20px;
 }
 
-input[type="text"],
-input[type="password"],
-select {
+/* Input fields */
+.form-container input[type="text"],
+.form-container input[type="password"],
+.form-container select {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -34,12 +39,14 @@ select {
     font-size: 16px;
 }
 
-input:focus {
+/* Focus state for input fields */
+.form-container input:focus {
     border-color: #1abc9c;
     outline: none;
 }
 
-.register-button {
+/* Register button */
+.form-container .register-button {
     background-color: #2176FF;
     color: #fff;
     padding: 10px;
@@ -50,21 +57,23 @@ input:focus {
     transition: background-color 0.3s ease;
 }
 
-.register-button:hover {
+.form-container .register-button:hover {
     background-color: #2176FF;
 }
 
-a {
+/* Links */
+.form-container a {
     color: #1abc9c;
     text-decoration: none;
     font-size: 14px;
 }
 
-a:hover {
+.form-container a:hover {
     text-decoration: underline;
 }
 
-.form-elements input {
+/* Form elements input */
+.form-container .form-elements input {
     border: solid 1px var(--font-color);
     background-color: rgba(0, 0, 0, 0);
     padding: 11px;
@@ -72,14 +81,15 @@ a:hover {
     color: var(--font-color);
 }
 
-input:focus {
+/* Focus state for form elements input */
+.form-container input:focus {
     border-color: #2176FF;  /* Changed from #1abc9c to match login blue */
     outline: none;
     box-shadow: 0 0 5px rgba(33, 118, 255, 0.3);  /* Added this line for the blue glow */
 }
 
-/* Or more specifically */
-.form-elements input:focus {
+/* More specific focus state for form elements input */
+.form-container .form-elements input:focus {
     border-color: #2176FF;
     outline: none;
     box-shadow: 0 0 5px rgba(33, 118, 255, 0.3);

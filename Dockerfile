@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y netcat-traditional
 
 # Copy requirements first
 COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r src/backend/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY src/backend/ .

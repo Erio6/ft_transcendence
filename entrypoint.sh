@@ -67,14 +67,24 @@ wait_for_service db 5432 "PostgreSQL"
 initialize_vault
 
 # Flush the database (clear all data)
-echo "Flushing the database..."
-python manage.py flush --no-input
+# echo "Flushing the database..."
+# python manage.py flush --no-input
 
 # Run Django migrations
 echo "Running migrations..."
+python manage.py makemigrations
 python manage.py migrate
 
 python manage.py collectstatic --no-input
+
+# Create Django superuser
+echo "Creating Django superuser..."
+python manage.py shell << END
+from django.contrib.auth import get_user_model
+User = get_user_model()
+if not User.objects.filter(username='admin').exists():
+    User.objects.create_superuser('admin', '', 'SuperAdmin')
+END
 
 # Start Django app
 echo "Starting Django app..."
