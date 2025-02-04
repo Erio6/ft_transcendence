@@ -4,11 +4,13 @@ function cancelMatchmaking() {
     window.location.href = home_url;
 }
 
+const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+
 let cancelButton = document.getElementById("cancelButton");
 cancelButton.addEventListener('click', cancelMatchmaking);
 
 
-const socket = new WebSocket('wss://' + window.location.host + '/ws/matchmaking/' + matchID + '/');
+const socket = new WebSocket(wsProtocol + window.location.host + '/ws/matchmaking/' + matchID + '/');
 
 socket.onopen = () => {
     console.log("Connected to matchmaking server: " + matchID);
