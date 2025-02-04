@@ -22,7 +22,6 @@ def quickPlay(request):
 
 @login_required
 def soloGame(request):
-
     profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         print(request.POST)
@@ -87,6 +86,7 @@ def online_game_creation(request):
     return render(request, 'game/online.html', {"games": games, "profile": profile})
 
 
+@login_required
 def game_3d(request, game_id):
     if not request.user.is_authenticated:
         return redirect("authentication:login")
@@ -95,13 +95,16 @@ def game_3d(request, game_id):
     if not Game.objects.filter(id=game_id).exists() and game_id != 69:
         print("Game does not exist", game_id)
         return redirect('/')
-    print("load threejs.html")
     return render(request, 'game/threejs.html', {"profile": profile})
 
 
 @login_required
-async def end_game(request, game_id):
+def game_error(request):
+    return render(request, 'game/error.html', {})
 
+
+@login_required
+async def end_game(request, game_id):
     game = await sync_to_async(get_object_or_404)(Game, id=game_id)
     winner_user = await sync_to_async(lambda: game.winner.user)()
     looser_user = await sync_to_async(lambda: game.looser.user)()
@@ -124,7 +127,6 @@ async def end_game(request, game_id):
 
     # Render the template asynchronously
     return await sync_to_async(render)(request, 'game/end_game.html', context)
-
 
 # def test_pong_game(request):
 #     if request.method == "POST":
