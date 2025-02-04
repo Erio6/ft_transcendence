@@ -11,11 +11,15 @@
     height: 75vh;
 }
 
-.graph-container {
-    grid-area: graph;
+.dashboard-container .container {
     border-radius: 35px;
     background: var(--menubar-color);
     backdrop-filter: blur(201px);
+    padding: 10px;
+}
+
+.graph-container {
+    grid-area: graph;
     display: flex;
     flex-direction: column;
     min-height: 250px;
@@ -23,13 +27,9 @@
 
 .history-container {
     grid-area: history;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
     min-width: 400px;
-    padding: 10px;
 }
 
 .history-container .game-history:last-child {
@@ -38,35 +38,27 @@
 
 .leaderboard-container {
     grid-area: leaderboard;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
 }
 
 .win-loss-container {
     grid-area: win-loss;
-    border-radius: 35px;
-    background: var(--menubar-icone-hover-color);
-    backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background-color: var(--menubar-icone-hover-color) !important;
 }
 
 .update-profile-container {
     grid-area: update-profile;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
     display: flex;
     flex-direction: column;
 }
 
 .update-profile-container a {
-    display:flex;
-    justify-content:center;
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;
 }
@@ -79,16 +71,16 @@
 }
 
 .dashboard-container p {
-    padding:10px;
+    padding: 10px;
 }
 
 .wins-losses {
-    display:flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.wins-losses .total{
+.wins-losses .total {
     font-size: 50px;
     padding-bottom: 10px;
     padding-left: 10px;
@@ -96,7 +88,7 @@
 }
 
 .leaderboard-container #ranking {
-    table-layout: fixed;
+    /*table-layout: fixed;*/
     word-wrap: break-word;
     width: 100%;
 }
@@ -125,8 +117,8 @@
 
 .update-profile-container .table-wrapper {
     display: flex;
-    justify-content: center;  /* Centers horizontally */
-    align-items: center;      /* Centers vertically (optional) */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically (optional) */
     height: 100%;
 }
 

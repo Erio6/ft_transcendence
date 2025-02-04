@@ -1,14 +1,14 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %}Dashboard{% endblock %}
-{% load static %
+{% load static %}
 
 {% block content %}
 <h2>My Dashboard</h2>
 <div class="dashboard-container">
-    <div class="graph-container">
+    <div class="graph-container container">
         <h2>My Activity</h2>
     </div>
-    <div class="history-container">
+    <div class="history-container container">
     <h2>My History</h2>
         <div class="table-wrapper">
         {% if game_histories %}
@@ -46,7 +46,7 @@
         </div>
         </div>
 
-    <div class="leaderboard-container">
+    <div class="leaderboard-container container">
     <h2>My Leaderboard</h2>
         <div class="table-wrapper">
     <table id ="ranking">
@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <div class="win-loss-container">
+    <div class="win-loss-container container">
     <h2>My Statistics</h2>
         {% if user_entry %}
         <div class="wins-losses">
@@ -75,10 +75,10 @@
             <p>No data available for the authenticated user.</p>
         {% endif %}
     </div>
-    <div class="update-profile-container">
+    <div class="update-profile-container container">
         <h2>My Profile</h2>
          <div class="table-wrapper">
-            <a href="{% url 'user:edit_profile' profile.user.username %}" class="nav-link" class="btn">Click here to update your profile</a>
+            <a href="{% url 'user:edit_profile' profile.user.username %}" class="btn nav-link">Update your profile</a>
          </div>
     </div>
 </div>

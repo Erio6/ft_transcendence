@@ -17,9 +17,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 /* --- General --- */
 
+@font-face {
+    font-family: "PP Neue Machina";
+    src: url('fonts/PPNeueMachina-Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PP Neue Machina";
+    src: url('fonts/PPNeueMachina-Ultrabold.otf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "PP Neue Machina";
+    src: url('fonts/PPNeueMachina-Light.otf');
+    font-weight: 100;
+    font-style: normal;
+}
+
 * {
-    font-family: "Poppins", sans-serif;
-    font-weight: 300;
+    font-family: "PP Neue Machina", "Poppins", sans-serif;
+    font-weight: 400;
     font-style: normal;
     margin: 0;
     padding: 0;
@@ -109,6 +130,7 @@ header .image {
 }
 /* --- Button --- */
 .btn {
+    font-size: 16px;
     padding: 15px 30px;
     border-radius: 35px;
     background-color: var(--font-color);
@@ -117,6 +139,22 @@ header .image {
     cursor: pointer;
     opacity: 1;
     transition: all .1s ease-in;
+}
+
+.primary-btn {
+    font-size: 16px;
+    padding: 15px 30px;
+    border-radius: 35px;
+    background-color: var(--menubar-icone-hover-color);
+    color: #eee;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 1;
+    transition: all .1s ease-in;
+}
+
+.btn:hover, .primary-btn:hover {
+    opacity: 0.8;
 }
 
 .sep {

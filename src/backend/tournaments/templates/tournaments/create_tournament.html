@@ -2,15 +2,16 @@
 {% block title %}Create Tournament{% endblock %}
 
 {% block content %}
-    <div class="create_tournament">
-        <h1 class="create_tournament_title"> Create your tournament </h1>
-        <form method="post" class="create_tournament_form">
+    <div class="create-tournament">
+        <h1 class="title"> Create your tournament </h1>
+        <form method="post">
             {% csrf_token %}
             <div class="input-form">
-                <input type="text" name="name" id="name" required="" class="create_tournament_form_input">
-                <label class="create_tournament_form_label">Tournament name</label>
+                <label for="name">Tournament name</label>
+                <input type="text" name="name" id="name" required="" class="create_tournament_form_input"
+                       placeholder="Name">
             </div>
-            <button type="submit" class="create_tournament_form_submitButton">Create</button>
+            <button type="submit" class="primary-btn">Create</button>
         </form>
     </div>
 {% endblock %}

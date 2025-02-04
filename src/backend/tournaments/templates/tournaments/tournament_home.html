@@ -5,8 +5,10 @@
     <div class="tournament">
         <h1 class="tournament_selection_title"> Create or join a Tournament </h1>
         <div class="tournament_buttons">
-            <button class="create_tournament_link nav-link"  onclick=window.location.href="{% url 'tournaments:create_tournament' %}">Create a Tournament</button>
-            <button class="join_tournament_link nav-link" onclick=window.location.href="{% url 'tournaments:join_tournament' %}">Join a Tournament</button>
+            <a class="create-tournament-btn tournament-btn" href="{% url 'tournaments:create_tournament' %}">Create a
+                tournament</a>
+            <a class="join-tournament-btn tournament-btn" href="{% url 'tournaments:join_tournament' %}">Join a
+                tournament</a>
         </div>
     </div>
 {% endblock %}
