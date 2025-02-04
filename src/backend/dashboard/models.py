@@ -19,9 +19,6 @@ class GameHistory(models.Model):
     game_object = GenericForeignKey('game_type', 'game_id')
     date_played = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ('game_type', 'game_id')
-
     def __str__(self):
         return f'GameHistory: {self.game_object}'
 

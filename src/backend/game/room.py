@@ -15,6 +15,7 @@ class Room:
         self.last_time = time.time()
         self.running = False
         self.delta_time = 0
+        self.completed = False
 
     async def update(self):
         if not self.running:
@@ -27,6 +28,7 @@ class Room:
             return False
 
         if self.left_paddle.score >= 10 or self.right_paddle.score >= 10:
+            print("score >= 10")
             await self.end_game()
             return False
         return True

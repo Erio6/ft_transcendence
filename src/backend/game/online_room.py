@@ -81,11 +81,46 @@ class OnlineRoom(Room):
         for consumer in self.spectators:
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
-        # game.tx_hash = await blockchain_score_storage(game.id)
-        # if game.tx_hash:
-        #      print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
-        # else:
-        #      print("Failed to record game on blockchain.")
+        game.tx_hash = await blockchain_score_storage(game.id)
+        if game.tx_hash:
+              print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+        else:
+              print("Failed to record game on blockchain.")
+
+    async def force_end(self, looser_consumer):
+        winner = self.left_paddle if self.left_paddle.consumer != looser_consumer else self.right_paddle
+        print("someone has disconnected so the winner is :", winner.consumer.user_profile)
+        looser = self.right_paddle if winner == self.left_paddle else self.left_paddle
+        looser.score = 10
+        game = await sync_to_async(Game.objects.get)(pk=self.id)
+        player_one = await sync_to_async(lambda: game.player_one)()
+        player1 = self.left_paddle if self.left_paddle.consumer.user_profile == player_one else self.right_paddle
+        player2 = self.left_paddle if player1 == self.right_paddle else self.right_paddle
+        game.winner = winner.consumer.user_profile
+        game.looser = looser.consumer.user_profile
+        game.winner_score = 10
+        game.looser_score = winner.score
+        game.player_one_score = player2.score
+        game.player_two_score = player1.score
+        game.end_time = now()
+        game.is_completed = True
+        await sync_to_async(game.save)(force_update=True)
+        await asyncio.sleep(0.5)
+        if self.is_tournament:
+            tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
+            tournament_id = await sync_to_async(lambda: tournament_game.tournament.id)()
+            new_url = "/tournament/tree/" + str(tournament_id) + "/"
+        else:
+            new_url = "/game/end/" + self.id + "/"
+        if self.left_paddle:
+            await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
+            await self.left_paddle.consumer.close()
+        if self.right_paddle:
+            await self.right_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': new_url}))
+            await self.right_paddle.consumer.close()
+        for consumer in self.spectators:
+            await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
+            await consumer.close()
 
     async def handle_paddle_msg(self, consumer, message):
         if self.left_paddle and consumer == self.left_paddle.consumer:
@@ -130,15 +165,21 @@ class OnlineRoom(Room):
                 await self.ball.init_ball_chan(consumer)
 
     async def remove_consumer(self, consumer):
+        wasRunning = self.running
         if (self.left_paddle and consumer == self.left_paddle.consumer) or (
                 self.right_paddle and consumer == self.right_paddle.consumer):
             self.running = False
         if consumer in self.spectators:
             self.spectators.remove(consumer)
         elif self.left_paddle and consumer == self.left_paddle.consumer:
+            if wasRunning:
+                print("someone left then force end")
+                await self.force_end(consumer)
             del self.left_paddle
             self.left_paddle = None
-            print("delete left", self.left_paddle)
         elif self.right_paddle and consumer == self.right_paddle.consumer:
+            if wasRunning:
+                print("someone left then force end")
+                await self.force_end(consumer)
             del self.right_paddle
             self.right_paddle = None

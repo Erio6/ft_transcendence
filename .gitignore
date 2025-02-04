@@ -18,3 +18,6 @@ __pycache__/
 /smart_contract/.env
 
 *.pyc
+
+*/migrations/*
+!*/migrations/__init__.py

@@ -28,14 +28,10 @@
                 <div class="date">
                     Played on: {{ history.date_played|date:"M d, Y H:i" }}
                 <div class="blockchain-tx" data-game-id="{{ history.game_id }}">
-                    {% if history.tx_url %}
-                        <a href="{{ history.tx_url }}" target="_blank">View on Etherscan</a>
-                    {% elif history.tx_hash %}
-                        <div class="loading">
-                            <span>Recording transaction on the blockchain...</span>
-                        </div>
+                    {% if history.tx_hash %}
+                        <a href="https://sepolia.etherscan.io/tx/0x{{ history.tx_hash }}" target="_blank">View on Etherscan</a>
                     {% else %}
-                        <span></span>
+                        <span>Recording in blockchain....</span>
                     {% endif %}
                     </div>
                 </div>

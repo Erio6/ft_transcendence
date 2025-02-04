@@ -1,14 +1,12 @@
 
 .our-team-container {
-    margin-top: 100px;
+    margin-top: 10px;
     display: grid;
     grid-template-areas: 'elo eliot'
-                         'elo eliot'
-                         'antho mehdi'
                          'antho mehdi';
     grid-gap: 20px;
-    grid-auto-rows: minmax(100px, auto);
-    grid-auto-columns: 500px;
+    grid-auto-rows: minmax(250px, auto);
+    grid-auto-columns: 50%;
     justify-content: center;
 }
 
@@ -19,6 +17,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    line-height: 1;
 }
 
 .elo-container {
@@ -39,13 +38,17 @@
 
 .our-team-container a {
     text-align: center;
-    font-size: 6.5em;
+    font-size: 7vw;
     margin: 20px;
     font-weight: bold;
     color: var(--font-color);
     text-decoration: none;
     line-height: 1;
     transition: all .1s ease-in-out;
+}
+
+.our-team-container .circle-1 {
+    bottom: -250px;
 }
 
 .our-team-container a:hover {

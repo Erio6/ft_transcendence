@@ -145,6 +145,13 @@ class World {
             }
         }
 
+        document.addEventListener("page:unload", () => {
+            if (webSocket) {
+                webSocket.close();
+                console.log("WebSocket fermée automatiquement car la page change.");
+            }
+        });
+
 
         camera = createCamera();
         scene = createScene();

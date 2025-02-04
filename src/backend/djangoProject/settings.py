@@ -26,11 +26,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-vfvsk%cx11j^o)to!8om3mt^tf72j81h3dlp&d_%)8-8e=-q-g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-CSRF_TRUSTED_ORIGINS = ["http://10.11.3.5:8080"]
+HOST_IP = os.getenv("HOST_IP")
+
+CSRF_TRUSTED_ORIGINS = [HOST_IP, "https://localhost:8443"]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
@@ -73,7 +81,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [('redis', 6379)],
         }
     }
 }
@@ -167,8 +175,6 @@ SIMPLE_JWT = {
 }
 
 
-SESSION_COOKIE_SECURE = False  # Use True for production with HTTPS
-CSRF_COOKIE_SECURE = False     # Use True for production with HTTPS
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 
