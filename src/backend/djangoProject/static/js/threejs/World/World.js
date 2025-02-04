@@ -24,7 +24,8 @@ class World {
         let lastPart = window.location.toString().split("/");
 
         lastPart = lastPart.pop() || lastPart.pop();
-        const webSocket = new WebSocket("wss://" + window.location.host + "/ws/game/" + lastPart + "/");
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const webSocket = new WebSocket(wsProtocol + window.location.host + "/ws/game/" + lastPart + "/");
 
         webSocket.onopen = (event) => {
             console.log("WebSocket connection established.");
