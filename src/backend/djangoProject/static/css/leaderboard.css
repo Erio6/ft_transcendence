@@ -35,7 +35,7 @@
 
 #ranking tr.current-user {
     border-radius: 35px;
-    backdrop-filter: blur(201px);
+    backdrop-filter: blur(51px);
 }
 
 /*avatar*/

@@ -1,5 +1,6 @@
 
 .our-team-container {
+    margin-top: 100px;
     display: grid;
     grid-template-areas: 'elo eliot'
                          'elo eliot'
@@ -7,47 +8,46 @@
                          'antho mehdi';
     grid-gap: 20px;
     grid-auto-rows: minmax(100px, auto);
-    margin-top: 20px;
+    grid-auto-columns: 500px;
+    justify-content: center;
+}
+
+.our-team-container .container {
+    border-radius: 35px;
+    background: var(--menubar-color);
+    backdrop-filter: blur(201px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .elo-container {
     grid-area: elo;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
-    display: flex;
-    flex-direction: column;
 }
 
 .eliot-container {
     grid-area: eliot;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
-    display: flex;
-    flex-direction: column;
 }
 
 .antho-container {
     grid-area: antho;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
-    display: flex;
-    flex-direction: column;
 }
 
 .mehdi-container {
     grid-area: mehdi;
-    border-radius: 35px;
-    background: var(--menubar-color);
-    backdrop-filter: blur(201px);
-    display: flex;
-    flex-direction: column;
 }
 
-.our-team-container h1 {
+.our-team-container a {
     text-align: center;
-    font-size: 2em;
-    margin:20px;
+    font-size: 6.5em;
+    margin: 20px;
+    font-weight: bold;
+    color: var(--font-color);
+    text-decoration: none;
+    line-height: 1;
+    transition: all .1s ease-in-out;
+}
+
+.our-team-container a:hover {
+    opacity: 0.8;
 }

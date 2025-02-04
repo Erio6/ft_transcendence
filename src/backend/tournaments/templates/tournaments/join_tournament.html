@@ -2,18 +2,18 @@
 {% block title %}Join a Tournament{% endblock %}
 
 {% block content %}
-    <div class="join_tournament_container">
-        <h1> Enter the code to join a tournament </h1>
-        <form method="post" class="join_tournament_form">
+    <div class="create-tournament">
+        <h1 class="title"> Enter the code to join a tournament </h1>
+        <form method="post">
             {% csrf_token %}
-            <div class="join_tournament_input_form">
-                <input type="text" name="code" id="code" required="" class="join_tournament_input">
-                <label for="code" class="join_tournament_label">Tournament code :</label>
+            <div class="input-form">
+                <label for="code">Tournament code :</label>
+                <input type="text" name="code" id="code" required placeholder="Code">
             </div>
-            <button type="submit" class="joint_tournament_button">Join</button>
+            <button type="submit" class="primary-btn">Join tournament</button>
         </form>
         {% if error %}
-        <p>{{ error }}</p>
+            <p>{{ error }}</p>
         {% endif %}
     </div>
 {% endblock %}
