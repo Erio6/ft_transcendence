@@ -1,6 +1,7 @@
 const playerList = document.getElementById('players_list');
 console.log(tournamentID);
-const ws = new WebSocket('wss://' + window.location.host + '/ws/tournaments/' + tournamentID + '/');
+const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const ws = new WebSocket(wsProtocol + window.location.host + '/ws/tournaments/' + tournamentID + '/');
 
 ws.onmessage = function (event) {
     const data = JSON.parse(event.data);

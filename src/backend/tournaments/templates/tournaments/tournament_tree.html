@@ -33,30 +33,30 @@
         let opponentName = "{{ opponent_name }}";
         const redirectMessage = document.getElementById("nextGameInfo");
 
-        {#function checkRedirect(data) {#}
-        {#    if (data.current_game_url) {#}
-        {#        currentGameUrl = data.current_game_url;#}
-        {#        opponentName = data.opponent_name;#}
-        {##}
-        {#        let seconds = 100;#}
-        {#        redirectMessage.style.display = 'block';#}
-        {#        redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;#}
-        {##}
-        {##}
-        {#        redirectTimeout = setInterval(() => {#}
-        {#            seconds--;#}
-        {#            redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;#}
-        {##}
-        {#            if (seconds <= 0) {#}
-        {#                clearInterval(redirectTimeout);#}
-        {#                window.location.href = currentGameUrl;#}
-        {#            }#}
-        {#        }, 1000);#}
-        {#    } else {#}
-        {#        redirectMessage.style.display = 'none';#}
-        {#        clearInterval(redirectTimeout);#}
-        {#    }#}
-        {#}#}
+        function checkRedirect(data) {
+            if (data.current_game_url) {
+                currentGameUrl = data.current_game_url;
+                opponentName = data.opponent_name;
+
+                let seconds = 10;
+                redirectMessage.style.display = 'block';
+                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;
+
+
+                redirectTimeout = setInterval(() => {
+                    seconds--;
+                    redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${seconds} seconds`;
+
+                    if (seconds <= 0) {
+                        clearInterval(redirectTimeout);
+                        window.location.href = currentGameUrl;
+                    }
+                }, 1000);
+            } else {
+                redirectMessage.style.display = 'none';
+                clearInterval(redirectTimeout);
+            }
+        }
 
         function refreshTournamentData() {
             fetch("{% url 'tournaments:tournament_tree_data' tournament.id %}")
@@ -65,7 +65,7 @@
                     console.log("Received nodes:",data.nodes);
                     renderTournamentTree(data.nodes, data.links);
                     if (!data.is_completed) {
-                        {#checkRedirect(data);#}
+                        checkRedirect(data);
                     } else {
                         redirectMessage.style.display = 'none';
                         clearInterval(redirectTimeout);
@@ -81,7 +81,8 @@
             document.getElementById("tournamentWinner").style.display = 'block';
         }
 
-        const wsPath = `wss://${window.location.host}/ws/tournaments/{{ tournament.id }}/`;
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        const wsPath = `${wsProtocol}${window.location.host}/ws/tournaments/{{ tournament.id }}/`;
         const socket = new WebSocket(wsPath);
 
         socket.onmessage = function(e) {
@@ -95,10 +96,10 @@
         // Initial setup
         refreshTournamentData();
         if (currentGameUrl) {
-            {#checkRedirect({#}
-            {#    current_game_url: currentGameUrl,#}
-            {#    opponent_name: opponentName#}
-            {#});#}
+            checkRedirect({
+                current_game_url: currentGameUrl,
+                opponent_name: opponentName
+            });
         }
     </script>
 
