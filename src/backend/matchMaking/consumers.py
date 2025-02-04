@@ -6,6 +6,7 @@ from asgiref.sync import sync_to_async, async_to_sync
 from .models import Match
 from game.models import Game
 from user.models import UserProfile
+from channels.db import database_sync_to_async
 
 class MatchMakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
