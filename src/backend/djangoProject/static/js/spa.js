@@ -9,6 +9,20 @@ document.addEventListener("DOMContentLoaded", () => {
         return newContent ? newContent.innerHTML : htmlString;
     }
 
+    function updatePage(htmlString) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, "text/html");
+
+        // Update the document title if a <title> tag is present.
+        const newTitleElement = doc.querySelector("title");
+        if (newTitleElement) {
+            document.title = newTitleElement.textContent;
+        }
+
+        // Update the content container.
+        contentDiv.innerHTML = extractContent(htmlString);
+    }
+
     // Function to load new content via AJAX for link navigation.
     async function loadContent(url, addToHistory = true) {
         try {
@@ -18,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             if (!response.ok) throw new Error("Network response was not ok");
             const htmlText = await response.text();
-            contentDiv.innerHTML = extractContent(htmlText);
+            updatePage(htmlText);
             if (addToHistory) {
                 history.pushState(null, "", url);
             }

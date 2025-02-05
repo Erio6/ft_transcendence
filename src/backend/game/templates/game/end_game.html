@@ -19,9 +19,9 @@
     <p>ref to the tournament tree to ADD </p>
     {% endif %}
 
-    <p><strong>Winner:</strong> {{ winner.user.username }}</p>
-    <p><strong>Loser:</strong> {{ looser.user.username }}</p>
-    <p><strong>Final Score:</strong> {{ winner_score }} - {{ looser_score }}</p>
+    <p><strong>Winner: </strong> {{ winner.user.username }}</p>
+    <p><strong>Loser: </strong> {{ looser.user.username }}</p>
+    <p><strong>Final Score: </strong> {{ winner_score }} - {{ looser_score }}</p>
     <div class="diffuse-circle circle-1"></div>
 </div>
 
@@ -39,7 +39,7 @@
 
 <!--    <script>-->
 <!--        setTimeout(function() {-->
-<!--            window.location.href = "{% url 'home' %}"; // Redirige vers la liste des jeux ou la page d'accueil-->
-<!--        }, 10000); // Redirection après 5 secondes-->
+<!--            window.location.href = "{% url 'home' %}";-->
+<!--        }, 10000); -->
 <!--    </script>-->
 {% endblock %}
