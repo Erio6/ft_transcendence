@@ -63,7 +63,7 @@ class OnlineRoom(Room):
         print("save the game")
         await sync_to_async(game.save)(force_update=True)
         print("game saved")
-        await asyncio.sleep(0.5)
+        # await asyncio.sleep(0.5)
         if self.is_tournament:
             tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
             tournament_id = await sync_to_async(lambda: tournament_game.tournament.id)()
@@ -105,7 +105,7 @@ class OnlineRoom(Room):
         game.end_time = now()
         game.is_completed = True
         await sync_to_async(game.save)(force_update=True)
-        await asyncio.sleep(0.5)
+        # await asyncio.sleep(0.5)
         if self.is_tournament:
             tournament_game = await sync_to_async(TournamentGame.objects.get)(game=self.id)
             tournament_id = await sync_to_async(lambda: tournament_game.tournament.id)()

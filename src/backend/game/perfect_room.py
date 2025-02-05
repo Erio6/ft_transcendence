@@ -58,6 +58,9 @@ class AIPerfectRoom(Room):
         game.end_time = now()
         game.is_completed = True
         await sync_to_async(game.save)(force_update=True)
+        if self.left_paddle:
+            await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
+            await self.left_paddle.consumer.close()
 
     async def start_game(self):
         await super().start_game()
