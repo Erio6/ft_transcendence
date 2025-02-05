@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 from .forms import UserUpdateForm, ProfileUpdateForm, AvatarUpdateForm
 from django.contrib.auth.models import User
 from .models import UserProfile
@@ -9,18 +12,20 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
 
-@login_required
-def edit_profile_view(request,username):
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def edit_profile_view(request, username):
     if request.user.username != username:
         messages.error(request, "You do not have the right to modify this profile.")
         return redirect('user:edit_profile', username=username)
 
-    profile = get_object_or_404(UserProfile,user=request.user)
+    profile = get_object_or_404(UserProfile, user=request.user)
 
     if request.method == "POST":
         form_type = request.POST.get('form_type')
 
-        if form_type =='avatar':
+        if form_type == 'avatar':
             avatar_form = AvatarUpdateForm(request.POST, request.FILES, instance=profile)
             if avatar_form.is_valid():
                 avatar_form.save()
@@ -78,9 +83,11 @@ def edit_profile_view(request,username):
             'profile': profile
         }
 
-    return render(request, 'user/edit_profile.html',context)
+    return render(request, 'user/edit_profile.html', context)
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def change_password(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':

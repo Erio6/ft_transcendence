@@ -44,12 +44,12 @@ class GameConsumer(AsyncWebsocketConsumer):
 
         if user.is_authenticated:
 
-            if self.room_name == "69":
-                print("connect to ai room")
-                await self.accept()
-                await self.channel_layer.group_add(self.room_name, self.channel_name)
-                await group_rooms[self.room_name].register_consumer(self)
-                return
+            # if self.room_name == "69":
+            #     print("connect to ai room")
+            #     await self.accept()
+            #     await self.channel_layer.group_add(self.room_name, self.channel_name)
+            #     await group_rooms[self.room_name].register_consumer(self)
+            #     return
 
             # Convert the lazy User object into a real User instance
             user = await sync_to_async(lambda: User.objects.get(pk=user.pk))()
@@ -119,29 +119,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         if start_loop:
             asyncio.create_task(game_loop())
 
-        # print(self.room_name)
-        # print(group_rooms[self.room_name])
-
-        # loc = "left" if len(connected_clients) == 0 else "right"
-        # paddle = Paddle(loc, self)
-        # self.paddle = paddle
-        # if loc == "left":
-        #   ball = Ball()
-        #   asyncio.create_task(game_loop())
-
-        # await self.send(json.dumps({'type': 'client', 'loc': loc, 'speed': paddle.speed}))
-
-        # await paddle.init_paddle()
-
-        # if ball is not None:
-        #     await ball.init_ball(self)
-
-        # for client, pad in connected_clients.items():
-        #     if client != self:
-        #         await paddle.init_paddle()
-        #     await pad.init_paddle()
-        # if loc == "left":
-
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.room_name, self.channel_name)
         print("disconnect")
@@ -154,7 +131,7 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
-        print(message)
+        # print(message)
         if message['type'] == 'move':
             room = group_rooms[self.room_name]
             if room:

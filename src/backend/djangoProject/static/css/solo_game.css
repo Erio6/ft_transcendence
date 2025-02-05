@@ -5,7 +5,7 @@
     background-color: var(--menubar-color); /* your transparent grey */
     border-radius: 35px;
     padding: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
 }
 
 /* Header for the solo game form */
@@ -17,15 +17,16 @@
 
 /* Center the form elements */
 .solo-game-form {
+    width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 30px auto;
 }
 
 /* Style for paragraphs that wrap the form fields */
 .solo-game-form p {
-    width: 80%;
-    margin: 0 auto 20px;
+    width: 100%;
 }
 
 /* Style for select fields inside the solo game form */
@@ -35,12 +36,13 @@
     border-radius: 35px;
     background: transparent;
     border: 1px solid var(--font-color);
-    color: white; /* Set text color to white for the selected option */
+    color: var(--font-color); /* Set text color to white for the selected option */
     margin: 5px 0;
-    appearance: none; /* Remove default styling */
-    -webkit-appearance: none; /* Remove default styling for Safari */
-    -moz-appearance: none; /* Remove default styling for Firefox */
-    background-color: var(--menubar-color); /* Match the background color */
+    /*appearance: none; !* Remove default styling *!*/
+    /*-webkit-appearance: none; !* Remove default styling for Safari *!*/
+    /*-moz-appearance: none; !* Remove default styling for Firefox *!*/
+    /*background-color: var(--menubar-color); !* Match the background color *!*/
+    cursor: pointer;
 }
 
 /* Style for the dropdown options */
@@ -65,13 +67,7 @@
 
 /* Button styles */
 .solo-game-form button {
-    padding: 10px 20px;
-    border-radius: 35px;
-    background: #2176ff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
+    margin-top: 40px;
 }
 
 .solo-game-form button:hover {

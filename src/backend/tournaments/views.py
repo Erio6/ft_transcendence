@@ -6,7 +6,11 @@ from asgiref.sync import async_to_sync
 from django.db import transaction
 from django.http import JsonResponse
 from math import ceil, log2
-from .utils import create_games , generate_links, assign_parent_child_relationships
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+from .utils import create_games, generate_links, assign_parent_child_relationships
 from user.models import UserProfile
 
 from tournaments.models import Tournament, TournamentPlayer, TournamentGame
@@ -19,10 +23,11 @@ import json
 
 def tournaments_home(request):
     profile = UserProfile.objects.get(user=request.user)
-    return render(request, 'tournaments/tournament_home.html',{'profile':profile})
+    return render(request, 'tournaments/tournament_home.html', {'profile': profile})
 
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def create_tournament(request):
     profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
@@ -39,9 +44,11 @@ def create_tournament(request):
         print(tournament.id)
         return redirect('tournaments:waiting_room', tournament_id=tournament.id)
 
-    return render(request, 'tournaments/create_tournament.html',{'profile':profile})
+    return render(request, 'tournaments/create_tournament.html', {'profile': profile})
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def join_tournament(request):
     profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
@@ -50,16 +57,18 @@ def join_tournament(request):
         tournament = Tournament.objects.filter(tournament_code_join=code, status='waiting').first()
         if tournament:
             if TournamentPlayer.objects.filter(tournament=tournament, player=request.user.userprofile).exists():
-                return redirect(request,'tournaments:waiting_room', tournament_id=tournament.id)
+                return redirect(request, 'tournaments:waiting_room', tournament_id=tournament.id)
             TournamentPlayer.objects.create(tournament=tournament, player=request.user.userprofile)
             return redirect('tournaments:waiting_room', tournament_id=tournament.id)
         else:
             return render(request, 'tournaments/join_tournament.html',
                           {'error': 'Invalid tournament code or tournament has already started.'})
 
-    return render(request, 'tournaments/join_tournament.html',{'profile':profile})
+    return render(request, 'tournaments/join_tournament.html', {'profile': profile})
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def tournament_waiting_room(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     print("*************Tournament ID 2: ")
@@ -71,7 +80,9 @@ def tournament_waiting_room(request, tournament_id):
         'current_user': request.user,
     })
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def cancel_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id, created_by=request.user.userprofile)
 
@@ -87,7 +98,9 @@ def cancel_tournament(request, tournament_id):
     tournament.delete()
     return redirect('tournaments:tournaments')
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def leave_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     player = TournamentPlayer.objects.filter(tournament=tournament, player=request.user.userprofile).first()
@@ -110,7 +123,9 @@ def leave_tournament(request, tournament_id):
 
     return redirect('tournaments:tournaments')
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def start_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id, created_by=request.user.userprofile)
 
@@ -155,7 +170,9 @@ def start_tournament(request, tournament_id):
 
     return redirect('tournaments:tournament_tree', tournament_id=tournament.id)
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def tournament_tree_view(request, tournament_id):
     profile = UserProfile.objects.get(user=request.user)
     tournament = get_object_or_404(Tournament, id=tournament_id)
@@ -168,8 +185,8 @@ def tournament_tree_view(request, tournament_id):
     for game in games:
         print(f"TournamentGame ID: {game.id}, Game Linked: {bool(game.game)}")
         is_current_user_in_game = (
-            (game.player_one and game.player_one.player == current_user) or
-            (game.player_two and game.player_two.player == current_user)
+                (game.player_one and game.player_one.player == current_user) or
+                (game.player_two and game.player_two.player == current_user)
         )
 
         if is_current_user_in_game and not current_game_url:
@@ -186,8 +203,8 @@ def tournament_tree_view(request, tournament_id):
             "round": game.round_number,
             "player_one": game.player_one.player.display_name if game.player_one else None,
             "player_two": game.player_two.player.display_name if game.player_two else None,
-            "score_one" : game.game.player_one_score if game.game else "0",
-            "score_two" : game.game.player_two_score if game.game else "0",
+            "score_one": game.game.player_one_score if game.game else "0",
+            "score_two": game.game.player_two_score if game.game else "0",
             "winner": game.game.winner.display_name if game.game and game.game.winner else None,
             "parent": f"match-{game.parent.id}" if game.parent else None,
             "category": "match",
@@ -205,7 +222,9 @@ def tournament_tree_view(request, tournament_id):
         'profile': profile,
     })
 
-@login_required
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def tournament_tree_data(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     games = TournamentGame.objects.filter(tournament=tournament).order_by('round_number')
@@ -227,7 +246,6 @@ def tournament_tree_data(request, tournament_id):
             opponent_name = game.player_two.player.display_name if game.player_two else "Bye"
         elif game.player_two and game.player_two.player == current_user:
             opponent_name = game.player_one.player.display_name if game.player_one else "Bye"
-
 
         match_node = {
             "key": f"match-{game.id}",
@@ -257,58 +275,53 @@ def tournament_tree_data(request, tournament_id):
         'is_completed': tournament.status == 'completed'
     })
 
-
-
-
 # for i in range(0, len(player_slots), 2):
-        #     player_one = player_slots[i].player if i < len(players) else None
-        #     player_two = player_slots[i + 1].player if i + 1 < len(players) else None
-        #     games.append(
-        #         TournamentGame(
-        #             tournament=tournament,
-        #             round_number=round_number,
-        #             player_one=player_one,
-        #             player_two=player_two,
-        #         )
-        #     )
+#     player_one = player_slots[i].player if i < len(players) else None
+#     player_two = player_slots[i + 1].player if i + 1 < len(players) else None
+#     games.append(
+#         TournamentGame(
+#             tournament=tournament,
+#             round_number=round_number,
+#             player_one=player_one,
+#             player_two=player_two,
+#         )
+#     )
 
-        # TournamentGame.objects.bulk_create(games)
+# TournamentGame.objects.bulk_create(games)
 
 
 # if game.player_one:
-        #     nodes.append(
-        #         {"key": f"player-{game.player_one.id}",
-        #          "text": game.player_one.display_name,
-        #          "category": "player",
-        #          "color": "red" if current_user == game.player_one else "lightblue",})
-        #
-        # if game.player_two:
-        #     nodes.append(
-        #         {"key": f"player-{game.player_two.id}",
-        #          "text": game.player_two.display_name,
-        #          "category": "player",
-        #          "color": "red" if current_user == game.player_two else "lightblue",})
+#     nodes.append(
+#         {"key": f"player-{game.player_one.id}",
+#          "text": game.player_one.display_name,
+#          "category": "player",
+#          "color": "red" if current_user == game.player_one else "lightblue",})
+#
+# if game.player_two:
+#     nodes.append(
+#         {"key": f"player-{game.player_two.id}",
+#          "text": game.player_two.display_name,
+#          "category": "player",
+#          "color": "red" if current_user == game.player_two else "lightblue",})
 
 # for game in games:
-    #     if game.player_one:
-    #         links.append(
-    #             {"from": f"player-{game.player_one.id}",
-    #              "to": f"match-{game.id}"})
-    #     if game.player_two:
-    #         links.append(
-    #             {"from": f"player-{game.player_two.id}",
-    #              "to": f"match-{game.id}"})
-    #
-    #     if game.winner:
-    #         next_match = TournamentGame.objects.filter(tournament=tournament, round_number=game.round_number + 1).first()
-    #         if next_match:
-    #             links.append(
-    #                 {"from": f"match-{game.id}",
-    #                  "to": f"match-{next_match.id}"})
+#     if game.player_one:
+#         links.append(
+#             {"from": f"player-{game.player_one.id}",
+#              "to": f"match-{game.id}"})
+#     if game.player_two:
+#         links.append(
+#             {"from": f"player-{game.player_two.id}",
+#              "to": f"match-{game.id}"})
+#
+#     if game.winner:
+#         next_match = TournamentGame.objects.filter(tournament=tournament, round_number=game.round_number + 1).first()
+#         if next_match:
+#             links.append(
+#                 {"from": f"match-{game.id}",
+#                  "to": f"match-{next_match.id}"})
 
 
-    # games_by_round = {}
-    # for game in TournamentGame.objects.filter(tournament=tournament).order_by('round_number'):
-    #     games_by_round.setdefault(game.round_number, []).append(game)
-
-
+# games_by_round = {}
+# for game in TournamentGame.objects.filter(tournament=tournament).order_by('round_number'):
+#     games_by_round.setdefault(game.round_number, []).append(game)
