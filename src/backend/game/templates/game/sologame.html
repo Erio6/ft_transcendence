@@ -5,15 +5,12 @@
         <h2 class="solo-game-header">Start a Local Game</h2>
         <form method="post" class="solo-game-form">
             {% csrf_token %}
-            <p>{{ form.player_side.label }}</p>
-            {{ form.player_side }}
-
             <p>{{ form.game_type.label }}</p>
             {{ form.game_type }}
 
             {{ form.player_profile }}  <!-- Hidden input field -->
 
-            <button type="submit">Start Game</button>
+            <button class="primary-btn" type="submit">Start Game</button>
         </form>
     </div>
 {% endblock %}

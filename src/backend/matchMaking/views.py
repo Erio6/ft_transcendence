@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
+from django.contrib import messages
 from .models import Match
 from user.models import UserProfile
 
@@ -16,12 +17,16 @@ def waiting_view(request):
     user_profile = UserProfile.objects.get(user=request.user)
 
     match = Match.objects.filter(player_two__isnull=True, status='waiting').first()
-    if match:
+    if match and match.player_one != user_profile:
         match.player_two = user_profile
         match.status = 'matched'
         match.save()
-    else:
+    elif not match:
         match = Match.objects.create(player_one=user_profile, status='waiting')
+    else:
+        print(match.player_one, user_profile)
+        messages.error(request, "You are already looking for a match")
+        return redirect("game:play")
     home = 'game:play'
     context = {
         "match_id": match.id,
@@ -29,3 +34,6 @@ def waiting_view(request):
         "home": home
     }
     return render(request, 'matchMaking/waiting.html', context)
+
+
+

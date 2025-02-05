@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 from .models import FriendRequest, FriendList
 from django.contrib import messages
 from django.shortcuts import render
@@ -9,7 +12,8 @@ from user.models import UserProfile
 
 # Create your views here.
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def friends_overview(request):
     userprofile = request.user.userprofile
     friend_list = get_object_or_404(FriendList, user=userprofile)
@@ -44,7 +48,8 @@ def friends_overview(request):
     return render(request, 'friends/friends.html', context)
 
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def send_friend_request(request, user_id):
     if request.method == 'POST':
         sender = request.user.userprofile
@@ -73,7 +78,8 @@ def send_friend_request(request, user_id):
     return redirect('friends:friends_overview')
 
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def accept_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user.userprofile,
                                        status='Pending')
@@ -83,7 +89,8 @@ def accept_friend_request(request, request_id):
     return redirect('friends:friends_overview')
 
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def decline_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user.userprofile,
                                        status='Pending')
@@ -93,7 +100,8 @@ def decline_friend_request(request, request_id):
     return redirect('friends:friends_overview')
 
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def cancel_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, sender=request.user.userprofile, status='Pending')
     if request.method == 'POST':
@@ -102,7 +110,8 @@ def cancel_friend_request(request, request_id):
     return redirect('friends:friends_overview')
 
 
-@login_required
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def remove_friend(request, friend_id):
     friend = get_object_or_404(UserProfile, id=friend_id)
     friend_list = get_object_or_404(FriendList, user=request.user.userprofile)

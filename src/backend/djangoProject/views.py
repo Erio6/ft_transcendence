@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from dashboard.models import GameHistory
 from user.models import UserProfile
 
+
 def home(request):
     game_histories = GameHistory.objects.order_by('-date_played')[:10]
 
@@ -42,13 +43,15 @@ def home(request):
 
     return render(request, 'djangoProject/home.html', context)
 
-@login_required
+
 def our_team(request):
-    profile = UserProfile.objects.get(user=request.user)
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.get(user=request.user)
     context = {
         'user': request.user,
         'profile': profile,
     }
     # if request.headers.get('x-requested-with') == 'XMLHttpRequest':
     #     return render(request, 'djangoProject/our_team.html', context)
-    return render(request, 'djangoProject/our_team.html',context)
+    return render(request, 'djangoProject/our_team.html', context)

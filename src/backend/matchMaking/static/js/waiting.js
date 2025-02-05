@@ -1,6 +1,9 @@
 function cancelMatchmaking() {
     console.log(home_url);
-    socket.close();
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ action: "cancel_matchmaking" }));
+        socket.close();
+    }
     window.location.href = home_url;
 }
 
@@ -27,3 +30,10 @@ socket.onmessage = (event) => {
         window.location.href = data.game_url;
     }
 };
+
+document.addEventListener("page:unload", () => {
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ action: "cancel_matchmaking" }));
+        socket.close();
+    }
+});

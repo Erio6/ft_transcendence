@@ -93,7 +93,9 @@
 <section class="home">
     <main id="content">
         {% block content %}
-            {% include 'dashboard/game_history.html' %}
+            <div class="home_gameHistory_container">
+                {% include 'dashboard/game_history.html' %}
+            </div>
         {% endblock %}
     </main>
 </section>

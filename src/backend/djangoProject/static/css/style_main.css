@@ -405,5 +405,20 @@ body.light .switch::before {
     z-index: 5;
 }
 
+.error-container {
+    width: fit-content;
+    margin: 200px auto;
+    padding: 50px 75px;
+    border-radius: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background-color: var(--menubar-color);
+}
+
+.error-container h1 {
+    font-weight: bold;
+}
+
 
 

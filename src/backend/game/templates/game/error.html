@@ -1,0 +1,12 @@
+{% extends 'djangoProject/home.html' %}
+{% block title %}Error{% endblock %}
+
+{% load static %}
+
+{% block content %}
+    <div class="error-container">
+        <h1>An error occurred</h1>
+        <p>Please try again later.</p>
+        <a class="btn" href="{% url 'home' %}">Go home</a>
+    </div>
+{% endblock %}

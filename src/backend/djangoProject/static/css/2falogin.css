@@ -44,13 +44,14 @@
     color: var(--font-color);
     display: block;
     margin-bottom: 8px;
+    width: fit-content;
+    margin-left: 10px;
 }
 
 /* Focus state for inputs */
 .login-form input:focus {
     outline: none;
     border-color: #2176ff;
-    box-shadow: 0 0 5px rgba(33, 118, 255, 0.3);
 }
 
 /* Button styles */

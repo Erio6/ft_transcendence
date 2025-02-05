@@ -9,8 +9,6 @@ from itertools import chain
 from dashboard.signals import update_ranks
 from decimal import Decimal
 
-
-
 # Create your models here.
 
 class GameHistory(models.Model):
