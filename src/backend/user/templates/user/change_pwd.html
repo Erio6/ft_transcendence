@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container-pwd">
     <h2>Change Password</h2>
-    <form class="form-link" method="post">
+    <form class="form-link" method="post" action="{% url 'home' %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Update Password</button>
