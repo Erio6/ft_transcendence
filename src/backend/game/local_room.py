@@ -86,4 +86,5 @@ class LocalRoom(Room):
 
     async def remove_consumer(self, consumer):
         if consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer:
-            self.running = False
+            if self.running:
+                await self.end_game()

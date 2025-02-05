@@ -124,7 +124,8 @@ class AIGameRoom(Room):
 
     async def remove_consumer(self, consumer):
         if consumer == self.left_paddle.consumer:
-            self.running = False
+            if self.running:
+                await self.end_game()
             del self.left_paddle
             del self.right_paddle
             self.left_paddle = None
