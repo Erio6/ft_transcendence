@@ -90,6 +90,7 @@
             if (data.type === 'tournament_update' && data.action === 'game_completed') {
                 console.log("Game completed, refreshing tournament tree...");
                 refreshTournamentData();
+                window.location.reload();
             }
         };
 
