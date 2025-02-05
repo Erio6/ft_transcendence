@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // For POST (or other methods), send the form data in the request body.
                 const formData = new FormData(form);
                 const accessToken = getCookie('access_token');
-                console.log("Access Token POST:", accessToken);
+                console.log("Access Token:", accessToken);
                 console.log("Submitting to URL:", url);
                 try {
                     const response = await fetch(url, {
