@@ -111,16 +111,16 @@ def game_error(request):
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
-async def end_game(request, game_id):
-    game = await sync_to_async(get_object_or_404)(Game, id=game_id)
-    winner_user = await sync_to_async(lambda: game.winner.user)()
-    looser_user = await sync_to_async(lambda: game.looser.user)()
-    current_user_id = await sync_to_async(lambda: request.user.id)()
-    profile = await sync_to_async(lambda: UserProfile.objects.get(user=request.user))()
+def end_game(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    winner_user = game.winner.user
+    looser_user = game.looser.user
+    current_user_id = request.user.id
+    profile = UserProfile.objects.get(user=request.user)
 
-    if current_user_id != winner_user.id and current_user_id != looser_user.id:
-        content = await sync_to_async(render_to_string)('game/unauthorized.html')
-        return HttpResponseForbidden(content)
+    # if current_user_id != winner_user.id and current_user_id != looser_user.id:
+    #     content = render_to_string('game/unauthorized.html')
+    #     return HttpResponseForbidden(content)
 
     context = {
         'game': game,
@@ -133,7 +133,7 @@ async def end_game(request, game_id):
     }
 
     # Render the template asynchronously
-    return await sync_to_async(render)(request, 'game/end_game.html', context)
+    return render(request, 'game/end_game.html', context)
 
 # def test_pong_game(request):
 #     if request.method == "POST":

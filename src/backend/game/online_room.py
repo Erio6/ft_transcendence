@@ -83,12 +83,12 @@ class OnlineRoom(Room):
             await consumer.close()
         game.tx_hash = await blockchain_score_storage(game.id)
         if game.tx_hash:
-              print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+            print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
         else:
-              print("Failed to record game on blockchain.")
+            print("Failed to record game on blockchain.")
 
-    async def force_end(self, looser_consumer):
-        winner = self.left_paddle if self.left_paddle.consumer != looser_consumer else self.right_paddle
+    async def force_end(self, looser_left=True):
+        winner = self.right_paddle if looser_left else self.left_paddle
         print("someone has disconnected so the winner is :", winner.consumer.user_profile)
         looser = self.right_paddle if winner == self.left_paddle else self.left_paddle
         looser.score = 10
@@ -174,12 +174,12 @@ class OnlineRoom(Room):
         elif self.left_paddle and consumer == self.left_paddle.consumer:
             if wasRunning:
                 print("someone left then force end")
-                await self.force_end(consumer)
+                await self.force_end(True)
             del self.left_paddle
             self.left_paddle = None
         elif self.right_paddle and consumer == self.right_paddle.consumer:
             if wasRunning:
-                print("someone left then force end")
-                await self.force_end(consumer)
+                print("someone right then force end")
+                await self.force_end(False)
             del self.right_paddle
             self.right_paddle = None

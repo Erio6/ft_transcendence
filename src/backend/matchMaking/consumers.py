@@ -8,13 +8,14 @@ from game.models import Game
 from user.models import UserProfile
 from channels.db import database_sync_to_async
 
+
 class MatchMakingConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.connection_id = str(uuid.uuid4()) #this will create a unique identifier for this connection
+        self.connection_id = str(uuid.uuid4())  # this will create a unique identifier for this connection
         self.match_id = self.scope["url_route"]["kwargs"].get("match_id")
-        print("**********" + self.match_id + "*************")
+        # print("**********" + self.match_id + "*************")
         self.user = self.scope["user"]
-        print("***********" + str(self.user) + "****************")
+        # print("***********" + str(self.user) + "****************")
 
         if not self.user.is_authenticated:
             await self.close()
@@ -44,7 +45,6 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
         if hasattr(self, "match"):
             await self.cancel_matchmaking()
 
-
     async def receive(self, text_data):
         data = json.loads(text_data)
         action = data.get("action")
@@ -66,7 +66,6 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
         if self.match.status == "waiting":
             print("Deleting match" + str(self.match.id))
             self.match.delete()
-
 
     @sync_to_async
     def add_connection_to_match(self):
@@ -105,17 +104,13 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
 
         return match
 
-
-
-
-
     @sync_to_async
     def notify_players(self, match):
         # Create the Game instance
         game = Game.objects.create(player_one=match.player_one, player_two=match.player_two)
 
         # Send the game URL to both players
-        game_url = reverse('game:real_game', kwargs={'game_id':game.id}) #f"/game/game/{game.id}/"
+        game_url = reverse('game:real_game', kwargs={'game_id': game.id})  # f"/game/game/{game.id}/"
         async_to_sync(self.channel_layer.group_send)(
             f"match_{match.id}",
             {
