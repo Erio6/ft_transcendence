@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect
+from django.db.models.query_utils import Q
+from django.shortcuts import render, redirect, reverse
+from django.db import transaction
 from .models import Match
 from user.models import UserProfile
 
@@ -29,3 +31,6 @@ def waiting_view(request):
         "home": home
     }
     return render(request, 'matchMaking/waiting.html', context)
+
+
+
