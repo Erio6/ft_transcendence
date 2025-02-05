@@ -28,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             document.dispatchEvent(new Event("page:unload"));
             const response = await fetch(url, {
-                headers: {"X-Requested-With": "XMLHttpRequest"}
+                headers: {"X-Requested-With": "XMLHttpRequest"},
+                credentials: "same-origin",
             });
             if (!response.ok) throw new Error("Network response was not ok");
             const htmlText = await response.text();
@@ -71,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     const response = await fetch(url, {
                         method: "GET",
-                        headers: {"X-Requested-With": "XMLHttpRequest"}
+                        headers: {"X-Requested-With": "XMLHttpRequest"},
+                        credentials: "same-origin",
                     });
                     if (!response.ok) throw new Error("Network error");
                     const html = await response.text();
@@ -89,7 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         headers: {
                             "X-Requested-With": "XMLHttpRequest"
                         },
-                        body: formData
+                        credentials: "same-origin",
+                        body: formData,
                     });
                     if (!response.ok) throw new Error("Network error");
                     const html = await response.text();
