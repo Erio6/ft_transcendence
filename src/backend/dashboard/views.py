@@ -40,7 +40,7 @@ def dashboard(request):
             game_id__in=Game.objects.filter(
                 Q(player_one=profile) | Q(player_two=profile)
             ).values_list('id', flat=True)
-        ).order_by('-date_played')[:4]
+        ).distinct().order_by('-date_played')[:4]
 
         history_data = []
         for history in game_histories:
