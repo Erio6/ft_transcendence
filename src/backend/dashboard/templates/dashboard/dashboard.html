@@ -8,8 +8,13 @@
     <div class="graph-container container">
         <h2></h2>
         <div class="wins-losses">
+            {% if user_entry %}
             <p class="elo">{{ user_entry.elo }} </p>
              <p class="title-elo">Elo points </p>
+            {% else %}
+            <p class="elo">1500</p>
+             <p class="title-elo">Elo points </p>
+        {% endif %}
         </div>
     </div>
     <div class="history-container container">

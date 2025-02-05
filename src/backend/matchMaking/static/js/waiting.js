@@ -12,7 +12,7 @@ const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 let cancelButton = document.getElementById("cancelButton");
 cancelButton.addEventListener('click', cancelMatchmaking);
 
-
+console.log("Matchmaking started for match ID: " + matchID);
 const socket = new WebSocket(wsProtocol + window.location.host + '/ws/matchmaking/' + matchID + '/');
 
 socket.onopen = () => {
