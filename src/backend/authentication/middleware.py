@@ -27,7 +27,8 @@ class AttachResponseMiddleware:
                 key="refresh_token",
                 value=str(refresh),
                 httponly=False,
-                secure=True,  # Use True in production
+                secure=True,  
+                # Use True in production
                 samesite="Lax"
             )
 

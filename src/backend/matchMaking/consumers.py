@@ -43,7 +43,7 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
                 self.channel_name
             )
         if hasattr(self, "match"):
-            await self.cancel_matchmaking()
+            await self.remove_connection_from_match()
 
     async def receive(self, text_data):
         data = json.loads(text_data)

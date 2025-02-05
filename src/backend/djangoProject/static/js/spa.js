@@ -52,8 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const accessToken = getCookie('access_token');
             console.log("Access Token nav-link:", accessToken);
             const response = await fetch(url, {
-                headers: {"X-Requested-With": "XMLHttpRequest",
-                "Authorization": "Bearer " + accessToken},
+				headers: {
+					"X-Requested-With": "XMLHttpRequest"
+				},
+                // "Authorization": "Bearer " + accessToken},
             });
             if (!response.ok) throw new Error("Network response was not ok");
             const htmlText = await response.text();
@@ -98,8 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     const response = await fetch(url, {
                         method: "GET",
-                        headers: {"X-Requested-With": "XMLHttpRequest",
-                        "Authorization": "Bearer " + accessToken},
+						headers: { "X-Requested-With": "XMLHttpRequest" }
+                        // "Authorization": "Bearer " + accessToken},
                     });
                     if (!response.ok) throw new Error("Network error");
                     const html = await response.text();
@@ -120,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         headers: {
                             "X-Requested-With": "XMLHttpRequest",
                             "X-CSRFToken": csrftoken,
-                            "Authorization": "Bearer " + accessToken
+                            // "Authorization": "Bearer " + accessToken
                         },
                         body: formData,
                     });

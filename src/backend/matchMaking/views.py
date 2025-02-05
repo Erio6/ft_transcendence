@@ -4,11 +4,13 @@ from .models import Match
 from user.models import UserProfile
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET", "POST"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def waiting_view(request):
     if not request.user.is_authenticated:
         return redirect("authentication:login")
@@ -22,8 +24,8 @@ def waiting_view(request):
         match.status = 'matched'
         match.save()
     elif not match:
-        match = Match.objects.create(player_one=user_profile)
-        print("Im here")
+        match = Match.objects.create(player_one=user_profile, status='waiting')
+        print("****IM HERE!!****")
     else:
         print(match.player_one, user_profile)
         messages.error(request, "You are already looking for a match")
@@ -36,6 +38,3 @@ def waiting_view(request):
         "home": home
     }
     return render(request, 'matchMaking/waiting.html', context)
-
-
-
