@@ -82,19 +82,11 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            asyncio.create_task(blockchain_recording_task(game.id))
-
-    async def blockchain_recording_task(game_id):
-        tx_hash = await blockchain_score_storage(game_id)
-        game = await sync_to_async(Game.objects.get)(pk=game_id)
-        if tx_hash:
-            print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
-            game.tx_hash = tx_hash
-            game.is_recorded_on_blockchain = True
-        else:
-            print("Failed to record game on blockchain.")
-
-        await sync_to_async(game.save)(force_update=True)
+            game.tx_hash = await blockchain_score_storage(game.id)
+            if game.tx_hash:
+                print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+            else:
+                print("Failed to record game on blockchain.")
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle
