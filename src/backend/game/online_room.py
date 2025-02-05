@@ -2,6 +2,7 @@ import asyncio
 import json
 import threading
 import time
+import threading
 
 from asgiref.sync import sync_to_async
 from django.shortcuts import redirect
@@ -84,11 +85,14 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            asyncio.create_task(self.blockchain_recording_task(game.id))
+            threading.Thread(target=self.run_async_blockchain_task,daemon=True, args=(game.id,)).start()
+
+    def run_async_blockchain_task(self, game_id):
+        asyncio.run(self.blockchain_recording_task(game_id))
 
     async def blockchain_recording_task(self, game_id):
         tx_hash = await blockchain_score_storage(game_id)
-        game = await sync_to_async(Game.objects.get)(pk=game_id)
+        game =  await sync_to_async(Game.objects.get)(pk=game_id)
         if tx_hash:
             print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
             game.tx_hash = tx_hash
@@ -182,6 +186,7 @@ class OnlineRoom(Room):
     async def register_consumer(self, consumer):
         # if consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer or consumer in self.spectators:
         #     return False
+        print("register")
         if self.is_tournament and not self.left_paddle and not self.right_paddle:
             threading.Thread(target=self.check_alone, daemon=True).start()
         if not self.left_paddle:
@@ -200,6 +205,7 @@ class OnlineRoom(Room):
             print("game started")
             # await self.ball.init_ball_chan(consumer)
         else:
+            print("should add spec")
             self.spectators.append(consumer)
             await consumer.send(json.dumps({'type': 'client', 'loc': 'spectator'}))
             await self.left_paddle.init_paddle_chan(consumer)
