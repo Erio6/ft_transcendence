@@ -22,13 +22,30 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update the content container.
         contentDiv.innerHTML = extractContent(htmlString);
     }
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
 
     // Function to load new content via AJAX for link navigation.
     async function loadContent(url, addToHistory = true) {
         try {
             document.dispatchEvent(new Event("page:unload"));
             const response = await fetch(url, {
-                headers: {"X-Requested-With": "XMLHttpRequest"}
+                headers: {"X-Requested-With": "XMLHttpRequest"},
+                credentials: "same-origin",
             });
             if (!response.ok) throw new Error("Network response was not ok");
             const htmlText = await response.text();
@@ -71,7 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     const response = await fetch(url, {
                         method: "GET",
-                        headers: {"X-Requested-With": "XMLHttpRequest"}
+                        headers: {"X-Requested-With": "XMLHttpRequest"},
+                        credentials: "same-origin",
                     });
                     if (!response.ok) throw new Error("Network error");
                     const html = await response.text();
@@ -83,13 +101,16 @@ document.addEventListener("DOMContentLoaded", () => {
             else {
                 // For POST (or other methods), send the form data in the request body.
                 const formData = new FormData(form);
+                console.log("Submitting to URL:", url);
                 try {
                     const response = await fetch(url, {
                         method: method,
                         headers: {
-                            "X-Requested-With": "XMLHttpRequest"
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": csrftoken,
                         },
-                        body: formData
+                        credentials: "same-origin",
+                        body: formData,
                     });
                     if (!response.ok) throw new Error("Network error");
                     const html = await response.text();

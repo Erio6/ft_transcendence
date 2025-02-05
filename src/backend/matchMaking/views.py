@@ -18,7 +18,7 @@ def waiting_view(request):
     match = Match.objects.filter(player_two__isnull=True, status='waiting').first()
     if match and match.player_one != user_profile:
         match.player_two = user_profile
-        print(match.player_one, match.player_two)
+        print(match.player_one, match.player_two, match.id)
         match.status = 'matched'
         match.save()
     elif not match:
