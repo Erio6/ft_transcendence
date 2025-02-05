@@ -12,7 +12,7 @@ from user.models import UserProfile
 
 # Create your views here.
 
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def friends_overview(request):
     userprofile = request.user.userprofile
@@ -48,7 +48,7 @@ def friends_overview(request):
     return render(request, 'friends/friends.html', context)
 
 
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def send_friend_request(request, user_id):
     if request.method == 'POST':
@@ -78,7 +78,7 @@ def send_friend_request(request, user_id):
     return redirect('friends:friends_overview')
 
 
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def accept_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user.userprofile,
@@ -89,7 +89,7 @@ def accept_friend_request(request, request_id):
     return redirect('friends:friends_overview')
 
 
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def decline_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, receiver=request.user.userprofile,
@@ -100,7 +100,7 @@ def decline_friend_request(request, request_id):
     return redirect('friends:friends_overview')
 
 
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def cancel_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, sender=request.user.userprofile, status='Pending')
@@ -110,7 +110,7 @@ def cancel_friend_request(request, request_id):
     return redirect('friends:friends_overview')
 
 
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def remove_friend(request, friend_id):
     friend = get_object_or_404(UserProfile, id=friend_id)
