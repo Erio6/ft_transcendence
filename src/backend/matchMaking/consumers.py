@@ -42,7 +42,7 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
                 self.channel_name
             )
         if hasattr(self, "match"):
-            await self.remove_connection_from_match()
+            await self.cancel_matchmaking()
 
 
     async def receive(self, text_data):
@@ -89,19 +89,19 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
             if not match:
                 raise ValueError(f"No match found with ID {match_id}")
 
-            if match.player_two is None and match.status == "waiting":
-                if match.player_one != user_profile:
-                    match.player_two = user_profile
-                    match.status = "matched"
-                    match.save()
-        else:
-            match = Match.objects.filter(player_two__isnull=True, status="waiting").exclude(player_one=user_profile).first()
-            if match:
-                match.player_two = user_profile
-                match.status = "matched"
-                match.save()
-            else:
-                match = Match.objects.create(player_one=user_profile, status="waiting")
+            # if match.player_two is None and match.status == "waiting":
+            #     if match.player_one != user_profile:
+            #         match.player_two = user_profile
+            #         match.status = "matched"
+            #         match.save()
+        # else:
+        #     match = Match.objects.filter(player_two__isnull=True, status="waiting").exclude(player_one=user_profile).first()
+        #     if match:
+        #         match.player_two = user_profile
+        #         match.status = "matched"
+        #         match.save()
+        #     else:
+        #         match = Match.objects.create(player_one=user_profile, status="waiting")
 
         return match
 
