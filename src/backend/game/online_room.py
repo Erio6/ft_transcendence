@@ -85,6 +85,18 @@ class OnlineRoom(Room):
         if not self.is_tournament:
             threading.Thread(target=self.blockchain_recording_task,daemon=True, args=(game.id,)).start()
 
+    async def blockchain_recording_task(self,game_id):
+        tx_hash = await blockchain_score_storage(game_id)
+        game = await sync_to_async(Game.objects.get)(pk=game_id)
+        if tx_hash:
+            print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
+            game.tx_hash = tx_hash
+            game.is_recorded_on_blockchain = True
+        else:
+            print("Failed to record game on blockchain.")
+
+        await sync_to_async(game.save)(force_update=True)
+
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle
         print("someone has disconnected so the winner is :", winner.consumer.user_profile)
