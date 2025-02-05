@@ -81,11 +81,12 @@ class OnlineRoom(Room):
         for consumer in self.spectators:
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
-        game.tx_hash = await blockchain_score_storage(game.id)
-        if game.tx_hash:
-            print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
-        else:
-            print("Failed to record game on blockchain.")
+        if not self.is_tournament:
+            game.tx_hash = await blockchain_score_storage(game.id)
+            if game.tx_hash:
+                print(f"Game recorded on blockchain with tx_hash: {game.tx_hash}")
+            else:
+                print("Failed to record game on blockchain.")
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle

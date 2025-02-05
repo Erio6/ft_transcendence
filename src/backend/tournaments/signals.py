@@ -36,11 +36,12 @@ def handle_game_completion(sender, instance, **kwargs):
                     tournament.end_date = timezone.now()
                     tournament.save()
 
+
                 if tournament_game.parent and tournament.status != 'completed':
                     parent_game = tournament_game.parent
                     if parent_game.player_one is None:
                         parent_game.player_one = winner_tp
-                    elif parent_game.player_two is None:
+                    elif parent_game.player_two is None and parent_game.player_one != winner_tp:
                         parent_game.player_two = winner_tp
                     parent_game.save()
 
