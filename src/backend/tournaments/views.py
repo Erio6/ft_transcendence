@@ -73,6 +73,7 @@ def join_tournament(request):
 # @permission_classes([IsAuthenticated])
 @login_required
 def tournament_waiting_room(request, tournament_id):
+    profile = UserProfile.objects.get(user=request.user)
     tournament = get_object_or_404(Tournament, id=tournament_id)
     print("*************Tournament ID 2: ")
     print(tournament.id)
@@ -81,6 +82,7 @@ def tournament_waiting_room(request, tournament_id):
         'tournament': tournament,
         'players': players,
         'current_user': request.user,
+        'profile': profile,
     })
 
 
@@ -234,6 +236,7 @@ def tournament_tree_view(request, tournament_id):
 # @permission_classes([IsAuthenticated])
 @login_required
 def tournament_tree_data(request, tournament_id):
+    profile = UserProfile.objects.get(user=request.user)
     tournament = get_object_or_404(Tournament, id=tournament_id)
     games = TournamentGame.objects.filter(tournament=tournament).order_by('round_number')
     current_user = request.user.userprofile
@@ -280,7 +283,8 @@ def tournament_tree_data(request, tournament_id):
         'links': links,
         'current_game_url': current_game_url,
         'opponent_name': opponent_name,
-        'is_completed': tournament.status == 'completed'
+        'is_completed': tournament.status == 'completed',
+        'profile': profile
     })
 
 # for i in range(0, len(player_slots), 2):
