@@ -109,7 +109,7 @@ def game_error(request):
     return render(request, 'game/error.html', {})
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 async def end_game(request, game_id):
     game = await sync_to_async(get_object_or_404)(Game, id=game_id)

@@ -18,11 +18,12 @@ def waiting_view(request):
     match = Match.objects.filter(player_two__isnull=True, status='waiting').first()
     if match and match.player_one != user_profile:
         match.player_two = user_profile
-        print(match.player_one, match.player_two)
+        print(match.player_one, match.player_two, match.id)
         match.status = 'matched'
         match.save()
     elif not match:
-        match = Match.objects.create(player_one=user_profile, status='waiting')
+        match = Match.objects.create(player_one=user_profile)
+        print("Im here")
     else:
         print(match.player_one, user_profile)
         messages.error(request, "You are already looking for a match")
