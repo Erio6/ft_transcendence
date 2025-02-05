@@ -74,6 +74,9 @@ class AIGameRoom(Room):
         game.end_time = now()
         game.is_completed = True
         await sync_to_async(game.save)(force_update=True)
+        if self.left_paddle:
+            await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
+            await self.left_paddle.consumer.close()
 
     async def handle_paddle_msg(self, consumer, message):
         if consumer == self.left_paddle.consumer:
