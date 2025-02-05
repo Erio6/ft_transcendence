@@ -83,7 +83,7 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            threading.Thread(target=self.blockchain_recording_task,daemon=True, args=(self.id,game.id)).start()
+            threading.Thread(target=self.blockchain_recording_task,daemon=True, args=(game.id,)).start()
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle
