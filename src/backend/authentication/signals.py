@@ -21,7 +21,7 @@ def set_jwt_cookies_on_login(sender, request, user, **kwargs):
             key="access_token",
             value=str(refresh.access_token),
             httponly=False,
-            secure=False,
+            secure=True,  # Ensure this is True in production for HTTPS
             samesite="Lax",
             expires=http_date(refresh.access_token.lifetime.total_seconds() + now().timestamp())
         )
@@ -29,7 +29,7 @@ def set_jwt_cookies_on_login(sender, request, user, **kwargs):
             key="refresh_token",
             value=str(refresh),
             httponly=False,
-            secure=False,
+            secure=True,
             samesite="Lax",
             expires=http_date(refresh.lifetime.total_seconds() + now().timestamp())
         )

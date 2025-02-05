@@ -26,8 +26,9 @@ def tournaments_home(request):
     return render(request, 'tournaments/tournament_home.html', {'profile': profile})
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def create_tournament(request):
     profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
@@ -47,8 +48,9 @@ def create_tournament(request):
     return render(request, 'tournaments/create_tournament.html', {'profile': profile})
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def join_tournament(request):
     profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
@@ -67,8 +69,9 @@ def join_tournament(request):
     return render(request, 'tournaments/join_tournament.html', {'profile': profile})
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def tournament_waiting_room(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     print("*************Tournament ID 2: ")
@@ -81,8 +84,9 @@ def tournament_waiting_room(request, tournament_id):
     })
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def cancel_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id, created_by=request.user.userprofile)
 
@@ -99,8 +103,9 @@ def cancel_tournament(request, tournament_id):
     return redirect('tournaments:tournaments')
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def leave_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     player = TournamentPlayer.objects.filter(tournament=tournament, player=request.user.userprofile).first()
@@ -124,8 +129,9 @@ def leave_tournament(request, tournament_id):
     return redirect('tournaments:tournaments')
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def start_tournament(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id, created_by=request.user.userprofile)
 
@@ -171,8 +177,9 @@ def start_tournament(request, tournament_id):
     return redirect('tournaments:tournament_tree', tournament_id=tournament.id)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def tournament_tree_view(request, tournament_id):
     profile = UserProfile.objects.get(user=request.user)
     tournament = get_object_or_404(Tournament, id=tournament_id)
@@ -223,8 +230,9 @@ def tournament_tree_view(request, tournament_id):
     })
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def tournament_tree_data(request, tournament_id):
     tournament = get_object_or_404(Tournament, id=tournament_id)
     games = TournamentGame.objects.filter(tournament=tournament).order_by('round_number')

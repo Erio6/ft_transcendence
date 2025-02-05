@@ -20,14 +20,15 @@ class AttachResponseMiddleware:
                 key="access_token",
                 value=str(refresh.access_token),
                 httponly=False,
-                secure=False,  # Use True in production
+                secure=True,  # Use True in production
                 samesite="Lax"
             )
             response.set_cookie(
                 key="refresh_token",
                 value=str(refresh),
                 httponly=False,
-                secure=False,  # Use True in production
+                secure=True,  
+                # Use True in production
                 samesite="Lax"
             )
 

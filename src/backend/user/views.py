@@ -13,8 +13,9 @@ from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
 
 
-@api_view(["GET","POST"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET","POST"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def edit_profile_view(request, username):
     if request.user.username != username:
         messages.error(request, "You do not have the right to modify this profile.")
@@ -86,8 +87,9 @@ def edit_profile_view(request, username):
     return render(request, 'user/edit_profile.html', context)
 
 
-@api_view(["GET","POST"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET","POST"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def change_password(request):
     profile = get_object_or_404(UserProfile, user=request.user)
     if request.method == 'POST':

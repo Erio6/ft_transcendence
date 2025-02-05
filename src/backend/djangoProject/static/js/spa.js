@@ -22,30 +22,40 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update the content container.
         contentDiv.innerHTML = extractContent(htmlString);
     }
+
     function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let cookie of cookies) {
-                cookie = cookie.trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Check if this cookie string starts with the name we want
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = cookie.substring(name.length + 1);
+                break;
             }
         }
-        return cookieValue;
+    }
+    return cookieValue;
     }
 
     const csrftoken = getCookie('csrftoken');
+    const accessToken = getCookie('access_token');
+    console.log("CSRF Token:", csrftoken);
+    console.log("Access Token:", accessToken);
+
 
     // Function to load new content via AJAX for link navigation.
     async function loadContent(url, addToHistory = true) {
         try {
             document.dispatchEvent(new Event("page:unload"));
+            const accessToken = getCookie('access_token');
+            console.log("Access Token nav-link:", accessToken);
             const response = await fetch(url, {
-                headers: {"X-Requested-With": "XMLHttpRequest"},
-                credentials: "include",
+				headers: {
+					"X-Requested-With": "XMLHttpRequest"
+				},
+                // "Authorization": "Bearer " + accessToken},
             });
             if (!response.ok) throw new Error("Network response was not ok");
             const htmlText = await response.text();
@@ -83,13 +93,15 @@ document.addEventListener("DOMContentLoaded", () => {
             if (method === "GET") {
                 // For GET requests, convert form data to query string and append it to the URL
                 const formData = new FormData(form);
+                const accessToken = getCookie('access_token');
+                console.log("Access Token: GET", accessToken);
                 const params = new URLSearchParams(formData).toString();
                 url = url.includes('?') ? `${url}&${params}` : `${url}?${params}`;
                 try {
                     const response = await fetch(url, {
                         method: "GET",
-                        headers: {"X-Requested-With": "XMLHttpRequest"},
-                        credentials: "include",
+						headers: { "X-Requested-With": "XMLHttpRequest" }
+                        // "Authorization": "Bearer " + accessToken},
                     });
                     if (!response.ok) throw new Error("Network error");
                     const html = await response.text();
@@ -101,6 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
             else {
                 // For POST (or other methods), send the form data in the request body.
                 const formData = new FormData(form);
+                const accessToken = getCookie('access_token');
+                console.log("Access Token POST:", accessToken);
                 console.log("Submitting to URL:", url);
                 try {
                     const response = await fetch(url, {
@@ -108,8 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         headers: {
                             "X-Requested-With": "XMLHttpRequest",
                             "X-CSRFToken": csrftoken,
+                            // "Authorization": "Bearer " + accessToken
                         },
-                        credentials: "include",
                         body: formData,
                     });
                     if (!response.ok) throw new Error("Network error");

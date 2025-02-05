@@ -22,8 +22,9 @@ def quickPlay(request):
     return render(request, 'game/playmode.html', {"profile": profile})
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET", "POST"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def soloGame(request):
     profile = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
@@ -79,8 +80,9 @@ def soloGame(request):
 #         return redirect(error, 'Game does not exist')
 #     return render(request, 'game/multiscores.html', {"game": game})
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def online_game_creation(request):
     # print(request.user.id, UserProfile.objects.get(id=request.user.id))
     profile = None
@@ -90,8 +92,9 @@ def online_game_creation(request):
     return render(request, 'game/online.html', {"games": games, "profile": profile})
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def game_3d(request, game_id):
     if not request.user.is_authenticated:
         return redirect("authentication:login")
@@ -103,14 +106,16 @@ def game_3d(request, game_id):
     return render(request, 'game/threejs.html', {"profile": profile})
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def game_error(request):
     return render(request, 'game/error.html', {})
 
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET", "POST"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def end_game(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     winner_user = game.winner.user

@@ -4,11 +4,13 @@ from .models import Match
 from user.models import UserProfile
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-@api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
+# @api_view(["GET", "POST"])
+# @permission_classes([IsAuthenticated])
+@login_required
 def waiting_view(request):
     if not request.user.is_authenticated:
         return redirect("authentication:login")
