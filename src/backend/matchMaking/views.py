@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def waiting_view(request):
     if not request.user.is_authenticated:
@@ -23,6 +23,7 @@ def waiting_view(request):
         match.save()
     elif not match:
         match = Match.objects.create(player_one=user_profile, status='waiting')
+        print("****IM HERE!!****")
     else:
         print(match.player_one, user_profile)
         messages.error(request, "You are already looking for a match")
@@ -35,6 +36,3 @@ def waiting_view(request):
         "home": home
     }
     return render(request, 'matchMaking/waiting.html', context)
-
-
-
