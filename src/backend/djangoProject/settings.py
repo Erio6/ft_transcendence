@@ -31,14 +31,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-HOST_IP = os.getenv("HOST_IP")
+# HOST_IP = os.getenv("HOST_IP")
+#
+# CSRF_TRUSTED_ORIGINS = [HOST_IP, "https://localhost:8443"]
 
-CSRF_TRUSTED_ORIGINS = [HOST_IP, "https://localhost:8443"]
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 # Application definition
 
@@ -81,7 +81,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis', 6379)],
+            'hosts': [('localhost', 6379)],
         }
     }
 }
