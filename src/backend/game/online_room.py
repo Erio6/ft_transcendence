@@ -89,8 +89,8 @@ class OnlineRoom(Room):
         asyncio.run(self.blockchain_recording_task(game_id))
 
     async def blockchain_recording_task(self,game_id):
-        tx_hash =  blockchain_score_storage(game_id)
-        game =  sync_to_async(Game.objects.get)(pk=game_id)
+        tx_hash = await blockchain_score_storage(game_id)
+        game =  await sync_to_async(Game.objects.get)(pk=game_id)
         if tx_hash:
             print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
             game.tx_hash = tx_hash
