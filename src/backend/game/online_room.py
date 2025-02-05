@@ -83,11 +83,14 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            threading.Thread(target=self.blockchain_recording_task,daemon=True, args=(game.id,)).start()
+            threading.Thread(target=self.run_async_blockchain_task,daemon=True, args=(game.id,)).start()
+
+    def run_async_blockchain_task(self, game_id):
+        asyncio.run(self.blockchain_recording_task(game_id))
 
     async def blockchain_recording_task(self,game_id):
-        tx_hash = await blockchain_score_storage(game_id)
-        game = await sync_to_async(Game.objects.get)(pk=game_id)
+        tx_hash =  blockchain_score_storage(game_id)
+        game =  sync_to_async(Game.objects.get)(pk=game_id)
         if tx_hash:
             print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
             game.tx_hash = tx_hash
