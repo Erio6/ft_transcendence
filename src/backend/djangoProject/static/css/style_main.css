@@ -78,6 +78,11 @@ body {
     color: var(--font-color);
 }
 
+option {
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
 body.light {
     --background-color: #ffffff;
     --toggle-color: #b4b5b6;

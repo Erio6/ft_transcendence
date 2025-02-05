@@ -45,11 +45,6 @@
     cursor: pointer;
 }
 
-/* Style for the dropdown options */
-.solo-game-form select option {
-    color: black; /* Set text color to black for the dropdown options */
-    background-color: white; /* Set background color to white for the dropdown options */
-}
 
 /* Style for labels */
 .solo-game-form label {
