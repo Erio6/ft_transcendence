@@ -13,7 +13,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.conf import settings
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def edit_profile_view(request, username):
     if request.user.username != username:
@@ -86,7 +86,7 @@ def edit_profile_view(request, username):
     return render(request, 'user/edit_profile.html', context)
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def change_password(request):
     profile = get_object_or_404(UserProfile, user=request.user)

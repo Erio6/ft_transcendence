@@ -22,7 +22,7 @@ def quickPlay(request):
     return render(request, 'game/playmode.html', {"profile": profile})
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
 def soloGame(request):
     profile = UserProfile.objects.get(user=request.user)
