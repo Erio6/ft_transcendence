@@ -35,10 +35,5 @@ class TournamentGame(models.Model):
     winner = models.ForeignKey(TournamentPlayer, related_name='game_winner', null=True, on_delete=models.SET_NULL)
     round_number = models.PositiveIntegerField(default=0)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='child_games')
-    # def __str__(self):
-    #     return  f'{self.player_one.display_name} vs {self.player_two.display_name} (Tournament)'
 
-    # - Tournament game (player one, player two, game ID, tournament ID)
-    # - Tournament (je reprend le model tournament qui existe deja)
-    # - Dans leaderboard j'affiche que les game ou le tournament bool est false
     

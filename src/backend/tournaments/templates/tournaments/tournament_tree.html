@@ -106,29 +106,4 @@
 
 {% endblock %}
 
-{#const nodes = {{ nodes|safe }};#}
-{#        const links = {{ links|safe }};#}
-{##}
-{#        renderTournamentTree(nodes, links);#}
-{##}
-{#        const redirectMessage = document.getElementById("nextGameInfo");#}
-{#        const currentGameUrl = "{{ current_game_url }}";#}
-{#        const opponentName = "{{ opponent_name }}";#}
-{##}
-{#        console.log(currentGameUrl);#}
-{#        console.log(opponentName);#}
-{##}
-{#        if (currentGameUrl) {#}
-{#            let secondsRemaining = 5;#}
-{#            const interval = setInterval(() => {#}
-{#                secondsRemaining -= 1;#}
-{#                redirectMessage.innerHTML = `You will be redirected to your game against ${opponentName} in ${secondsRemaining} seconds ...`;#}
-{#                if (secondsRemaining <= 0) {#}
-{#                    clearInterval(interval);#}
-{#                }#}
-{#            }, 1000);#}
-{##}
-{#            setTimeout(() => {#}
-{#                window.location.href = currentGameUrl#}
-{#            }, 5000);#}
-{#        }#}
+
