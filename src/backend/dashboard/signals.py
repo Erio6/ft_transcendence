@@ -50,7 +50,6 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
             opponent_leaderboard=leaderboard_one,
             is_winner=(instance.winner == instance.player_two),
         )
-        update_ranks()
 
 # @receiver(post_save, sender=SoloGame)
 # def log_solo_game(sender, instance, created, **kwargs):
