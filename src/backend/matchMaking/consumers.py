@@ -45,6 +45,29 @@ class MatchMakingConsumer(AsyncWebsocketConsumer):
             await self.remove_connection_from_match()
 
 
+    async def receive(self, text_data):
+        data = json.loads(text_data)
+        action = data.get("action")
+
+        if action == "cancel_matchmaking":
+            await self.cancel_matchmaking()
+
+    async def cancel_matchmaking(self):
+        if hasattr(self, "match"):
+            await self.remove_connection_from_match()
+
+            if self.match.status == "waiting":
+                await self.delete_match()
+
+        await self.close()
+
+    @sync_to_async
+    def delete_match(self):
+        if self.match.status == "waiting":
+            print("Deleting match" + str(self.match.id))
+            self.match.delete()
+
+
     @sync_to_async
     def add_connection_to_match(self):
         if self.connection_id not in self.match.connected_players:

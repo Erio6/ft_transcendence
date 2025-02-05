@@ -22,6 +22,14 @@
             <p>Spectate any online game and see how bad Lucas is.</p>
         </a>
     </div>
+
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                alert("{{ message }}");
+            {% endfor %}
+        </script>
+    {% endif %}
     {#    <h1> Choose your destiny </h1>#}
     {#    <a href="{% url 'game:solo' %}" class="nav-link" >Solo Game</a>#}
     {#    <a href="">Tournament</a>#}
