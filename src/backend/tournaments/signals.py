@@ -22,6 +22,20 @@ def handle_game_completion(sender, instance, **kwargs):
                 tournament_game.winner = winner_tp
                 tournament_game.save()
 
+                max_round = TournamentGame.objects.filter(
+                    tournament=tournament
+                ).aggregate(Max('round_number'))['round_number__max']
+
+                final_games = TournamentGame.objects.filter(
+                    tournament=tournament,
+                    round_number=max_round,
+                )
+
+                if all(games.winner for games in final_games):
+                    tournament.status = 'completed'
+                    tournament.end_date = timezone.now()
+                    tournament.save()
+
 
                 if tournament_game.parent and tournament.status != 'completed':
                     parent_game = tournament_game.parent
@@ -40,19 +54,19 @@ def handle_game_completion(sender, instance, **kwargs):
                         parent_game.game = game_instance
                         parent_game.save()
 
-                max_round = TournamentGame.objects.filter(
-                    tournament=tournament
-                ).aggregate(Max('round_number'))['round_number__max']
-
-                final_games = TournamentGame.objects.filter(
-                    tournament=tournament,
-                    round_number=max_round,
-                )
-
-                if all(games.winner for games in final_games):
-                    tournament.status = 'completed'
-                    tournament.end_date = timezone.now()
-                    tournament.save()
+                # max_round = TournamentGame.objects.filter(
+                #     tournament=tournament
+                # ).aggregate(Max('round_number'))['round_number__max']
+                #
+                # final_games = TournamentGame.objects.filter(
+                #     tournament=tournament,
+                #     round_number=max_round,
+                # )
+                #
+                # if all(games.winner for games in final_games):
+                #     tournament.status = 'completed'
+                #     tournament.end_date = timezone.now()
+                #     tournament.save()
 
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(
