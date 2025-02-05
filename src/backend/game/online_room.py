@@ -186,6 +186,7 @@ class OnlineRoom(Room):
     async def register_consumer(self, consumer):
         # if consumer == self.left_paddle.consumer or consumer == self.right_paddle.consumer or consumer in self.spectators:
         #     return False
+        print("register")
         if self.is_tournament and not self.left_paddle and not self.right_paddle:
             threading.Thread(target=self.check_alone, daemon=True).start()
         if not self.left_paddle:
@@ -204,6 +205,7 @@ class OnlineRoom(Room):
             print("game started")
             # await self.ball.init_ball_chan(consumer)
         else:
+            print("should add spec")
             self.spectators.append(consumer)
             await consumer.send(json.dumps({'type': 'client', 'loc': 'spectator'}))
             await self.left_paddle.init_paddle_chan(consumer)
