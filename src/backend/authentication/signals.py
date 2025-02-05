@@ -20,15 +20,15 @@ def set_jwt_cookies_on_login(sender, request, user, **kwargs):
         response.set_cookie(
             key="access_token",
             value=str(refresh.access_token),
-            httponly=True,
-            secure=False,  # Ensure this is True in production for HTTPS
+            httponly=False,
+            secure=False,
             samesite="Lax",
             expires=http_date(refresh.access_token.lifetime.total_seconds() + now().timestamp())
         )
         response.set_cookie(
             key="refresh_token",
             value=str(refresh),
-            httponly=True,
+            httponly=False,
             secure=False,
             samesite="Lax",
             expires=http_date(refresh.lifetime.total_seconds() + now().timestamp())
