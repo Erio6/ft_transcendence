@@ -67,6 +67,10 @@ class GameConsumer(AsyncWebsocketConsumer):
                             await self.send(json.dumps({'type': 'redirect', 'url': '/game/error'}))
                             await self.close()
                             return
+                elif type(self.game) != OnlineRoom:
+                    await self.accept()
+                    await self.send(json.dumps({'type': 'redirect', 'url': '/game/error'}))
+                    await self.close()
                 if self.game.is_completed == True:
                     print("game already completed")
                     await self.accept()
