@@ -16,7 +16,6 @@ def leaderboard(request):
     context = {
         'profile': profile,
         'leaderboard': leaderboard,
-        'active_page': 'leaderboard',
     }
 
     return render(request, 'dashboard/leaderboard.html', context)

@@ -51,7 +51,6 @@ def our_team(request):
     context = {
         'user': request.user,
         'profile': profile,
-        'active_page': 'our_team',
     }
     # if request.headers.get('x-requested-with') == 'XMLHttpRequest':
     #     return render(request, 'djangoProject/our_team.html', context)
