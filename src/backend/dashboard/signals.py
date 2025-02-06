@@ -1,6 +1,6 @@
 import asyncio
 
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 from django.db.models.signals import post_save
 from django.db.models import F
 from django.dispatch import receiver
@@ -49,7 +49,7 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
             is_winner=(instance.winner == instance.player_two),
         )
 
-        asyncio.run(blockchain_recording_task(instance.id))
+        async_to_sync(blockchain_recording_task)(instance.id)
 
 
 async def blockchain_recording_task(game_id):
