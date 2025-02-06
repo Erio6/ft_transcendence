@@ -39,7 +39,7 @@ def record_game_on_blockchain(game_id):
         print(f"Using account address: {account.address}")
         print(f"Contract address: {contract_address}")
 
-        nonce=w3.eth.get_transaction_count(account.address,'pending')
+        nonce=w3.eth.get_transaction_count(account.address,)
         print(f"[DEBUG] Nonce for transaction: {nonce}")
         txn = contract.functions.recordGameResult(
             game.id,
