@@ -41,16 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const csrftoken = getCookie('csrftoken');
     const accessToken = getCookie('access_token');
-    console.log("CSRF Token:", csrftoken);
-    console.log("Access Token:", accessToken);
-
 
     // Function to load new content via AJAX for link navigation.
     async function loadContent(url, addToHistory = true) {
         try {
             document.dispatchEvent(new Event("page:unload"));
-            const accessToken = getCookie('access_token');
-            console.log("Access Token nav-link:", accessToken);
             const response = await fetch(url, {
 				headers: {
 					"X-Requested-With": "XMLHttpRequest"
@@ -93,8 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (method === "GET") {
                 // For GET requests, convert form data to query string and append it to the URL
                 const formData = new FormData(form);
-                const accessToken = getCookie('access_token');
-                console.log("Access Token: GET", accessToken);
                 const params = new URLSearchParams(formData).toString();
                 url = url.includes('?') ? `${url}&${params}` : `${url}?${params}`;
                 try {
@@ -114,8 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 // For POST (or other methods), send the form data in the request body.
                 const formData = new FormData(form);
                 const accessToken = getCookie('access_token');
-                console.log("Access Token:", accessToken);
-                console.log("Submitting to URL:", url);
                 try {
                     const response = await fetch(url, {
                         method: method,
