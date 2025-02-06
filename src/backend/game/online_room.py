@@ -87,6 +87,7 @@ class OnlineRoom(Room):
             process.start()
             print(f"[DEBUG] Started blockchain recording process (PID: {process.pid})")
 
+    @staticmethod
     def run_async_blockchain_task(self, game_id):
         print(f"[DEBUG] Recording game {game_id} on blockchain in a separate process")
         asyncio.run(blockchain_score_storage(game_id))
