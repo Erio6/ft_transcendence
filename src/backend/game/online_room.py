@@ -3,6 +3,7 @@ import json
 import threading
 import time
 import threading
+from concurrent.futures import ThreadPoolExecutor
 
 from asgiref.sync import sync_to_async
 from django.shortcuts import redirect
@@ -12,7 +13,7 @@ from django.db import close_old_connections
 from tournaments.models import Tournament, TournamentGame
 from user.models import UserProfile
 
-from blockchain.utils import blockchain_score_storage
+from blockchain.utils import blockchain_score_storage, record_game_on_blockchain
 from game.models import Game
 from game.paddle import Paddle
 from game.room import Room
@@ -22,6 +23,7 @@ class OnlineRoom(Room):
     def __init__(self, room_id, is_tournament):
         super().__init__(room_id)
         self.is_tournament = is_tournament
+        self.executor = ThreadPoolExecutor()
 
     async def update(self):
         if not await super().update():
@@ -86,34 +88,39 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            threading.Thread(target=self.run_blockchain_thread,daemon=True, args=(game.id,)).start()
+            asyncio.create_task(self.blockchain_recording_task(self.id))
             print("blockchain task started")
 
-    @staticmethod
-    def run_blockchain_thread(game_id):
-        """ Runs blockchain recording in a separate thread (Non-blocking) """
-        print(f"[DEBUG] Recording game {game_id} on blockchain in a separate thread")
+    # @staticmethod
+    # def run_blockchain_thread(game_id):
+    #     """ Runs blockchain recording in a separate thread (Non-blocking) """
+    #     print(f"[DEBUG] Recording game {game_id} on blockchain in a separate thread")
+    #
+    #     # ✅ Close old DB connections to prevent locking issues
+    #     close_old_connections()
+    #
+    #     # ✅ Create a new event loop for this thread instead of using `asyncio.run()`
+    #     loop = asyncio.new_event_loop()
+    #     asyncio.set_event_loop(loop)
+    #
+    #     try:
+    #         loop.run_until_complete(OnlineRoom.blockchain_recording_task(game_id))
+    #         print(f"[SUCCESS] Successfully executed blockchain transaction for game {game_id}")
+    #     except Exception as e:
+    #         print(f"[ERROR] Exception in run_blockchain_thread: {e}")
+    #     finally:
+    #         loop.close()
 
-        # ✅ Close old DB connections to prevent locking issues
-        close_old_connections()
+    async def blockchain_recording_task(self, game_id):
+        """Handles blockchain recording without blocking the event loop"""
+        print("Recording game on blockchain")
+        loop = asyncio.get_running_loop()
 
-        # ✅ Create a new event loop for this thread instead of using `asyncio.run()`
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        # Run the blockchain function in a separate thread
+        tx_hash = await loop.run_in_executor(self.executor, record_game_on_blockchain, game_id)
 
-        try:
-            loop.run_until_complete(OnlineRoom.blockchain_recording_task(game_id))
-            print(f"[SUCCESS] Successfully executed blockchain transaction for game {game_id}")
-        except Exception as e:
-            print(f"[ERROR] Exception in run_blockchain_thread: {e}")
-        finally:
-            loop.close()
-
-    @staticmethod
-    async def blockchain_recording_task(game_id):
-        print("recording game on blockchain")
-        tx_hash = await blockchain_score_storage(game_id)
-        game =  await sync_to_async(Game.objects.get)(pk=game_id)
+        # Now update the game in the database (in a non-blocking way)
+        game = await sync_to_async(Game.objects.get, thread_sensitive=True)(pk=game_id)
         if tx_hash:
             print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
             game.tx_hash = tx_hash
@@ -121,7 +128,7 @@ class OnlineRoom(Room):
         else:
             print("Failed to record game on blockchain.")
 
-        await sync_to_async(game.save)(force_update=True)
+        await sync_to_async(game.save, thread_sensitive=True)(force_update=True)
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle
