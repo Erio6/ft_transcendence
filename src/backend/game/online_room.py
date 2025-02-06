@@ -85,25 +85,25 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
 
-    #     if not self.is_tournament:
-    #         threading.Thread(target=self.run_async_blockchain_task,daemon=True, args=(game.id,)).start()
-    #         print("blockchain task started")
-    #
-    # def run_async_blockchain_task(self, game_id):
-    #     asyncio.run(self.blockchain_recording_task(game_id))
-    #
-    # async def blockchain_recording_task(self, game_id):
-    #     print("recording game on blockchain")
-    #     tx_hash = await blockchain_score_storage(game_id)
-    #     game =  await sync_to_async(Game.objects.get)(pk=game_id)
-    #     if tx_hash:
-    #         print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
-    #         game.tx_hash = tx_hash
-    #         game.is_recorded_on_blockchain = True
-    #     else:
-    #         print("Failed to record game on blockchain.")
-    #
-    #     await sync_to_async(game.save)(force_update=True)
+        if not self.is_tournament:
+            threading.Thread(target=self.run_async_blockchain_task, daemon=True, args=(game.id,)).start()
+            print("blockchain task started")
+
+    def run_async_blockchain_task(self, game_id):
+        asyncio.run(self.blockchain_recording_task(game_id))
+
+    async def blockchain_recording_task(self, game_id):
+        print("recording game on blockchain")
+        tx_hash = await blockchain_score_storage(game_id)
+        game = await sync_to_async(Game.objects.get)(pk=game_id)
+        if tx_hash:
+            print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
+            game.tx_hash = tx_hash
+            game.is_recorded_on_blockchain = True
+        else:
+            print("Failed to record game on blockchain.")
+
+        await sync_to_async(game.save)(force_update=True)
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle

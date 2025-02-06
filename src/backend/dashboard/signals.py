@@ -49,21 +49,21 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
             is_winner=(instance.winner == instance.player_two),
         )
 
-        async_to_sync(blockchain_recording_task)(instance.id)
-
-
-async def blockchain_recording_task(game_id):
-    print("recording game on blockchain")
-    tx_hash = await blockchain_score_storage(game_id)
-    game = await sync_to_async(Game.objects.get)(pk=game_id)
-    if tx_hash:
-        print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
-        game.tx_hash = tx_hash
-        game.is_recorded_on_blockchain = True
-    else:
-        print("Failed to record game on blockchain.")
-
-    await sync_to_async(game.save)(force_update=True)
+#         async_to_sync(blockchain_recording_task)(instance.id)
+#
+#
+# async def blockchain_recording_task(game_id):
+#     print("recording game on blockchain")
+#     tx_hash = await blockchain_score_storage(game_id)
+#     game = await sync_to_async(Game.objects.get)(pk=game_id)
+#     if tx_hash:
+#         print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
+#         game.tx_hash = tx_hash
+#         game.is_recorded_on_blockchain = True
+#     else:
+#         print("Failed to record game on blockchain.")
+#
+#     await sync_to_async(game.save)(force_update=True)
 
 # @receiver(post_save, sender=SoloGame)
 # def log_solo_game(sender, instance, created, **kwargs):
