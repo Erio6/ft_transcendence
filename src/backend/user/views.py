@@ -1,20 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 
 from .forms import UserUpdateForm, ProfileUpdateForm, AvatarUpdateForm
-from django.contrib.auth.models import User
 from .models import UserProfile
 from django.contrib import messages
 from django.shortcuts import render
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from django.conf import settings
 
-
-# @api_view(["GET","POST"])
-# @permission_classes([IsAuthenticated])
 @login_required
 def edit_profile_view(request, username):
     if request.user.username != username:
@@ -73,7 +66,6 @@ def edit_profile_view(request, username):
             }
 
     else:
-        # For GET requests, initialize the forms normally.
         form = ProfileUpdateForm(instance=profile)
         form2 = UserUpdateForm(instance=request.user)
         avatar_form = AvatarUpdateForm(instance=profile)
@@ -87,8 +79,6 @@ def edit_profile_view(request, username):
     return render(request, 'user/edit_profile.html', context)
 
 
-# @api_view(["GET","POST"])
-# @permission_classes([IsAuthenticated])
 @login_required
 def change_password(request):
     profile = get_object_or_404(UserProfile, user=request.user)
@@ -96,10 +86,10 @@ def change_password(request):
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  # Prevents user from being logged out
+            update_session_auth_hash(request, user)
             messages.success(request, 'Your password has been successfully updated!')
             return redirect('home')
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'user/change_pwd.html', {'form': form, 'profile': profile})
-# Create your views here.
+
