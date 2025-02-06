@@ -7,6 +7,7 @@ import threading
 from asgiref.sync import sync_to_async
 from django.shortcuts import redirect
 from django.utils.timezone import now
+from django.db import close_old_connections
 
 from tournaments.models import Tournament, TournamentGame
 from user.models import UserProfile
@@ -85,13 +86,31 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            threading.Thread(target=self.run_async_blockchain_task,daemon=True, args=(game.id,)).start()
+            threading.Thread(target=self.run_blockchain_thread,daemon=True, args=(game.id,)).start()
             print("blockchain task started")
 
-    def run_async_blockchain_task(self, game_id):
-        asyncio.run(self.blockchain_recording_task(game_id))
+    @staticmethod
+    def run_blockchain_thread(game_id):
+        """ Runs blockchain recording in a separate thread (Non-blocking) """
+        print(f"[DEBUG] Recording game {game_id} on blockchain in a separate thread")
 
-    async def blockchain_recording_task(self, game_id):
+        # ✅ Close old DB connections to prevent locking issues
+        close_old_connections()
+
+        # ✅ Create a new event loop for this thread instead of using `asyncio.run()`
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+        try:
+            loop.run_until_complete(OnlineRoom.blockchain_recording_task(game_id))
+            print(f"[SUCCESS] Successfully executed blockchain transaction for game {game_id}")
+        except Exception as e:
+            print(f"[ERROR] Exception in run_blockchain_thread: {e}")
+        finally:
+            loop.close()
+
+    @staticmethod
+    async def blockchain_recording_task(game_id):
         print("recording game on blockchain")
         tx_hash = await blockchain_score_storage(game_id)
         game =  await sync_to_async(Game.objects.get)(pk=game_id)
