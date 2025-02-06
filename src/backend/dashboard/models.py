@@ -30,6 +30,8 @@ class Leaderboard(models.Model):
     def update_elo(self, opponent_leaderboard, is_winner, is_draw=False):
         k_factor = 32
         outcome = 1.0 if is_winner else 0.0
+        self.total_losses += 1 if not is_winner else 0
+        self.total_wins += 1 if is_winner else 0
         expected_score = 1 / (1 + 10 ** ((opponent_leaderboard.elo - self.elo) / 400))
         new_elo = self.elo + k_factor * (outcome - expected_score)
         self.elo = int(round(new_elo))
@@ -38,14 +40,6 @@ class Leaderboard(models.Model):
         new_opponent_elo = opponent_leaderboard.elo + k_factor * (opponent_outcome - opponent_expected_score)
         opponent_leaderboard.elo = int(round(new_opponent_elo))
         self.save()
-        opponent_leaderboard.save()
-
-    def update_player_stats(self, opponent_leaderboard, is_winner):
-        if is_winner:
-            self.total_wins += 1
-        else:
-            self.total_losses += 1
-
         opponent_leaderboard.save()
         update_ranks()
 

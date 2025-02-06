@@ -39,6 +39,8 @@ def record_game_on_blockchain(game_id):
         print(f"Using account address: {account.address}")
         print(f"Contract address: {contract_address}")
 
+        nonce=w3.eth.get_transaction_count(account.address,'pending')
+        print(f"[DEBUG] Nonce for transaction: {nonce}")
         txn = contract.functions.recordGameResult(
             game.id,
             game.player_one.user.username,
@@ -49,13 +51,17 @@ def record_game_on_blockchain(game_id):
             'chainId': 11155111,  # Sepolia 11155111, Anvil 31337
             'gas': 200000,
             'gasPrice': w3.eth.gas_price,
-            'nonce': w3.eth.get_transaction_count(account.address),
+            'nonce': nonce,
         })
         print(f"Build transaction passed")
 
         signed_txn = w3.eth.account.sign_transaction(txn, account.key)
+        print(f"[DEBUG] Signed transaction hash: {signed_txn.hash.hex()}")
         tx_hash = w3.eth.send_raw_transaction(signed_txn.raw_transaction)
+
         receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=300)
+        print(f"[DEBUG] Transaction receipt: {receipt}")
+
         if receipt.status != 1:
             raise Exception("Transaction failed")
 
