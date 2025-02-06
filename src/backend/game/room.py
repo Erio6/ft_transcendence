@@ -50,6 +50,9 @@ class Room:
             await sync_to_async(game.delete)()
             print("game deleted")
             return
+        elif not self.left_paddle or self.right_paddle:
+            print("one not here")
+            return
         if self.left_paddle:
             await self.left_paddle.consumer.channel_layer.group_send(
                 self.left_paddle.consumer.room_name,
