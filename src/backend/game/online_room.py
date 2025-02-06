@@ -164,6 +164,9 @@ class OnlineRoom(Room):
         for consumer in self.spectators:
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
+        if not self.is_tournament:
+            asyncio.create_task(self.blockchain_recording_task(self.id))
+            print("blockchain task started")
 
     async def check_alone_async(self):
         time.sleep(4)
