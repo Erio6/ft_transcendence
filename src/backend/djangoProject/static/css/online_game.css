@@ -1,0 +1,43 @@
+.online-content {
+    background-color: var(--menubar-color);
+    border-radius: 35px;
+    padding: 30px;
+    max-width: 700px;
+    margin: 150px auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.online-content h1 {
+    font-size: 32px;
+}
+
+.online-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.online-container .game-online {
+    margin: 15px auto;
+    color: var(--font-color);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 70%;
+}
+
+.online-container .game-online img {
+    margin: 0 10px;
+}
+
+.link-container {
+    display: flex;
+    align-items: center;
+}
+
+.link-container .spectate {
+}

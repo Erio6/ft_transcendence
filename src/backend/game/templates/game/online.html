@@ -2,8 +2,19 @@
 {% block title %}Quick Play{% endblock %}
 
 {% block content %}
-    <h1>Online Game</h1>
-    {% for game in games %}
-        <a class="nav-link" href="/game/game/{{ game.id }}">game no {{ game.id }} vs {{ game.player_one.display_name }}</a>
-    {% endfor %}
+    <div class="online-content">
+        <h1>Online Game</h1>
+        <div class="online-container">
+            {% for game in games %}
+                <div class="link-container">
+                    <a class="game-online" href="/game/game/{{ game.id }}">
+                        <img src="{{ game.player_one.avatar.url }}" alt="profile picture">
+                        {{ game.player_one.display_name }}
+                        vs {{ game.player_two.display_name }}
+                        <img src="{{ game.player_two.avatar.url }}" alt="profile picture"></a>
+                    <a class="spectate btn" href="/game/game/{{ game.id }}">Spectate <i class="fa-solid fa-eye"></i></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

@@ -50,7 +50,6 @@ def soloGame(request):
     return render(request, 'game/sologame.html', {'form': form, 'profile': profile})
 
 
-
 # @api_view(["GET"])
 # @permission_classes([IsAuthenticated])
 @login_required
@@ -59,7 +58,7 @@ def online_game_creation(request):
     profile = None
     if request.user.is_authenticated:
         profile = UserProfile.objects.get(user=request.user)
-    games = Game.objects.filter(is_completed=False).all()
+    games = Game.objects.filter(is_completed=False, type_of_game="multiplayer").all()
     return render(request, 'game/online.html', {"games": games, "profile": profile})
 
 
@@ -110,5 +109,3 @@ def end_game(request, game_id):
 
     # Render the template asynchronously
     return render(request, 'game/end_game.html', context)
-
-
