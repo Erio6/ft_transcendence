@@ -70,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateActiveNav() {
-        console.log("Update nav")
         // Get the current page from the body attribute (or another way)
         let currentPage = document.body.getAttribute("data-active-page");
 

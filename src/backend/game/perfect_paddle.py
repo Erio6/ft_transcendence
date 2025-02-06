@@ -1,5 +1,3 @@
-import json
-
 from game.paddle import Paddle
 
 
@@ -50,6 +48,5 @@ class PerfectPaddle(Paddle):
             elif self.direction == 1 and self.y >= self.new_pos:
                 self.direction = 0
 
-            # print(self.movingDown, self.movingUp)
             for consumer in room.get_consumers(self.loc != "left", self.loc != "right"):
                 await self.send_data_chan(consumer)

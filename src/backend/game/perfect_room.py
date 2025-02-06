@@ -1,8 +1,5 @@
 import json
-import os
-import pickle
 
-import neat
 from asgiref.sync import sync_to_async
 from django.utils.timezone import now
 
@@ -28,8 +25,6 @@ class AIPerfectRoom(Room):
         await self.left_paddle.move(self.delta_time, self)
         await self.right_paddle.move(self.delta_time, self)
 
-        # print("-------------------")
-        # print(self.ball.v_x, self.ball.v_y)
         hit1 = self.ball.paddles_collide_check(self.left_paddle)
         hit2 = self.ball.paddles_collide_check(self.right_paddle)
 
@@ -46,7 +41,6 @@ class AIPerfectRoom(Room):
 
         await self.ball.move(self.delta_time)
         if hit1 or hit2 or hit3:
-            # print(self.ball.v_x, self.ball.v_y)
             self.right_paddle.compute_pos(self.ball)
 
     async def end_game(self):

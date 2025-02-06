@@ -167,38 +167,14 @@ class World {
         createFont(scene, -30, 30, 0, "00", fontGroup);
         createFont(scene, 30, 30, 0, "00", fontGroup);
 
-        const controls = createControls(camera, renderer.domElement);
+        // const controls = createControls(camera, renderer.domElement);
 
         const {ambientLight, light} = createLights();
 
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
-
-        // const top = createCube();
-        // const bot = createCube();
-        // top.position.set(0, 51, 0);
-        // top.scale.set(50, 1, 1);
-        // bot.position.set(0, -51, 0);
-        // bot.scale.set(50, 1, 1);
-
-        // const mat = new LineBasicMaterial({color: 0x0000ff});
-        // const points = [];
-        // points.push(new Vector3(-50, -50, 0));
-        // points.push(new Vector3(50, -50, 0));
-        // points.push(new Vector3(50, 50, 0));
-        // points.push(new Vector3(-50, 50, 0));
-        // points.push(new Vector3(-50, -50, 0));
-        // points.push(new Vector3(-50 + 3, -50 + 3))
-        // points.push(new Vector3(50 - 3, -50 + 3, 0));
-        // points.push(new Vector3(50 - 3, 50 - 3, 0));
-        // points.push(new Vector3(-50 + 3, 50 - 3, 0));
-        // points.push(new Vector3(-50 + 3, -50 + 3, 0));
-
-        // const geometry = new BufferGeometry().setFromPoints(points);
-        // const line = new Line(geometry, mat);
-        // scene.add(line);
-
-        loop.updatables.push(controls);
+        
+        // loop.updatables.push(controls);
 
         scene.add(ambientLight, light, fontGroup);
 

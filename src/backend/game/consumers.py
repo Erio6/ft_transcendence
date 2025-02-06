@@ -1,19 +1,15 @@
 import asyncio
 import json
-import time
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 
 from game.aigame_room import AIGameRoom
-from game.ball import Ball
 from game.local_room import LocalRoom
 from game.models import Game
 from game.online_room import OnlineRoom
-from game.paddle import Paddle
 from game.perfect_room import AIPerfectRoom
-from game.room import Room
 from user.models import UserProfile
 
 connected_clients = {}
@@ -43,13 +39,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         print(user.is_authenticated)
 
         if user.is_authenticated:
-
-            # if self.room_name == "69":
-            #     print("connect to ai room")
-            #     await self.accept()
-            #     await self.channel_layer.group_add(self.room_name, self.channel_name)
-            #     await group_rooms[self.room_name].register_consumer(self)
-            #     return
 
             # Convert the lazy User object into a real User instance
             user = await sync_to_async(lambda: User.objects.get(pk=user.pk))()
@@ -133,17 +122,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         message = json.loads(text_data)
-        # print(message)
         if message['type'] == 'move':
             room = group_rooms[self.room_name]
             if room:
                 await room.handle_paddle_msg(self, message)
-            # paddle = connected_clients.get(self)
-            # if paddle:
-            #     paddle.moving = int(message['data'])
-            #     if paddle.moving == 0:
-            #         for consumer, other_paddle in connected_clients.items():
-            #             await paddle.send_data()
 
     # Broadcast methods called from group_send
 

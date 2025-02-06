@@ -40,7 +40,10 @@ class Room:
         if not self.left_paddle or not self.right_paddle:
             self.running = False
             return
-        await asyncio.sleep(3)
+        await asyncio.sleep(1.5)
+        if not self.left_paddle or not self.right_paddle:
+            self.running = False
+            return
         if self.left_paddle:
             await self.left_paddle.consumer.channel_layer.group_send(
                 self.left_paddle.consumer.room_name,
