@@ -1,11 +1,12 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %}Leaderboard{% endblock %}
+{% block body_attributes %}data-active-page="leaderboard"{% endblock %}
 
 {% block content %}
     <h2>Leaderboard</h2>
     <div class="container-leaderboard">
-    <table id ="ranking">
-        <thead class="ladder-titles">
+        <table id="ranking">
+            <thead class="ladder-titles">
             <tr>
                 <th>Rank</th>
                 <th>Username</th>
@@ -13,19 +14,20 @@
                 <th>Total Win(s)</th>
                 <th>Total Loss(es)</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for entry in leaderboard %}
-         <tr {% if entry.player.user == request.user %} class="current-user"{% endif %}>
-                <td><span class="rank">{{ entry.rank }}. </span> <img src="{{ entry.player.avatar.url }}" alt=""></td>
-                <td>{{ entry.player.user.username }}</td>
-                <td>{{ entry.elo }}</td>
-                <td>{{ entry.total_wins }}</td>
-                <td>{{ entry.total_losses }}</td>
-         </tr>
+                <tr {% if entry.player.user == request.user %} class="current-user"{% endif %}>
+                    <td><span class="rank">{{ entry.rank }}. </span> <img src="{{ entry.player.avatar.url }}" alt="">
+                    </td>
+                    <td>{{ entry.player.user.username }}</td>
+                    <td>{{ entry.elo }}</td>
+                    <td>{{ entry.total_wins }}</td>
+                    <td>{{ entry.total_losses }}</td>
+                </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
     </div>
-<div class="diffuse-circle circle-1"></div>
+    <div class="diffuse-circle circle-1"></div>
 {% endblock %}

@@ -276,12 +276,12 @@ header .image-text .header-text {
 }
 
 /* To see how to fix the hover its not good i think */
-.sidebar li a:hover {
+.sidebar li a:hover, .sidebar li a.active {
     background-color: #ffffff;
     opacity: 1;
 }
 
-.sidebar li .icon:hover {
+.sidebar li .icon:hover, .sidebar li a.active .icon {
     color: var(--menubar-icone-hover-color);
 }
 

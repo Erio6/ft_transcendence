@@ -1,11 +1,12 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %}Tournament details{% endblock %}
 {% load static %}
+{% block body_attributes %}data-active-page="play"{% endblock %}
 {% block content %}
     <h2 class="tournament_waitingRoom_title"> {{ tournament.name }} </h2>
     <div class="tournament_waiting_room_container">
         <div class="code_to_join_container">
-            <p class="join_code">Code to join the game :   <strong>{{ tournament.tournament_code_join }}</strong></p>
+            <p class="join_code">Code to join the game : <strong>{{ tournament.tournament_code_join }}</strong></p>
         </div>
         <div class="creator_tournament_container">
             <p>Tournament created by : <strong>{{ tournament.created_by.user.username }}</strong></p>
@@ -14,7 +15,7 @@
             <p>Status :<strong>{{ tournament.status }}</strong></p>
         </div>
         <div class="tournament_player_list_container">
-            <h2>Players in the game :     <span id="connected-count">0</span></h2>
+            <h2>Players in the game : <span id="connected-count">0</span></h2>
             <ul id="players_list">
                 {% for player in players %}
                     <li>{{ player.user.username }}</li>
@@ -22,29 +23,30 @@
             </ul>
         </div>
         <div class="tournament_waiting_room_buttons">
-        {% if current_user == tournament.created_by.user %}
-            <a class="primary-btn" id="start-button" href="{% url "tournaments:start_tournament" tournament.id %}" style="display:none;">Start the tournament</a>
-            <button class="btn" onclick="confirmCancel()">Cancel</button>
-        {% endif %}
-        {% if current_user != tournament.created_by.user %}
-            <button class="btn" onclick="confirmLeave()">Leave Tournament</button>
-        {% endif %}
+            {% if current_user == tournament.created_by.user %}
+                <a class="primary-btn" id="start-button" href="{% url "tournaments:start_tournament" tournament.id %}"
+                   style="display:none;">Start the tournament</a>
+                <button class="btn" onclick="confirmCancel()">Cancel</button>
+            {% endif %}
+            {% if current_user != tournament.created_by.user %}
+                <button class="btn" onclick="confirmLeave()">Leave Tournament</button>
+            {% endif %}
         </div>
     </div>
     <script> const tournamentID = "{{ tournament.id }}"</script>
     <script>
-    function confirmCancel() {
-        if (confirm("Are you sure you want to cancel this tournament?")) {
-            window.location.href = '{% url "tournaments:cancel_tournament" tournament.id %}';
+        function confirmCancel() {
+            if (confirm("Are you sure you want to cancel this tournament?")) {
+                window.location.href = '{% url "tournaments:cancel_tournament" tournament.id %}';
+            }
         }
-    }
 
-    function confirmLeave() {
-        if (confirm("Are you sure you want to leave this tournament?")) {
-            window.location.href = '{% url "tournaments:leave_tournament" tournament.id %}';
+        function confirmLeave() {
+            if (confirm("Are you sure you want to leave this tournament?")) {
+                window.location.href = '{% url "tournaments:leave_tournament" tournament.id %}';
+            }
         }
-    }
-</script>
+    </script>
     <script src="{% static 'js/waiting_room.js' %}"></script>
 
 {% endblock %}

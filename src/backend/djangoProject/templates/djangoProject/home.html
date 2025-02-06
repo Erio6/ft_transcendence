@@ -18,9 +18,9 @@
     <title>
         {% block title %} The Famous Pong {% endblock %}
     </title>
-        {% block head %}{% endblock %}
+    {% block head %}{% endblock %}
 </head>
-<body>
+<body {% block body_attributes %}{% endblock %}>
 
 <header>
     <div class="header-container">
@@ -35,13 +35,13 @@
             {% if user.is_authenticated %}
                 <img class=avatar src="{{ profile.avatar.url }}" alt="Profile Image">
                 <a> Hi, {{ profile.user.username }} !</a>
-                <a href="{% url 'authentication:logout' %}" method="post">
+                <a href="{% url 'authentication:logout' %}">
                     {% csrf_token %}
                     <i class='bx bx-log-out'></i>
                 </a>
             {% else %}
-                <a href="{% url 'authentication:register' %}" alt="register">Register</a>
-                <a href="{% url 'authentication:login' %}"  alt="login">Login</a>
+                <a href="{% url 'authentication:register' %}" title="register">Register</a>
+                <a href="{% url 'authentication:login' %}" title="login">Login</a>
             {% endif %}
         </div>
     </div>
@@ -53,24 +53,27 @@
     <div class="menu-container">
         <div class="menu-bar">
             <li class="nav-links">
-                <a href="{% url 'home' %}" class="nav-link" title="Home">
+                <a href="{% url 'home' %}" class="nav-link navbar-link" data-page="home" title="Home">
                     <i class='bx bxs-home-alt-2 icon'></i>
                 </a>
-                <a href="{% url 'dashboard:leaderboard' %}" class="nav-link" title="Leaderboard">
-                    <i class='bx bxs-trophy icon' ></i>
+                <a href="{% url 'dashboard:leaderboard' %}" class="nav-link navbar-link" data-page="leaderboard"
+                   title="Leaderboard">
+                    <i class='bx bxs-trophy icon'></i>
                 </a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard:dashboard' %}" class="nav-link" title="Dashboard">
+                    <a href="{% url 'dashboard:dashboard' %}" class="nav-link navbar-link" data-page="dashboard"
+                       title="Dashboard">
                         <i class='bx bxs-face icon'></i>
                     </a>
-                    <a href="{% url 'friends:friends_overview' %}"class="nav-link" title="Friends">
+                    <a href="{% url 'friends:friends_overview' %}" class="nav-link navbar-link" data-page="friends"
+                       title="Friends">
                         <i class='bx bxs-heart icon'></i>
                     </a>
                 {% endif %}
-                <a href="{% url 'game:play' %}" class="nav-link" title="Play">
+                <a href="{% url 'game:play' %}" class="nav-link navbar-link" data-page="play" title="Play">
                     <i class='bx bxs-rocket icon'></i>
                 </a>
-                <a href="{% url 'our_team' %}"class="nav-link" title="Our Team">
+                <a href="{% url 'our_team' %}" class="nav-link navbar-link" data-page="our_team" title="Our Team">
                     <i class='bx bxl-github icon'></i>
                 </a>
             </li>

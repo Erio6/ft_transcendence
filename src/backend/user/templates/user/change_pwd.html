@@ -1,11 +1,12 @@
 {% extends 'djangoProject/home.html' %}
+{% block body_attributes %}data-active-page="dashboard"{% endblock %}
 {% block content %}
-<div class="container-pwd">
-    <h2>Change Password</h2>
-    <form class="form-link" method="post" action="{% url 'home' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Update Password</button>
-    </form>
-</div>
+    <div class="container-pwd">
+        <h2>Change Password</h2>
+        <form class="form-link" method="post" action="{% url 'home' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+    </div>
 {% endblock %}

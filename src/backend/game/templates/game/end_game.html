@@ -1,29 +1,30 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %}End Game{% endblock %}
+{% block body_attributes %}data-active-page="play"{% endblock %}
 {% block head %}
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 {% endblock %}
 {% block content %}
-<div class="container-end-game">
-    {% if user == winner.user %}
-        <div id="celebration">
-            <h2>Congratulations, You Won!</h2>
-        </div>
-    {% elif user == looser.user%}
-        <div id="loser">
-            <h2>You Lost!</h2>
-        </div>
-    {% endif %}
+    <div class="container-end-game">
+        {% if user == winner.user %}
+            <div id="celebration">
+                <h2>Congratulations, You Won!</h2>
+            </div>
+        {% elif user == looser.user %}
+            <div id="loser">
+                <h2>You Lost!</h2>
+            </div>
+        {% endif %}
 
-    {% if is_tournament %}
-    <p>ref to the tournament tree to ADD </p>
-    {% endif %}
+        {% if is_tournament %}
+            <p>ref to the tournament tree to ADD </p>
+        {% endif %}
 
-    <p><strong>Winner: </strong> {{ winner.user.username }}</p>
-    <p><strong>Loser: </strong> {{ looser.user.username }}</p>
-    <p><strong>Final Score: </strong> {{ winner_score }} - {{ looser_score }}</p>
-    <div class="diffuse-circle circle-1"></div>
-</div>
+        <p><strong>Winner: </strong> {{ winner.user.username }}</p>
+        <p><strong>Loser: </strong> {{ looser.user.username }}</p>
+        <p><strong>Final Score: </strong> {{ winner_score }} - {{ looser_score }}</p>
+        <div class="diffuse-circle circle-1"></div>
+    </div>
 
     <script>
         // Juste les confettis
@@ -32,14 +33,14 @@
             confetti({
                 particleCount: 1000,
                 spread: 100,
-                origin: { x:0.55,y: 0.6 }
+                origin: {x: 0.55, y: 0.6}
             });
         }
     </script>
 
-<!--    <script>-->
-<!--        setTimeout(function() {-->
-<!--            window.location.href = "{% url 'home' %}";-->
-<!--        }, 10000); -->
-<!--    </script>-->
+    <!--    <script>-->
+    <!--        setTimeout(function() {-->
+    <!--            window.location.href = "{% url 'home' %}";-->
+    <!--        }, 10000); -->
+    <!--    </script>-->
 {% endblock %}
