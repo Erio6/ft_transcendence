@@ -49,10 +49,10 @@ class Room:
             game = await sync_to_async(Game.objects.get)(pk=self.id)
             await sync_to_async(game.delete)()
             print("game deleted")
-            if self.left_paddle and self.left_paddle.consumer:
-                await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
-            elif self.right_paddle and self.right_paddle.consumer:
-                await self.right_paddle.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
+            # if self.left_paddle and self.left_paddle.consumer:
+            #     await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
+            # elif self.right_paddle and self.right_paddle.consumer:
+            #     await self.right_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
             return
         if self.left_paddle:
             await self.left_paddle.consumer.channel_layer.group_send(
