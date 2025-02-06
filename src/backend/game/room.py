@@ -44,14 +44,15 @@ class Room:
             self.running = False
             return
         await asyncio.sleep(1.5)
-        if not self.left_paddle and not self.right_paddle:
+        if not self.left_paddle or self.right_paddle:
             self.running = False
             game = await sync_to_async(Game.objects.get)(pk=self.id)
             await sync_to_async(game.delete)()
             print("game deleted")
-            return
-        elif not self.left_paddle or self.right_paddle:
-            print("one not here")
+            if self.left_paddle and self.left_paddle.consumer:
+                await self.left_paddle.consumer.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
+            elif self.right_paddle and self.right_paddle.consumer:
+                await self.right_paddle.send(json.dumps({'type': 'redirect', 'url': '/game/'}))
             return
         if self.left_paddle:
             await self.left_paddle.consumer.channel_layer.group_send(
