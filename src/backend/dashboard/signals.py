@@ -22,6 +22,9 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
     if instance.is_completed and not instance.winner_score == 0 and instance.type_of_game == "multiplayer":
         from .models import GameHistory
         from .models import Leaderboard
+
+        if GameHistory.objects.filter(game_id=instance.id).exists():
+            return
         # Log the game in history
         GameHistory.objects.create(
             game_type=ContentType.objects.get_for_model(Game),
@@ -30,16 +33,6 @@ def log_multiplayer_game(sender, instance, created, **kwargs):
 
         leaderboard_one, created = Leaderboard.objects.get_or_create(player=instance.player_one)
         leaderboard_two, created = Leaderboard.objects.get_or_create(player=instance.player_two)
-
-        leaderboard_one.update_player_stats(
-            opponent_leaderboard=leaderboard_two,
-            is_winner=(instance.winner == instance.player_one),
-        )
-
-        leaderboard_two.update_player_stats(
-            opponent_leaderboard=leaderboard_one ,
-            is_winner=(instance.winner == instance.player_two),
-        )
 
         leaderboard_one.update_elo(
             opponent_leaderboard=leaderboard_two,
