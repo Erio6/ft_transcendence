@@ -1,6 +1,7 @@
 {% extends "two_factor/_base.html" %}
 {% load i18n %}
 {% load static %}
+{% block body_attributes %}data-active-page=""{% endblock %}
 
 {% block content_wrapper %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/2fasetup.css' %}">
@@ -19,56 +20,56 @@
     </style>
 
     {% block two_factor_content %}
-    <div class="login-container">
-        {% if wizard.steps.current == 'welcome' %}
-            <h2 class="login-header">Welcome to Two-Factor Setup</h2>
-            <p>You are about to enable two-factor authentication.</p>
-        {% elif wizard.steps.current == 'method' %}
-            <h2 class="login-header">Choose Method</h2>
-        {% elif wizard.steps.current == 'generator' %}
-            <h2 class="login-header">Setup Authenticator App</h2>
-            <p>Scan the QR code below with your authenticator app:</p>
-            <div class="qr-container">
-                <img src="{{ QR_URL }}" alt="QR Code">
-            </div>
-            <p>Or enter this code manually in your app:</p>
-            <div class="secret-key">
-                {{ secret_key }}
-            </div>
-        {% elif wizard.steps.current == 'validation' %}
-            <h2 class="login-header">Verify Setup</h2>
-            <p>Enter the code from your authenticator app to verify the setup:</p>
-        {% endif %}
+        <div class="login-container">
+            {% if wizard.steps.current == 'welcome' %}
+                <h2 class="login-header">Welcome to Two-Factor Setup</h2>
+                <p>You are about to enable two-factor authentication.</p>
+            {% elif wizard.steps.current == 'method' %}
+                <h2 class="login-header">Choose Method</h2>
+            {% elif wizard.steps.current == 'generator' %}
+                <h2 class="login-header">Setup Authenticator App</h2>
+                <p>Scan the QR code below with your authenticator app:</p>
+                <div class="qr-container">
+                    <img src="{{ QR_URL }}" alt="QR Code">
+                </div>
+                <p>Or enter this code manually in your app:</p>
+                <div class="secret-key">
+                    {{ secret_key }}
+                </div>
+            {% elif wizard.steps.current == 'validation' %}
+                <h2 class="login-header">Verify Setup</h2>
+                <p>Enter the code from your authenticator app to verify the setup:</p>
+            {% endif %}
 
-        <form action="" method="post" class="login-form" onsubmit="return handleSubmit(event)">
-            {% csrf_token %}
-            {{ wizard.management_form }}
-            {{ form.as_p }}
+            <form action="" method="post" class="login-form" onsubmit="return handleSubmit(event)">
+                {% csrf_token %}
+                {{ wizard.management_form }}
+                {{ form.as_p }}
 
-            <div class="button-group">
-                <button type="button" class="next-btn" onclick="window.location.href='/'">
-                    {% trans "Cancel" %}
-                </button>
-                <button type="submit" class="next-btn" name="wizard_goto_step" value="{{ wizard.steps.next }}">
-                    {% if wizard.steps.current == 'validation' %}
-                        {% trans "Verify" %}
-                    {% else %}
-                        {% trans "Next" %}
-                    {% endif %}
-                </button>
-            </div>
-        </form>
-    </div>
+                <div class="button-group">
+                    <button type="button" class="next-btn" onclick="window.location.href='/'">
+                        {% trans "Cancel" %}
+                    </button>
+                    <button type="submit" class="next-btn" name="wizard_goto_step" value="{{ wizard.steps.next }}">
+                        {% if wizard.steps.current == 'validation' %}
+                            {% trans "Verify" %}
+                        {% else %}
+                            {% trans "Next" %}
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
 
-    <script>
-        function handleSubmit(event) {
-            event.preventDefault();
-            const form = event.target;
-            const nextBtn = form.querySelector('button[type="submit"]');
-            form.wizard_goto_step.value = nextBtn.value;
-            form.submit();
-            return false;
-        }
-    </script>
+        <script>
+            function handleSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+                const nextBtn = form.querySelector('button[type="submit"]');
+                form.wizard_goto_step.value = nextBtn.value;
+                form.submit();
+                return false;
+            }
+        </script>
     {% endblock %}
 {% endblock %}

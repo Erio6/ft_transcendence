@@ -1,6 +1,7 @@
 {% extends 'djangoProject/home.html' %}
 
 {% load static %}
+{% block body_attributes %}data-active-page="friends"{% endblock %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'flags/sprite-hq.css' %}">
@@ -40,7 +41,8 @@
                                             </div>
                                             <p>{{ user.country.name }}</p>
                                         </div>
-                                        <form class="form-link" action="{% url 'friends:send_friend_request' user.user.id %}"
+                                        <form class="form-link"
+                                              action="{% url 'friends:send_friend_request' user.user.id %}"
                                               method="POST">
                                             {% csrf_token %}
                                             <button class="accept" type="submit">Add Friend
@@ -136,7 +138,8 @@
                             </div>
                             <p>{{ request.sender.user.username }}</p>
                         </div>
-                        <form class="form-link" action="{% url 'friends:accept_friend_request' request.id %}" method="POST">
+                        <form class="form-link" action="{% url 'friends:accept_friend_request' request.id %}"
+                              method="POST">
                             {% csrf_token %}
                             <button class="accept" type="submit">Accept
                                 <span>
@@ -144,7 +147,8 @@
                                     </span>
                             </button>
                         </form>
-                        <form class="form-link" action="{% url 'friends:decline_friend_request' request.id %}" method="POST">
+                        <form class="form-link" action="{% url 'friends:decline_friend_request' request.id %}"
+                              method="POST">
                             {% csrf_token %}
                             <button class="accept" type="submit">Deny
                                 <span>

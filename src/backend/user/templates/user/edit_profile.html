@@ -1,116 +1,120 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %} User Profile {% endblock %}
-{% load static %
+{% load static %}
+{% block body_attributes %}data-active-page="dashboard"{% endblock %}
 
 {% block content %}
-<h2>My Profile</h2>
-<div class="my-profile">
+    <h2>My Profile</h2>
+    <div class="my-profile">
 
-    <div class="hi-profile">
-        <h2>Hi, {{ profile.user.username }}</h2>
-        <p> Welcome to your profile page! </p>
-    </div>
-
-    <div class="my-profile-pic">
-        <h2>My Profile Picture</h2>
-        <div class="profile-container">
-            <div class="profile-pic">
-                <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
-            </div>
-        <form method="POST" enctype="multipart/form-data" action="{% url 'user:edit_profile' profile.user.username %}" class="avatar-form form-link">
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="avatar">
-            <div class="file-input-wrapper">
-                {{ avatar_form.avatar }}
-                <label for="{{ avatar_form.avatar.id_for_label }}" class="edit-pic">
-                    <i class="fa-solid fa-image"></i>
-                    <button type="submit" class="btn" >Validate</button>
-                </label>
-            </div>
-        </form>
+        <div class="hi-profile">
+            <h2>Hi, {{ profile.user.username }}</h2>
+            <p> Welcome to your profile page! </p>
         </div>
-    </div>
 
-    <div class="my-informations">
-        <h2>My Informations</h2>
-        <form method="POST" class="form-link" action="{% url 'user:edit_profile' profile.user.username %}">
-            {% csrf_token %}
-            <input type="hidden" name="form_type" value="profile_info">
-
-            {% for field in form2 %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="error-message">{{ field.errors }}</div>
-                    {% endif %}
-                    {% if field.help_text %}
-                        <div class="help-text">{{ field.help_text }}</div>
-                    {% endif %}
+        <div class="my-profile-pic">
+            <h2>My Profile Picture</h2>
+            <div class="profile-container">
+                <div class="profile-pic">
+                    <img class="avatar" src="{{ profile.avatar.url }}" alt="Profile Image">
                 </div>
-            {% endfor %}
-
-            {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="error-message">{{ field.errors }}</div>
-                    {% endif %}
-                    {% if field.help_text %}
-                        <div class="help-text">{{ field.help_text }}</div>
-                    {% endif %}
-                </div>
-            {% endfor %}
-
-            {% if profile.country %}
-                <div class="country-display">
-                    <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag" class="country-flag">
-                    <span>{{ profile.country.name }}</span>
-                </div>
-            {% endif %}
-
-        <div class="div-button">
-            {% if user == profile.user %}
-                <button type="submit" class="btn">Update Profile</button>
-            {% endif %}
+                <form method="POST" enctype="multipart/form-data"
+                      action="{% url 'user:edit_profile' profile.user.username %}" class="avatar-form form-link">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="avatar">
+                    <div class="file-input-wrapper">
+                        {{ avatar_form.avatar }}
+                        <label for="{{ avatar_form.avatar.id_for_label }}" class="edit-pic">
+                            <i class="fa-solid fa-image"></i>
+                            <button type="submit" class="btn">Validate</button>
+                        </label>
+                    </div>
+                </form>
+            </div>
         </div>
-            </form>
-        <br>
-        <div class="div-button">
-            <form method="POST" class="form-link" action="{% url 'user:change_password' %}">
+
+        <div class="my-informations">
+            <h2>My Informations</h2>
+            <form method="POST" class="form-link" action="{% url 'user:edit_profile' profile.user.username %}">
                 {% csrf_token %}
-                <button type="submit" class="btn">Change Password</button>
-            </form>
-        </div>
-    </div>
+                <input type="hidden" name="form_type" value="profile_info">
 
- <!-- Two-factor authentication management -->
-    <div class="my-settings">
-     <h2>2FA settings</h2>
-        <div class="two-factor-authentication">
-            {% if user.has_usable_password %}
-                {% if user.is_authenticated and user.totpdevice_set.exists %}
-                    <!-- If 2FA is enabled, show the option to disable it -->
-                    <p>Your two-factor authentication is enabled.</p>
-                    <a href="{% url 'two_factor:disable' %}" class="btn nav-link">Disable Two-Factor Authentication</a>
+                {% for field in form2 %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error-message">{{ field.errors }}</div>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-                    <!-- Button to view backup tokens -->
-                    <p><a href="/account/two_factor/backup/tokens/" class="btn nav-link ">View Backup Tokens</a></p>
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error-message">{{ field.errors }}</div>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <div class="help-text">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-                {% else %}
-                    <!-- If 2FA is not enabled, show the option to enable it -->
-                    <p>Your account does not have two-factor authentication enabled.</p>
-                    <a href="{% url 'two_factor:setup' %}" class="btn nav-link">Enable Two-Factor Authentication</a>
+                {% if profile.country %}
+                    <div class="country-display">
+                        <img src="{{ profile.country.flag }}" alt="{{ profile.country.name }} flag"
+                             class="country-flag">
+                        <span>{{ profile.country.name }}</span>
+                    </div>
                 {% endif %}
-            {% else %}
-                <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
-            {% endif %}
+
+                <div class="div-button">
+                    {% if user == profile.user %}
+                        <button type="submit" class="btn">Update Profile</button>
+                    {% endif %}
+                </div>
+            </form>
+            <br>
+            <div class="div-button">
+                <form method="POST" class="form-link" action="{% url 'user:change_password' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Change Password</button>
+                </form>
+            </div>
         </div>
+
+        <!-- Two-factor authentication management -->
+        <div class="my-settings">
+            <h2>2FA settings</h2>
+            <div class="two-factor-authentication">
+                {% if user.has_usable_password %}
+                    {% if user.is_authenticated and user.totpdevice_set.exists %}
+                        <!-- If 2FA is enabled, show the option to disable it -->
+                        <p>Your two-factor authentication is enabled.</p>
+                        <a href="{% url 'two_factor:disable' %}" class="btn nav-link">Disable Two-Factor
+                            Authentication</a>
+
+                        <!-- Button to view backup tokens -->
+                        <p><a href="/account/two_factor/backup/tokens/" class="btn nav-link ">View Backup Tokens</a></p>
+
+                    {% else %}
+                        <!-- If 2FA is not enabled, show the option to enable it -->
+                        <p>Your account does not have two-factor authentication enabled.</p>
+                        <a href="{% url 'two_factor:setup' %}" class="btn nav-link">Enable Two-Factor Authentication</a>
+                    {% endif %}
+                {% else %}
+                    <p>Your account does not have a usable password, so two-factor authentication is unavailable.</p>
+                {% endif %}
+            </div>
+        </div>
+
     </div>
 
-</div>
-
- <div class="diffuse-circle circle-1"></div>
+    <div class="diffuse-circle circle-1"></div>
 
 {% endblock %}

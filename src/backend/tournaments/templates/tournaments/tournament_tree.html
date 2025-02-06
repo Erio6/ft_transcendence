@@ -1,5 +1,6 @@
 {% extends 'djangoProject/home.html' %}
 {% block title %}Tournaments Tree{% endblock %}
+{% block body_attributes %}data-active-page="play"{% endblock %}
 {% load static %}
 {% block content %}
     <script src="https://cdn.jsdelivr.net/npm/gojs@3.0/release/go.js"></script>
@@ -11,7 +12,7 @@
             <h2>Tournament Winner: <span id="winnerName"></span></h2>
         </div>
 
-        <div id="myDiagramDiv" ></div>
+        <div id="myDiagramDiv"></div>
         <div id="nextGameInfo">
             <p>
                 {% if opponent_name %}
@@ -52,7 +53,8 @@
                         window.location.href = currentGameUrl;
                     }
                 }, 1000);
-            } else {
+            }
+            else {
                 redirectMessage.style.display = 'none';
                 clearInterval(redirectTimeout);
             }
@@ -62,11 +64,12 @@
             fetch("{% url 'tournaments:tournament_tree_data' tournament.id %}")
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Received nodes:",data.nodes);
+                    console.log("Received nodes:", data.nodes);
                     renderTournamentTree(data.nodes, data.links);
                     if (!data.is_completed) {
                         checkRedirect(data);
-                    } else {
+                    }
+                    else {
                         redirectMessage.style.display = 'none';
                         clearInterval(redirectTimeout);
                         document.getElementById("navigationButtons").style.display = 'block';
@@ -85,7 +88,7 @@
         const wsPath = `${wsProtocol}${window.location.host}/ws/tournaments/{{ tournament.id }}/`;
         const socket = new WebSocket(wsPath);
 
-        socket.onmessage = function(e) {
+        socket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             if (data.type === 'tournament_update' && data.action === 'game_completed') {
                 console.log("Game completed, refreshing tournament tree...");

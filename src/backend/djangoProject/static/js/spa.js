@@ -18,25 +18,29 @@ document.addEventListener("DOMContentLoaded", () => {
         if (newTitleElement) {
             document.title = newTitleElement.textContent;
         }
+        const newBody = doc.querySelector("body");
+        if (newBody) {
+            document.body.setAttribute("data-active-page", newBody.getAttribute("data-active-page") || "home");
+        }
 
         // Update the content container.
         contentDiv.innerHTML = extractContent(htmlString);
     }
 
     function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Check if this cookie string starts with the name we want
-            if (cookie.startsWith(name + "=")) {
-                cookieValue = cookie.substring(name.length + 1);
-                break;
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Check if this cookie string starts with the name we want
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = cookie.substring(name.length + 1);
+                    break;
+                }
             }
         }
-    }
-    return cookieValue;
+        return cookieValue;
     }
 
     const csrftoken = getCookie('csrftoken');
@@ -52,9 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const accessToken = getCookie('access_token');
             console.log("Access Token nav-link:", accessToken);
             const response = await fetch(url, {
-				headers: {
-					"X-Requested-With": "XMLHttpRequest"
-				},
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                },
                 // "Authorization": "Bearer " + accessToken},
             });
             if (!response.ok) throw new Error("Network response was not ok");
@@ -63,12 +67,32 @@ document.addEventListener("DOMContentLoaded", () => {
             if (addToHistory) {
                 history.pushState(null, "", url);
             }
-
+            updateActiveNav();
             document.dispatchEvent(new Event("page:load"));
         } catch (error) {
             console.error("Failed to load content:", error);
         }
     }
+
+    function updateActiveNav() {
+        console.log("Update nav")
+        // Get the current page from the body attribute (or another way)
+        let currentPage = document.body.getAttribute("data-active-page");
+
+        // Remove active class from all links
+        document.querySelectorAll(".navbar-link").forEach(link => {
+            link.classList.remove("active");
+
+            // Check if the link matches the current page
+            if (link.getAttribute("data-page") === currentPage) {
+                link.classList.add("active");
+            }
+        });
+    }
+
+    // Run on page load
+    updateActiveNav();
+
 
     // Intercept click events on links with the class "nav-link"
     document.addEventListener("click", (event) => {
@@ -100,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     const response = await fetch(url, {
                         method: "GET",
-						headers: { "X-Requested-With": "XMLHttpRequest" }
+                        headers: {"X-Requested-With": "XMLHttpRequest"}
                         // "Authorization": "Bearer " + accessToken},
                     });
                     if (!response.ok) throw new Error("Network error");

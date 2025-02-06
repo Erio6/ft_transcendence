@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Leaderboard, GameHistory, SoloGame , Game
+from .models import Leaderboard, GameHistory, SoloGame, Game
 from user.models import UserProfile
 from django.contrib.contenttypes.models import ContentType
+
 
 # Create your views here.
 
@@ -15,9 +16,11 @@ def leaderboard(request):
     context = {
         'profile': profile,
         'leaderboard': leaderboard,
+        'active_page': 'leaderboard',
     }
 
     return render(request, 'dashboard/leaderboard.html', context)
+
 
 def dashboard(request):
     profile = None
@@ -63,7 +66,6 @@ def dashboard(request):
         }
 
     return render(request, 'dashboard/dashboard.html', context)
-
 
 # def game_history_view(request):
 #     game_histories = GameHistory.objects.order_by('date_played')[:10]
