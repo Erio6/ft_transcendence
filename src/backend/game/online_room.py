@@ -1,13 +1,15 @@
 import asyncio
 import json
-import multiprocessing
+import threading
 import time
 import threading
 
 from asgiref.sync import sync_to_async
+from django.shortcuts import redirect
 from django.utils.timezone import now
 
 from tournaments.models import Tournament, TournamentGame
+from user.models import UserProfile
 
 from blockchain.utils import blockchain_score_storage
 from game.models import Game
@@ -83,14 +85,24 @@ class OnlineRoom(Room):
             await consumer.send(json.dumps({'type': 'redirect', 'url': "/"}))
             await consumer.close()
         if not self.is_tournament:
-            process = multiprocessing.Process(target=self.run_async_blockchain_task, args=(game.id,))
-            process.start()
-            print(f"[DEBUG] Started blockchain recording process (PID: {process.pid})")
+            threading.Thread(target=self.run_async_blockchain_task,daemon=True, args=(game.id,)).start()
+            print("blockchain task started")
 
-    @staticmethod
     def run_async_blockchain_task(self, game_id):
-        print(f"[DEBUG] Recording game {game_id} on blockchain in a separate process")
-        asyncio.run(blockchain_score_storage(game_id))
+        asyncio.run(self.blockchain_recording_task(game_id))
+
+    async def blockchain_recording_task(self, game_id):
+        print("recording game on blockchain")
+        tx_hash = await blockchain_score_storage(game_id)
+        game =  await sync_to_async(Game.objects.get)(pk=game_id)
+        if tx_hash:
+            print(f"Game recorded on blockchain with tx_hash: {tx_hash}")
+            game.tx_hash = tx_hash
+            game.is_recorded_on_blockchain = True
+        else:
+            print("Failed to record game on blockchain.")
+
+        await sync_to_async(game.save)(force_update=True)
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle
