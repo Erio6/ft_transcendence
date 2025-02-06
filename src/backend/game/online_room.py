@@ -5,11 +5,9 @@ import time
 import threading
 
 from asgiref.sync import sync_to_async
-from django.shortcuts import redirect
 from django.utils.timezone import now
 
 from tournaments.models import Tournament, TournamentGame
-from user.models import UserProfile
 
 from blockchain.utils import blockchain_score_storage
 from game.models import Game
@@ -91,7 +89,7 @@ class OnlineRoom(Room):
 
     def run_async_blockchain_task(self, game_id):
         print(f"[DEBUG] Recording game {game_id} on blockchain in a separate process")
-        asyncio.run(self.blockchain_score_storage(game_id))
+        asyncio.run(blockchain_score_storage(game_id))
 
     async def force_end(self, looser_left=True):
         winner = self.right_paddle if looser_left else self.left_paddle
