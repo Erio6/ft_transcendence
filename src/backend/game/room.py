@@ -2,7 +2,10 @@ import asyncio
 import json
 import time
 
+from asgiref.sync import sync_to_async
+
 from game.ball import Ball
+from game.models import Game
 
 
 class Room:
@@ -41,8 +44,11 @@ class Room:
             self.running = False
             return
         await asyncio.sleep(1.5)
-        if not self.left_paddle or not self.right_paddle:
+        if not self.left_paddle and not self.right_paddle:
             self.running = False
+            game = await sync_to_async(Game.objects.get)(pk=self.id)
+            await sync_to_async(game.delete)()
+            print("game deleted")
             return
         if self.left_paddle:
             await self.left_paddle.consumer.channel_layer.group_send(
