@@ -23,7 +23,9 @@ async def game_loop():
 
     while True:
         for room in group_rooms.values():
+            print("before update")
             await room.update()
+            print("after update")
         await asyncio.sleep(1 / 60)
 
 
