@@ -128,7 +128,7 @@ class OnlineRoom(Room):
             await consumer.close()
 
     async def check_alone_async(self):
-        time.sleep(3)
+        time.sleep(4)
         if self.left_paddle and self.right_paddle:
             print("Game Full")
         elif self.left_paddle or self.right_paddle:

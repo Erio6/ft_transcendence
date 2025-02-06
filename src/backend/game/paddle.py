@@ -9,9 +9,9 @@ class Paddle:
         self.movingDown = 0
         self.moving = 0
         self.consumer = consumer
-        self.length = 25
+        self.length = 20
         self.width = 3.5
-        self.speed = 100
+        self.speed = 150
         self.x = 2
         self.score = 0
         self.hit = 0

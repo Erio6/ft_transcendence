@@ -1,13 +1,6 @@
 import asyncio
 import json
-import time
 
-from asgiref.sync import sync_to_async
-from django.utils.timezone import now
-
-from blockchain.utils import blockchain_score_storage
-from game.ball import Ball
-from game.models import Game
 from game.paddle import Paddle
 from game.room import Room
 
@@ -25,13 +18,10 @@ class AIRoom(Room):
         if not await super().update():
             return
 
-        # print(self.send_left, self.send_right)
         new_pos = [self.left_paddle.y, self.right_paddle.y]
-        # print(self.old_pos, new_pos)
 
         await self.ball.wall_collide()
         ball_hit = self.ball.paddles_collide_check(self.left_paddle)
-        # self.ball.paddles_collide_check(self.right_paddle)
 
         # Play again wall
         if self.ball.x > 97.5:
@@ -49,15 +39,12 @@ class AIRoom(Room):
                 await self.ball.send_data(self.spectators[0])
 
         if len(self.spectators) > 0:
-            # print("send to spec : ", self.spectators)
             await self.ball.send_data(self.spectators[0])
             await self.ball.send_score(self.spectators[0])
             if self.send_left:
-                # print("left difference")
                 await self.left_paddle.send_data_chan(self.spectators[0])
                 self.send_left = False
             if self.send_right:
-                # print("right difference")
                 await self.right_paddle.send_data_chan(self.spectators[0])
                 self.send_right = False
 
